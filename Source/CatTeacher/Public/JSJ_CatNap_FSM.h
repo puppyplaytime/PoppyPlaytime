@@ -27,14 +27,15 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 	
-	// 스테이트 enum 변수를 쓰기 위한 변수
-	CATNAP_State cState = CATNAP_State::C_Idle;
+
 
 public:	
+
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-	UFUNCTION()
-	void ChangeState(CATNAP_State cState);
+	// 스테이트 enum 변수를 쓰기 위한 변수
+	UPROPERTY()
+	CATNAP_State cState = CATNAP_State::C_Idle;
 
 	void IdleState();
 	void MoveState();

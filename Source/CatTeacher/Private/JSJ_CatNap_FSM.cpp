@@ -29,14 +29,6 @@ void UJSJ_CatNap_FSM::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 	// FSM 변경 함수
-	ChangeState(cState);
-
-}
-
-#pragma region ChangeState
-
-void UJSJ_CatNap_FSM::ChangeState(CATNAP_State cState)
-{
 
 	// m_state에 따른 변화
 	switch (cState)
@@ -54,7 +46,6 @@ void UJSJ_CatNap_FSM::ChangeState(CATNAP_State cState)
 	}
 }
 
-#pragma endregion
 
 #pragma region IdleState
 void  UJSJ_CatNap_FSM::IdleState()

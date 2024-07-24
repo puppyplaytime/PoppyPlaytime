@@ -27,14 +27,7 @@ void UKHH_Teatcher_FSM::TickComponent(float DeltaTime, ELevelTick TickType, FAct
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 	// FSM 변경 함수
-	ChangeState(tState);
-}
-#pragma region ChangeState
-
-void UKHH_Teatcher_FSM::ChangeState(Teacher_FSM tState)
-{
-
-	// m_state에 따른 변화
+		// m_state에 따른 변화
 	switch (tState)
 	{
 	case Teacher_FSM::T_Idle:
@@ -48,8 +41,6 @@ void UKHH_Teatcher_FSM::ChangeState(Teacher_FSM tState)
 		break;
 	}
 }
-
-#pragma endregion
 
 #pragma region IdleState
 void UKHH_Teatcher_FSM::IdleState()

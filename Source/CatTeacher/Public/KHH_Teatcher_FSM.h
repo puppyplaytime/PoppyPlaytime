@@ -27,15 +27,14 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-	// 스테이트 enum 변수를 쓰기 위한 변수
-	Teacher_FSM tState = Teacher_FSM::T_Idle;
+
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-	UFUNCTION()
-	void ChangeState(Teacher_FSM tState);
+	// 스테이트 enum 변수를 쓰기 위한 변수
+	UPROPERTY()
+	Teacher_FSM tState = Teacher_FSM::T_Idle;
 		
-
 	void IdleState();
 	void MoveState();
 	void AttackState();

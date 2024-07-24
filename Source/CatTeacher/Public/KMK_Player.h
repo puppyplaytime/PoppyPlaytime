@@ -33,45 +33,48 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 #pragma region InputVaribles
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
-	class UInputMappingContext* IMC_Mapping;
+	class UInputMappingContext* IMC_Mapping = nullptr;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
-	class UInputAction* IA_Move;
+	class UInputAction* IA_Move = nullptr;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
-	class UInputAction* IA_Turn;
+	class UInputAction* IA_Turn = nullptr;
 
     UPROPERTY(EditDefaultsOnly, Category = "Input")
-    class UInputAction* IA_Jump;
+    class UInputAction* IA_Jump = nullptr;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
-    class UInputAction* IA_Sit;
+    class UInputAction* IA_Sit = nullptr;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
-    class UInputAction* IA_Run;
+    class UInputAction* IA_Run = nullptr;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
-    class UInputAction* IA_ClickE;
+    class UInputAction* IA_ClickE = nullptr;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
-    class UInputAction* IA_Click1;
+    class UInputAction* IA_Click1 = nullptr;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
-    class UInputAction* IA_Click2;
+    class UInputAction* IA_Click2 = nullptr;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
-    class UInputAction* IA_Click3;
+    class UInputAction* IA_Click3 = nullptr;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
-    class UInputAction* IA_ClickR;
+    class UInputAction* IA_ClickR = nullptr;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
-    class UInputAction* IA_ClickL;
+    class UInputAction* IA_ClickL = nullptr;
 #pragma endregion
 #pragma region variables
-	FVector dir;
-	UPROPERTY(EditAnywhere)
+	FVector dir = FVector(0);
+
+	UPROPERTY(EditAnywhere, Category = "Variables")
 	float speed = 600.f;
+	UPROPERTY()
+	float jumpPower = 0;
 
 	bool isRight = false;
 	bool isLeft = false;
@@ -98,7 +101,10 @@ public:
 	void InputNum2(const struct FInputActionValue& value);
 	void InputNum3(const struct FInputActionValue& value);
 
-	// 마우스 클릭
+	// 마우스 클릭 
+	// 1. ongoing일때, 일정거리 내에 물체가 있으면 물체를 잡기 상태로 변경
+	// 2. cancle 되면, ray 못나가게 만들기
+	// 3. 잡은 상태일때, 캔슬되면 ray취소
 	// 오른손
 	void InputMR(const struct FInputActionValue& value);
 	void InputMRComp(const struct FInputActionValue& value);

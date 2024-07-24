@@ -29,6 +29,7 @@ AKMK_Player::AKMK_Player()
 	bUseControllerRotationYaw = true;
 
 	JumpMaxCount = 1;
+	
 }
 
 // Called when the game starts or when spawned
@@ -36,6 +37,7 @@ void AKMK_Player::BeginPlay()
 {
 	Super::BeginPlay();
 	movementComp = GetCharacterMovement();
+	jumpPower = movementComp->JumpZVelocity;
 	auto* pc = Cast<APlayerController>(Controller);
 	if (pc)
 	{
@@ -91,10 +93,10 @@ void AKMK_Player::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 		playerInput->BindAction(IA_Click3, ETriggerEvent::Started, this, &AKMK_Player::InputNum3);
 		// 마우스 클릭
 		// 오른손
-		playerInput->BindAction(IA_ClickR, ETriggerEvent::Started, this, &AKMK_Player::InputMR);
+		playerInput->BindAction(IA_ClickR, ETriggerEvent::Ongoing, this, &AKMK_Player::InputMR);
 		playerInput->BindAction(IA_ClickR, ETriggerEvent::Canceled, this, &AKMK_Player::InputMRComp);
 		// 왼손
-		playerInput->BindAction(IA_ClickL, ETriggerEvent::Started, this, &AKMK_Player::InputML);
+		playerInput->BindAction(IA_ClickL, ETriggerEvent::Ongoing, this, &AKMK_Player::InputML);
 		playerInput->BindAction(IA_ClickL, ETriggerEvent::Canceled, this, &AKMK_Player::InputMLComp);
 	}
 
@@ -123,19 +125,19 @@ void AKMK_Player::InputMove(const struct FInputActionValue& value)
 }
 #pragma endregion
 #pragma region Jump
-
+// 점프
 void AKMK_Player::InputJump(const struct FInputActionValue& value)
 {
 	Jump();
 }
 #pragma endregion
 #pragma region Sit
-
+// 앉기
 void AKMK_Player::InputSit(const struct FInputActionValue& value)
 {
 	springArm->SetRelativeLocation(FVector(0, 0, 0));
 }
-
+// 일어나기
 void AKMK_Player::InputStand(const struct FInputActionValue& value)
 {
 	springArm->SetRelativeLocation(FVector(0, 0, 50));
@@ -143,11 +145,12 @@ void AKMK_Player::InputStand(const struct FInputActionValue& value)
 
 #pragma endregion
 #pragma region Run
+// 달리기
 void AKMK_Player::InputRun(const struct FInputActionValue& value)
 {
 	movementComp->MaxWalkSpeed = speed * 2;
 }
-
+// 걷기
 void AKMK_Player::InputWalk(const struct FInputActionValue& value)
 {
 	movementComp->MaxWalkSpeed = speed;
@@ -181,7 +184,7 @@ void AKMK_Player::InputNum3(const struct FInputActionValue& value)
 
 #pragma endregion
 #pragma region MouseRight click
-
+// 오른쪽 클릭시
 void AKMK_Player::InputMR(const struct FInputActionValue& value)
 {
 	GEngine->AddOnScreenDebugMessage(0, 1, FColor::White, FString::Printf(TEXT("Right")));
@@ -195,6 +198,7 @@ void AKMK_Player::InputMRComp(const struct FInputActionValue& value)
 
 #pragma endregion
 #pragma region MouseLeft Click
+// 왼쪽 클릭시
 void AKMK_Player::InputML(const struct FInputActionValue& value)
 {
 	GEngine->AddOnScreenDebugMessage(0, 1, FColor::White, FString::Printf(TEXT("Left")));

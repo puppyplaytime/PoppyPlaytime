@@ -4,37 +4,37 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "JSJ_CatNap_FSM.generated.h"
+#include "KHH_Teatcher_FSM.generated.h"
 // State 변수들
 UENUM()
-enum class CATNAP_State : uint8
+enum class Teacher_FSM : uint8
 {
-	C_Idle,
-	C_Move,
-	C_Attack,
+	T_Idle,
+	T_Move,
+	T_Attack,
 };
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class CATTEACHER_API UJSJ_CatNap_FSM : public UActorComponent
+class CATTEACHER_API UKHH_Teatcher_FSM : public UActorComponent
 {
 	GENERATED_BODY()
 
 public:	
 	// Sets default values for this component's properties
-	UJSJ_CatNap_FSM();
+	UKHH_Teatcher_FSM();
 
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
-	
-	// 스테이트 enum 변수를 쓰기 위한 변수
-	CATNAP_State cState = CATNAP_State::C_Idle;
 
+	// 스테이트 enum 변수를 쓰기 위한 변수
+	Teacher_FSM tState = Teacher_FSM::T_Idle;
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 	UFUNCTION()
-	void ChangeState(CATNAP_State cState);
+	void ChangeState(Teacher_FSM tState);
+		
 
 	void IdleState();
 	void MoveState();

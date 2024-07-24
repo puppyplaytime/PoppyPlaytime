@@ -1,10 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "JSJ_CatNap_FSM.h"
+#include "KHH_Teatcher_FSM.h"
 
 // Sets default values for this component's properties
-UJSJ_CatNap_FSM::UJSJ_CatNap_FSM()
+UKHH_Teatcher_FSM::UKHH_Teatcher_FSM()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
@@ -15,40 +15,35 @@ UJSJ_CatNap_FSM::UJSJ_CatNap_FSM()
 
 
 // Called when the game starts
-void UJSJ_CatNap_FSM::BeginPlay()
+void UKHH_Teatcher_FSM::BeginPlay()
 {
 	Super::BeginPlay();
-
-	// ...
 	
 }
 
 
 // Called every frame
-void UJSJ_CatNap_FSM::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+void UKHH_Teatcher_FSM::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 	// FSM 변경 함수
-	ChangeState(cState);
-
+	ChangeState(tState);
 }
-
 #pragma region ChangeState
 
-void UJSJ_CatNap_FSM::ChangeState(CATNAP_State cState)
+void UKHH_Teatcher_FSM::ChangeState(Teacher_FSM tState)
 {
 
 	// m_state에 따른 변화
-	switch (cState)
+	switch (tState)
 	{
-	case CATNAP_State::C_Idle:
+	case Teacher_FSM::T_Idle:
 		IdleState();
 		break;
-	case CATNAP_State::C_Move:
+	case Teacher_FSM::T_Move:
 		MoveState();
 		break;
-
-	case CATNAP_State::C_Attack:
+	case Teacher_FSM::T_Attack:
 		AttackState();
 		break;
 	}
@@ -57,7 +52,7 @@ void UJSJ_CatNap_FSM::ChangeState(CATNAP_State cState)
 #pragma endregion
 
 #pragma region IdleState
-void  UJSJ_CatNap_FSM::IdleState()
+void UKHH_Teatcher_FSM::IdleState()
 {
 
 }
@@ -65,16 +60,15 @@ void  UJSJ_CatNap_FSM::IdleState()
 
 
 #pragma region MoveState
-void  UJSJ_CatNap_FSM::MoveState()
+void UKHH_Teatcher_FSM::MoveState()
 {
 
 }
 #pragma endregion
 
 #pragma region AttackState
-void  UJSJ_CatNap_FSM::AttackState()
+void UKHH_Teatcher_FSM::AttackState()
 {
 
 }
 #pragma endregion
-

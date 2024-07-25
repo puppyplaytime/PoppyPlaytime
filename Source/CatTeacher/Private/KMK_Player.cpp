@@ -38,7 +38,7 @@ AKMK_Player::AKMK_Player()
 	GrabSpringArm->TargetArmLength = -50.f;
 	GrabSpringArm->bUsePawnControlRotation = true;
 	armMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("GrabpackMesh"));
-	ConstructorHelpers::FObjectFinder<UStaticMesh> tempMesh(TEXT("/Script/Engine.StaticMesh'/Game/Project/Modeling/Player/source/NewGrabpack_MainMesh.NewGrabpack_MainMesh'"));
+	ConstructorHelpers::FObjectFinder<UStaticMesh> tempMesh(TEXT("/Script/Engine.StaticMesh'/Game/Project/Modeling/Player/source/pibot_MainMesh.pibot_MainMesh'"));
 	if(tempMesh.Succeeded())
 	{
 		armMesh->SetStaticMesh(tempMesh.Object);

@@ -3,13 +3,16 @@
 
 #include "KMK_Player.h"
 
+#include "InstancedReferenceSubobjectHelper.h"
 #include "KMK_PlayerHandFSM.h"
 #include "Engine/SkeletalMesh.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "../../../../Plugins/EnhancedInput/Source/EnhancedInput/Public/EnhancedInputComponent.h"
 #include "../../../../Plugins/EnhancedInput/Source/EnhancedInput/Public/EnhancedInputSubsystems.h"
+#include "Engine/GameEngine.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AKMK_Player::AKMK_Player()
@@ -28,6 +31,21 @@ AKMK_Player::AKMK_Player()
 	camera->SetupAttachment(springArm);
 	camera->bUsePawnControlRotation = false;
 	bUseControllerRotationYaw = true;
+	// 1-3 모델링 설정
+	GrabSpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("GrabSpringArm"));
+	GrabSpringArm->SetupAttachment(GetMesh());
+	GrabSpringArm->SetRelativeLocation(FVector(0, 0, 50));
+	GrabSpringArm->TargetArmLength = -50.f;
+	GrabSpringArm->bUsePawnControlRotation = true;
+	armMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("GrabpackMesh"));
+	ConstructorHelpers::FObjectFinder<UStaticMesh> tempMesh(TEXT("/Script/Engine.StaticMesh'/Game/Project/Modeling/Player/source/NewGrabpack_MainMesh.NewGrabpack_MainMesh'"));
+	if(tempMesh.Succeeded())
+	{
+		armMesh->SetStaticMesh(tempMesh.Object);
+	}
+	armMesh->SetupAttachment(GrabSpringArm);
+	armMesh->SetRelativeLocationAndRotation(GrabPackLoc, GrabPackRotation);
+	armMesh->SetRelativeScale3D(GrabPackScale);
 	// 점프 횟수 제한
 	JumpMaxCount = 1;
 	// FSM 붙이기

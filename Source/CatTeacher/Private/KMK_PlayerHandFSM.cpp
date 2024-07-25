@@ -29,7 +29,6 @@ void UKMK_PlayerHandFSM::BeginPlay()
 void UKMK_PlayerHandFSM::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-	PState = PlayerHandFSM::JumpPack;
 	// 스테이트 변경
 	switch (PState)
 	{

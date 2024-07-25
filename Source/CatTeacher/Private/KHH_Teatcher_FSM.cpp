@@ -26,8 +26,8 @@ void UKHH_Teatcher_FSM::BeginPlay()
 void UKHH_Teatcher_FSM::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-	// FSM º¯°æ ÇÔ¼ö
-		// m_state¿¡ µû¸¥ º¯È­
+	// FSM ë³€ê²½ í•¨ìˆ˜
+		// m_stateì— ë”°ë¥¸ ë³€í™”
 	switch (tState)
 	{
 	case Teacher_FSM::T_Idle:

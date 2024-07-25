@@ -1,0 +1,46 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
+#pragma once
+
+#include "CoreMinimal.h"
+#include "Components/ActorComponent.h"
+#include "KMK_PlayerHandFSM.generated.h"
+
+// 플레이어 장갑을 위한 FSM
+UENUM()
+enum class PlayerHandFSM
+{
+	Normal,
+	JumpPack,
+	GunPack,
+	Energy
+};
+
+UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+class CATTEACHER_API UKMK_PlayerHandFSM : public UActorComponent
+{
+	GENERATED_BODY()
+
+public:	
+	// Sets default values for this component's properties
+	UKMK_PlayerHandFSM();
+
+protected:
+	// Called when the game starts
+	virtual void BeginPlay() override;
+	UPROPERTY()
+	PlayerHandFSM PState = PlayerHandFSM::Normal;
+public:	
+	// Called every frame
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	// 플레이어 객체 가져올 변수
+	class AKMK_Player* Player = nullptr;
+	
+	class UCharacterMovementComponent* movementComp = nullptr;
+	// fsm 변경시 호출되는 함수들
+	void NormalHand();
+	void JumpHand();
+	void GunHand();
+	void EnergyHand();
+		
+};

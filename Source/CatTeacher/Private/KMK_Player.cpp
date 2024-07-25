@@ -2,6 +2,8 @@
 
 
 #include "KMK_Player.h"
+
+#include "KMK_PlayerHandFSM.h"
 #include "Engine/SkeletalMesh.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
@@ -14,21 +16,22 @@ AKMK_Player::AKMK_Player()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	// 1. 1ÀÎÄª Ä«¸Ş¶ó ¸¸µé±â
-	// 1-1 spring arm ºÙÀÌ±â
+	// 1. 1ì¸ì¹­ ì¹´ë©”ë¼ ë§Œë“¤ê¸°
+	// 1-1 spring arm ë¶™ì´ê¸°
 	springArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArmComp"));
 	springArm->SetupAttachment(GetMesh());
 	springArm->SetRelativeLocation(FVector(0, 0, 50));
 	springArm->TargetArmLength = -50.f;
 	springArm->bUsePawnControlRotation = true;
-	// 1-2 camera ºÙÀÌ±â
+	// 1-2 camera ë¶™ì´ê¸°
 	camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	camera->SetupAttachment(springArm);
 	camera->bUsePawnControlRotation = false;
-
 	bUseControllerRotationYaw = true;
-
+	// ì í”„ íšŸìˆ˜ ì œí•œ
 	JumpMaxCount = 1;
+	// FSM ë¶™ì´ê¸°
+	FSM = CreateDefaultSubobject<UKMK_PlayerHandFSM>(TEXT("FSM"));
 	
 }
 
@@ -53,12 +56,12 @@ void AKMK_Player::BeginPlay()
 void AKMK_Player::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	// ÀÌµ¿ÇÏ±â
-	// È¸Àü¹æÇâÀ¸·Î ÀÌµ¿
-	// 1. controller rotationÀ» ÅëÇØ transform »ı¼º
+	// ì´ë™í•˜ê¸°
+	// íšŒì „ë°©í–¥ìœ¼ë¡œ ì´ë™
+	// 1. controller rotationì„ í†µí•´ transform ìƒì„±
 	FTransform t = FTransform(GetControlRotation());
 	dir = t.TransformVector(dir);
-	// ÀÌµ¿ ÀÎÇ²
+	// ì´ë™ ì¸í’‹
 	AddMovementInput(dir, speed * DeltaTime);
 	dir = FVector::ZeroVector;
 }
@@ -67,35 +70,35 @@ void AKMK_Player::Tick(float DeltaTime)
 void AKMK_Player::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
-	// ÇÃ·¹ÀÌ¾î ÀÎÇ² Ã³¸®
+	// í”Œë ˆì´ì–´ ì¸í’‹ ì²˜ë¦¬
 	auto playerInput = CastChecked<UEnhancedInputComponent>(PlayerInputComponent);
 
 	if (playerInput)
 	{
-		// Å° ¹ÙÀÎµù
-		// È¸Àü ¹ÙÀÎµù
+		// í‚¤ ë°”ì¸ë”©
+		// íšŒì „ ë°”ì¸ë”©
 		playerInput->BindAction(IA_Turn, ETriggerEvent::Triggered, this, &AKMK_Player::InputTurn);
-		// ¿òÁ÷ÀÓ ¹ÙÀÎµù
+		// ì›€ì§ì„ ë°”ì¸ë”©
 		playerInput->BindAction(IA_Move, ETriggerEvent::Triggered, this, &AKMK_Player::InputMove);
-		// Á¡ÇÁ ¹ÙÀÎµù
+		// ì í”„ ë°”ì¸ë”©
 		playerInput->BindAction(IA_Jump, ETriggerEvent::Started, this, &AKMK_Player::InputJump);
-		// ¾É±â ¹ÙÀÎµù
+		// ì•‰ê¸° ë°”ì¸ë”©
 		playerInput->BindAction(IA_Sit, ETriggerEvent::Started, this, &AKMK_Player::InputSit);
 		playerInput->BindAction(IA_Sit, ETriggerEvent::Completed, this, &AKMK_Player::InputStand);
-		// ´Ş¸®±â ¹ÙÀÎµù
+		// ë‹¬ë¦¬ê¸° ë°”ì¸ë”©
 		playerInput->BindAction(IA_Run, ETriggerEvent::Started, this, &AKMK_Player::InputRun);
 		playerInput->BindAction(IA_Run, ETriggerEvent::Completed, this, &AKMK_Player::InputWalk);
-		// »óÈ£ÀÛ¿ë
+		// ìƒí˜¸ì‘ìš©
 		playerInput->BindAction(IA_ClickE, ETriggerEvent::Started, this, &AKMK_Player::InputE);
-		// ¼Õ º¯°æ ¹ÙÀÎµù
+		// ì† ë³€ê²½ ë°”ì¸ë”©
 		playerInput->BindAction(IA_Click1, ETriggerEvent::Started, this, &AKMK_Player::InputNum1);
 		playerInput->BindAction(IA_Click2, ETriggerEvent::Started, this, &AKMK_Player::InputNum2);
 		playerInput->BindAction(IA_Click3, ETriggerEvent::Started, this, &AKMK_Player::InputNum3);
-		// ¸¶¿ì½º Å¬¸¯
-		// ¿À¸¥¼Õ
+		// ë§ˆìš°ìŠ¤ í´ë¦­
+		// ì˜¤ë¥¸ì†
 		playerInput->BindAction(IA_ClickR, ETriggerEvent::Ongoing, this, &AKMK_Player::InputMR);
 		playerInput->BindAction(IA_ClickR, ETriggerEvent::Canceled, this, &AKMK_Player::InputMRComp);
-		// ¿Ş¼Õ
+		// ì™¼ì†
 		playerInput->BindAction(IA_ClickL, ETriggerEvent::Ongoing, this, &AKMK_Player::InputML);
 		playerInput->BindAction(IA_ClickL, ETriggerEvent::Canceled, this, &AKMK_Player::InputMLComp);
 	}
@@ -103,7 +106,7 @@ void AKMK_Player::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 }
 
 #pragma region MouseRotation
-// È¸ÀüÃ³¸® ÇÔ¼ö
+// íšŒì „ì²˜ë¦¬ í•¨ìˆ˜
 void AKMK_Player::InputTurn(const struct FInputActionValue& value)
 {
 	FVector2D v = value.Get<FVector2D>();
@@ -114,7 +117,7 @@ void AKMK_Player::InputTurn(const struct FInputActionValue& value)
 
 #pragma endregion
 #pragma region Move
-// ÀÌµ¿°ü·Ã
+// ì´ë™ê´€ë ¨
 void AKMK_Player::InputMove(const struct FInputActionValue& value)
 {
 	FVector2D v = value.Get<FVector2D>();
@@ -125,19 +128,19 @@ void AKMK_Player::InputMove(const struct FInputActionValue& value)
 }
 #pragma endregion
 #pragma region Jump
-// Á¡ÇÁ
+// ì í”„
 void AKMK_Player::InputJump(const struct FInputActionValue& value)
 {
 	Jump();
 }
 #pragma endregion
 #pragma region Sit
-// ¾É±â
+// ì•‰ê¸°
 void AKMK_Player::InputSit(const struct FInputActionValue& value)
 {
 	springArm->SetRelativeLocation(FVector(0, 0, 0));
 }
-// ÀÏ¾î³ª±â
+// ì¼ì–´ë‚˜ê¸°
 void AKMK_Player::InputStand(const struct FInputActionValue& value)
 {
 	springArm->SetRelativeLocation(FVector(0, 0, 50));
@@ -145,12 +148,12 @@ void AKMK_Player::InputStand(const struct FInputActionValue& value)
 
 #pragma endregion
 #pragma region Run
-// ´Ş¸®±â
+// ë‹¬ë¦¬ê¸°
 void AKMK_Player::InputRun(const struct FInputActionValue& value)
 {
 	movementComp->MaxWalkSpeed = speed * 2;
 }
-// °È±â
+// ê±·ê¸°
 void AKMK_Player::InputWalk(const struct FInputActionValue& value)
 {
 	movementComp->MaxWalkSpeed = speed;
@@ -158,33 +161,33 @@ void AKMK_Player::InputWalk(const struct FInputActionValue& value)
 
 #pragma endregion
 #pragma region interaction
-// »óÈ£ÀÛ¿ë
+// ìƒí˜¸ì‘ìš©
 void AKMK_Player::InputE(const struct FInputActionValue& value)
 {
-	GEngine->AddOnScreenDebugMessage(0, 1, FColor::White, FString::Printf(TEXT("EÅ¬¸¯")));
+	GEngine->AddOnScreenDebugMessage(0, 1, FColor::White, FString::Printf(TEXT("Eí´ë¦­")));
 }
 #pragma endregion
 #pragma region ChangeHand
-// ±âº» ¼Õ
+// ê¸°ë³¸ ì†
 void AKMK_Player::InputNum1(const struct FInputActionValue& value)
 {
-	GEngine->AddOnScreenDebugMessage(0, 1, FColor::White, FString::Printf(TEXT("1¹ø")));
+	GEngine->AddOnScreenDebugMessage(0, 1, FColor::White, FString::Printf(TEXT("1ë²ˆ")));
 }
 
-// ¿¡³ÊÁö ÃæÀü ¼Õ
+// ì—ë„ˆì§€ ì¶©ì „ ì†
 void AKMK_Player::InputNum2(const struct FInputActionValue& value)
 {
-	GEngine->AddOnScreenDebugMessage(0, 1, FColor::White, FString::Printf(TEXT("2¹ø")));
+	GEngine->AddOnScreenDebugMessage(0, 1, FColor::White, FString::Printf(TEXT("2ë²ˆ")));
 }
-// Á¡ÇÁ ¼Õ
+// ì í”„ ì†
 void AKMK_Player::InputNum3(const struct FInputActionValue& value)
 {
-	GEngine->AddOnScreenDebugMessage(0, 1, FColor::White, FString::Printf(TEXT("3¹ø")));
+	GEngine->AddOnScreenDebugMessage(0, 1, FColor::White, FString::Printf(TEXT("3ë²ˆ")));
 }
 
 #pragma endregion
 #pragma region MouseRight click
-// ¿À¸¥ÂÊ Å¬¸¯½Ã
+// ì˜¤ë¥¸ìª½ í´ë¦­ì‹œ
 void AKMK_Player::InputMR(const struct FInputActionValue& value)
 {
 	GEngine->AddOnScreenDebugMessage(0, 1, FColor::White, FString::Printf(TEXT("Right")));
@@ -198,7 +201,7 @@ void AKMK_Player::InputMRComp(const struct FInputActionValue& value)
 
 #pragma endregion
 #pragma region MouseLeft Click
-// ¿ŞÂÊ Å¬¸¯½Ã
+// ì™¼ìª½ í´ë¦­ì‹œ
 void AKMK_Player::InputML(const struct FInputActionValue& value)
 {
 	GEngine->AddOnScreenDebugMessage(0, 1, FColor::White, FString::Printf(TEXT("Left")));

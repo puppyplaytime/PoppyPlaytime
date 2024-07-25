@@ -34,8 +34,9 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 	// 플레이어 객체 가져올 변수
-	class AKMK_Player* player;
-	class UCharacterMovementComponent* movementComp;
+	class AKMK_Player* Player = nullptr;
+	
+	class UCharacterMovementComponent* movementComp = nullptr;
 	// fsm 변경시 호출되는 함수들
 	void NormalHand();
 	void JumpHand();

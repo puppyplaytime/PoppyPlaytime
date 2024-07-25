@@ -15,16 +15,18 @@ public:
 	// Sets default values for this character's properties
 	AKMK_Player();
 	UPROPERTY(VisibleAnywhere, Category = "Camera")
-	class USpringArmComponent* springArm;
+	class USpringArmComponent* springArm = nullptr;
 
 	UPROPERTY(VisibleAnywhere, Category = "Camera")
-	class UCameraComponent* camera;
+	class UCameraComponent* camera = nullptr;
 
+	UPROPERTY(VisibleAnywhere, Category = "Component")
+	class UKMK_PlayerHandFSM* FSM = nullptr;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 	UPROPERTY()
-	class UCharacterMovementComponent* movementComp;
+	class UCharacterMovementComponent* movementComp = nullptr;
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -79,41 +81,35 @@ public:
 	bool isRight = false;
 	bool isLeft = false;
 #pragma endregion
-
-
 #pragma region Function
-	// È¸ÀüÃ³¸®
+	// È¸ï¿½ï¿½Ã³ï¿½ï¿½
 	void InputTurn(const struct FInputActionValue& value);
-	// ÁÂ¿ì ÀÌµ¿
+	// ï¿½Â¿ï¿½ ï¿½Ìµï¿½
 	void InputMove(const struct FInputActionValue& value);
-	// Á¡ÇÁ
+	// ï¿½ï¿½ï¿½ï¿½
 	void InputJump(const struct FInputActionValue& value);
-	// ¾É±â
+	// ï¿½É±ï¿½
 	void InputSit(const struct FInputActionValue& value);
 	void InputStand(const struct FInputActionValue& value);
-	// ´Þ¸®±â
+	// ï¿½Þ¸ï¿½ï¿½ï¿½
 	void InputRun(const struct FInputActionValue& value);
 	void InputWalk(const struct FInputActionValue& value);
-	// »óÈ£ÀÛ¿ë
+	// ï¿½ï¿½È£ï¿½Û¿ï¿½
 	void InputE(const struct FInputActionValue& value);
-	// ¹«±â ¹Ù²Ù±â
+	// ï¿½ï¿½ï¿½ï¿½ ï¿½Ù²Ù±ï¿½
 	void InputNum1(const struct FInputActionValue& value);
 	void InputNum2(const struct FInputActionValue& value);
 	void InputNum3(const struct FInputActionValue& value);
 
-	// ¸¶¿ì½º Å¬¸¯ 
-	// 1. ongoingÀÏ¶§, ÀÏÁ¤°Å¸® ³»¿¡ ¹°Ã¼°¡ ÀÖÀ¸¸é ¹°Ã¼¸¦ Àâ±â »óÅÂ·Î º¯°æ
-	// 2. cancle µÇ¸é, ray ¸ø³ª°¡°Ô ¸¸µé±â
-	// 3. ÀâÀº »óÅÂÀÏ¶§, Äµ½½µÇ¸é rayÃë¼Ò
-	// ¿À¸¥¼Õ
+	// ï¿½ï¿½ï¿½ì½º Å¬ï¿½ï¿½ 
+	// 1. ongoingï¿½Ï¶ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½Å¸ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã¼ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã¼ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Â·ï¿½ ï¿½ï¿½ï¿½ï¿½
+	// 2. cancle ï¿½Ç¸ï¿½, ray ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½
+	// 3. ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¶ï¿½, Äµï¿½ï¿½ï¿½Ç¸ï¿½ rayï¿½ï¿½ï¿½
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	void InputMR(const struct FInputActionValue& value);
 	void InputMRComp(const struct FInputActionValue& value);
-	// ¿Þ¼Õ
+	// ï¿½Þ¼ï¿½
 	void InputML(const struct FInputActionValue& value);
 	void InputMLComp(const struct FInputActionValue& value);
 #pragma endregion
-
-
-
-
 };

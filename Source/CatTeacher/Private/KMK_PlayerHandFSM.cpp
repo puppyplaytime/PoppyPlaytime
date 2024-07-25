@@ -2,6 +2,8 @@
 
 
 #include "KMK_PlayerHandFSM.h"
+#include "KMK_Player.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 // Sets default values for this component's properties
 UKMK_PlayerHandFSM::UKMK_PlayerHandFSM()
@@ -18,8 +20,8 @@ void UKMK_PlayerHandFSM::BeginPlay()
 {
 	Super::BeginPlay();
 	// 플레이어 객체 들고오기
-	// player = Cast<AKMK_Player>(GetWorld()->GetFirstPlayerController()->GetPawn());
-	// movementComp = player->GetCharacterMovement();
+	Player = Cast<AKMK_Player>(GetWorld()->GetFirstPlayerController()->GetPawn());
+	movementComp = GetOwner()->FindComponentByClass<UCharacterMovementComponent>();
 }
 
 
@@ -27,6 +29,7 @@ void UKMK_PlayerHandFSM::BeginPlay()
 void UKMK_PlayerHandFSM::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	PState = PlayerHandFSM::JumpPack;
 	// 스테이트 변경
 	switch (PState)
 	{
@@ -54,17 +57,16 @@ void UKMK_PlayerHandFSM::NormalHand()
 #pragma region Jump
 void UKMK_PlayerHandFSM::JumpHand()
 {
-
+	 float a = movementComp->JumpZVelocity;
+	movementComp->JumpZVelocity = a * 2;
 }
 #pragma endregion
-
 #pragma region Gun
 void UKMK_PlayerHandFSM::GunHand()
 {
 
 }
 #pragma endregion
-
 #pragma region Energy
 void UKMK_PlayerHandFSM::EnergyHand()
 {

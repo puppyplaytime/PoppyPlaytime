@@ -44,8 +44,8 @@ AKMK_Player::AKMK_Player()
 		armMesh->SetStaticMesh(tempMesh.Object);
 	}
 	armMesh->SetupAttachment(GrabSpringArm);
-	armMesh->SetRelativeLocationAndRotation(GrabPackLoc, GrabPackRotation);
-	armMesh->SetRelativeScale3D(GrabPackScale);
+	armMesh->SetRelativeLocationAndRotation(FVector(0, 0, 0), FRotator(0, -90, 0););
+	armMesh->SetRelativeScale3D(FVector(1.5f));
 	// 점프 횟수 제한
 	JumpMaxCount = 1;
 	// FSM 붙이기

@@ -27,12 +27,7 @@ public:
 	class USpringArmComponent* GrabSpringArm = nullptr;
 	UPROPERTY(VisibleAnywhere, Category = "Modeling")
 	class UStaticMeshComponent* armMesh = nullptr;
-	UPROPERTY(EditAnywhere, Category = "Modeling")
-	FVector GrabPackLoc = FVector(0, 0, 0);
-	UPROPERTY(EditAnywhere, Category = "Modeling")
-	FRotator GrabPackRotation = FRotator(0, -90, 0);
-	UPROPERTY(EditAnywhere, Category = "Modeling")
-	FVector GrabPackScale = FVector(1.5f);
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

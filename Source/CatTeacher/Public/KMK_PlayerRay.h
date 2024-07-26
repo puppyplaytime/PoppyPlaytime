@@ -30,16 +30,17 @@ public:
 #pragma region ray variables
 	FVector startPos;
 	FVector endPos;
+	UFUNCTION()
+	void SetRayPos(FVector start, FVector end);
 	UPROPERTY(EditAnywhere)
 	float rayDis = 1000;
 
-	UFUNCTION()
-	void SetStartEndPos(FVector start, FVector end);
-
 	class UKMK_PlayerHandFSM* FSM;
-
+	class AKMK_Player* playerComp;
+	UPROPERTY()
 	bool isRay = false;
 #pragma endregion
+
 
 		
 };

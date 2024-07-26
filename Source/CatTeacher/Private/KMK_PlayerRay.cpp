@@ -3,6 +3,7 @@
 
 #include "KMK_PlayerRay.h"
 #include "KMK_PlayerHandFSM.h"
+#include "KMK_Player.h"
 
 // Sets default values for this component's properties
 UKMK_PlayerRay::UKMK_PlayerRay()
@@ -20,7 +21,7 @@ void UKMK_PlayerRay::BeginPlay()
 {
 	Super::BeginPlay();
 	FSM = GetOwner()->FindComponentByClass<UKMK_PlayerHandFSM>();
-	
+	playerComp = Cast<AKMK_Player>(GetOwner());
 }
 
 
@@ -28,39 +29,49 @@ void UKMK_PlayerRay::BeginPlay()
 void UKMK_PlayerRay::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	// 레이 셋팅
 	FCollisionQueryParams params;
 	params.AddIgnoredActor(GetOwner());
+	
+	endPos = playerComp->endPos;
+	// hit된 물체 정보 들고오기
 	FHitResult hitInfo;
 	// 클릭이 된다면
+	// 레이를 쏘고
+	bool bhit = GetWorld()->LineTraceSingleByChannel(hitInfo, startPos, endPos, ECC_Visibility, params);
+
 	if (isRay)
 	{
-		// 레이를 쏘고
-		bool bhit = GetWorld()->LineTraceSingleByChannel(hitInfo, startPos, endPos, ECC_Visibility, params);
-		DrawDebugLine(GetWorld(), startPos, endPos, FColor::Blue, false, 1.0f);
 		// 물체가 있다면
 		if (bhit)
 		{
+			DrawDebugLine(GetWorld(), startPos, endPos, FColor::Blue, false, 5.f);
 			GEngine->AddOnScreenDebugMessage(1, 1, FColor::Blue, FString::Printf(TEXT("hi")));
-			// jump패드를 감지했을때
-			if (hitInfo.GetActor()->GetActorLabel().Contains("jump"))
+			if(playerComp->isRight)
 			{
-				// movementComp->JumpZVelocity = JumpPower * 2;
-			}
-			if (hitInfo.GetActor()->GetActorLabel().Contains("ElectricalPanel"))
-			{
-				FSM->PState = PlayerHandFSM::Energy;
+				// energy패드 들고있을때
+				if (playerComp->Rhand->GetStaticMesh() == playerComp->RHandMeshes[0] && hitInfo.GetActor()->GetActorLabel().Contains("ElectricalPanel"))
+				{
+					FSM->PState = PlayerHandFSM::Energy;
+					FSM->isCharge = true;
+				}
+				// jump패드를 감지했을때
+				if (playerComp->Rhand->GetStaticMesh() == playerComp->RHandMeshes[2] && hitInfo.GetActor()->GetActorLabel().Contains("jump"))
+				{
+					FSM->isJump = false;
+					FSM->PState = PlayerHandFSM::JumpPack;
+				}
+
 			}
 		}
 	}
-
 }
-// 첫 위치값과 마지막 위치값
-// 클릭됐을때, 레이의 위치 설정됨
-void UKMK_PlayerRay::SetStartEndPos(FVector start, FVector dir)
+
+void UKMK_PlayerRay::SetRayPos(FVector start, FVector end)
 {
 	startPos = start;
-	endPos = start + dir * rayDis;
-	
+	endPos = end;
+
 	isRay = true;
 }
 

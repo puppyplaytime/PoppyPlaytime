@@ -17,7 +17,7 @@ public:
 	UPROPERTY(VisibleAnywhere, Category = "Camera")
 	class USpringArmComponent* springArm = nullptr;
 
-	UPROPERTY(VisibleAnywhere, Category = "Camera")
+	UPROPERTY(EditDefaultsOnly, Category = "Camera")
 	class UCameraComponent* camera = nullptr;
 
 	UPROPERTY(VisibleAnywhere, Category = "Component")
@@ -32,7 +32,11 @@ public:
 	UPROPERTY(VisibleAnywhere, Category = "Modeling")
 	class UStaticMeshComponent* Rhand = nullptr;
 	UPROPERTY(EditAnywhere, Category = "Modeling")
-	TArray<class UStaticMesh*> LhandMeshes;
+	TArray<class UStaticMesh*> RHandMeshes;
+	UPROPERTY(EditAnywhere, Category = "Modeling")
+	class UArrowComponent* Rarrow;
+	UPROPERTY(EditAnywhere, Category = "Modeling")
+	class UArrowComponent* Larrow;
 
 
 	UPROPERTY(VisibleAnywhere, Category = "Ray")
@@ -94,10 +98,12 @@ public:
 	float speed = 600.f;
 	UPROPERTY()
 	float jumpPower = 0;
-
+	UPROPERTY()
 	bool isRight = false;
+	UPROPERTY()
 	bool isLeft = false;
-	UPROPERTY(EditAnywhere)
+
+	UPROPERTY()
 	bool isIntarctive = false;
 #pragma endregion
 #pragma region Function
@@ -139,8 +145,8 @@ public:
 	float rayDis = 1000;
 #pragma endregion
 #pragma region Overlap
-	//UFUNCTION()
-	//void NotifyHit(UPrimitiveComponent* MyComp, AActor* Other, UPrimitiveComponent* OtherComp, bool bSelfMoved, FVector HitLocation, FVector HitNormal, FVector NormalImpulse, const FHitResult& Hit);
+	UFUNCTION()
+	void NotifyHit(UPrimitiveComponent* MyComp, AActor* Other, UPrimitiveComponent* OtherComp, bool bSelfMoved, FVector HitLocation, FVector HitNormal, FVector NormalImpulse, const FHitResult& Hit);
 	// 오버랩 감지를 위한 함수 선언
 	/*virtual void BeginOverlap(UPrimitiveComponent* OverlappedComponent,
 		AActor* OtherActor,

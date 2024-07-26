@@ -46,7 +46,6 @@ void UKMK_PlayerHandFSM::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 			EnergyHand();
 		break;
 	}
-	if(PState != PlayerHandFSM::JumpPack) movementComp->JumpZVelocity = JumpPower;
 }
 
 #pragma region Normal
@@ -59,7 +58,15 @@ void UKMK_PlayerHandFSM::NormalHand()
 // 일정 트리거가 발견되면 점프력을 2배로
 void UKMK_PlayerHandFSM::JumpHand()
 {
-	if(movementComp->JumpZVelocity != JumpPower * 2)movementComp->JumpZVelocity = JumpPower * 2;
+	if(movementComp->JumpZVelocity != JumpPower * 2)
+	{
+		movementComp->JumpZVelocity = JumpPower * 2;
+	}
+	if (!isJump)
+	{
+		Player->Jump();
+		isJump = true;
+	}
 }
 #pragma endregion
 #pragma region Gun
@@ -76,6 +83,7 @@ void UKMK_PlayerHandFSM::EnergyHand()
 	GEngine->AddOnScreenDebugMessage(3, 1, FColor::Blue, FString::Printf(TEXT("%f"), t));
 	if (t > chargeTime)
 	{
+		isCharge = false;
 		PState = PlayerHandFSM::Normal;
 		t = 0;
 	}

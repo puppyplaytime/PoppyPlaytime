@@ -53,7 +53,7 @@ public:
 	void GunHand();
 	void EnergyHand();
 
-
+	bool isJump = false;
 
 		
 };

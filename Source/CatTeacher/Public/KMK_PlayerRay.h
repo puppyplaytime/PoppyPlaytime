@@ -6,10 +6,10 @@
 #include "Components/ActorComponent.h"
 #include "KMK_PlayerRay.generated.h"
 
-// 3°¡ÁöÀÇ ·¹ÀÌ¸¦ ¸¸µé¿¹Á¤
-// 1. ¿Þ¼Õ
-// 2. ¿À¸¥¼Õ
-// 3. ´« => ÇÐ±³ Ãß°Ý½ÅÀ» À§ÇÔ
+// 3ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ì¸ï¿½ ï¿½ï¿½ï¿½é¿¹ï¿½ï¿½
+// 1. ï¿½Þ¼ï¿½
+// 2. ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+// 3. ï¿½ï¿½ => ï¿½Ð±ï¿½ ï¿½ß°Ý½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class CATTEACHER_API UKMK_PlayerRay : public UActorComponent
 {
@@ -22,10 +22,24 @@ public:
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
-
+	
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+
+#pragma region ray variables
+	FVector startPos;
+	FVector endPos;
+	UPROPERTY(EditAnywhere)
+	float rayDis = 1000;
+
+	UFUNCTION()
+	void SetStartEndPos(FVector start, FVector end);
+
+	class UKMK_PlayerHandFSM* FSM;
+
+	bool isRay = false;
+#pragma endregion
 
 		
 };

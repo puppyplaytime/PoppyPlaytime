@@ -22,6 +22,7 @@ void UKMK_PlayerHandFSM::BeginPlay()
 	// 플레이어 객체 들고오기
 	Player = Cast<AKMK_Player>(GetWorld()->GetFirstPlayerController()->GetPawn());
 	movementComp = GetOwner()->FindComponentByClass<UCharacterMovementComponent>();
+	JumpPower = movementComp->JumpZVelocity;
 }
 
 
@@ -45,19 +46,20 @@ void UKMK_PlayerHandFSM::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 			EnergyHand();
 		break;
 	}
+	if(PState != PlayerHandFSM::JumpPack) movementComp->JumpZVelocity = JumpPower;
 }
 
 #pragma region Normal
 void UKMK_PlayerHandFSM::NormalHand()
 {
-
+	GEngine->AddOnScreenDebugMessage(4, 1, FColor::Blue, FString::Printf(TEXT("remve")));
 }
 #pragma endregion
 #pragma region Jump
+// 일정 트리거가 발견되면 점프력을 2배로
 void UKMK_PlayerHandFSM::JumpHand()
 {
-	 float a = movementComp->JumpZVelocity;
-	movementComp->JumpZVelocity = a * 2;
+	if(movementComp->JumpZVelocity != JumpPower * 2)movementComp->JumpZVelocity = JumpPower * 2;
 }
 #pragma endregion
 #pragma region Gun
@@ -69,6 +71,13 @@ void UKMK_PlayerHandFSM::GunHand()
 #pragma region Energy
 void UKMK_PlayerHandFSM::EnergyHand()
 {
-
+	t += GetWorld()->DeltaTimeSeconds;
+	GEngine->AddOnScreenDebugMessage(3, 1, FColor::Blue, FString::Printf(TEXT("charge")));
+	GEngine->AddOnScreenDebugMessage(3, 1, FColor::Blue, FString::Printf(TEXT("%f"), t));
+	if (t > chargeTime)
+	{
+		PState = PlayerHandFSM::Normal;
+		t = 0;
+	}
 }
 #pragma endregion

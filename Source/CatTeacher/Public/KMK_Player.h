@@ -27,6 +27,17 @@ public:
 	class USpringArmComponent* GrabSpringArm = nullptr;
 	UPROPERTY(VisibleAnywhere, Category = "Modeling")
 	class UStaticMeshComponent* armMesh = nullptr;
+	UPROPERTY(VisibleAnywhere, Category = "Modeling")
+	class UStaticMeshComponent* Lhand = nullptr;
+	UPROPERTY(VisibleAnywhere, Category = "Modeling")
+	class UStaticMeshComponent* Rhand = nullptr;
+	UPROPERTY(EditAnywhere, Category = "Modeling")
+	TArray<class UStaticMesh*> LhandMeshes;
+
+
+	UPROPERTY(VisibleAnywhere, Category = "Ray")
+	class UKMK_PlayerRay* playerRay = nullptr;
+
 
 protected:
 	// Called when the game starts or when spawned
@@ -86,6 +97,8 @@ public:
 
 	bool isRight = false;
 	bool isLeft = false;
+	UPROPERTY(EditAnywhere)
+	bool isIntarctive = false;
 #pragma endregion
 #pragma region Function
 	// ȸ��ó��
@@ -117,5 +130,23 @@ public:
 	// �޼�
 	void InputML(const struct FInputActionValue& value);
 	void InputMLComp(const struct FInputActionValue& value);
+
+#pragma endregion
+#pragma region ray variables
+	FVector startPos;
+	FVector endPos;
+	UPROPERTY(EditAnywhere)
+	float rayDis = 1000;
+#pragma endregion
+#pragma region Overlap
+	//UFUNCTION()
+	//void NotifyHit(UPrimitiveComponent* MyComp, AActor* Other, UPrimitiveComponent* OtherComp, bool bSelfMoved, FVector HitLocation, FVector HitNormal, FVector NormalImpulse, const FHitResult& Hit);
+	// 오버랩 감지를 위한 함수 선언
+	/*virtual void BeginOverlap(UPrimitiveComponent* OverlappedComponent,
+		AActor* OtherActor,
+		UPrimitiveComponent* OtherComp,
+		int32 OtherBodyIndex,
+		bool bFromSweep,
+		const FHitResult& SweepResult);*/
 #pragma endregion
 };

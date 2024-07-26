@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "KMK_Player.h"
 #include "Components/ActorComponent.h"
 #include "JSH_CatFSM.generated.h"
 
@@ -71,19 +72,31 @@ public:
 	//-----------------------------------------------------------------
 
 
-	
 
+	
 	// 왕복 타깃
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = FSM)
 	class AJSH_Target* target01;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = FSM)
 	class AJSH_Target* target02;
+	
+	// player
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = FSM)
+	class AJSH_Target* target03;
+	
 
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = FSM)
+	//class AJSH_Cat*  AttackCat;
 
+	
 	// 소유 액터
 	UPROPERTY()
 	class AJSH_Cat* me;
+	
+
+
+	
 
 	// 공격 범위
 	UPROPERTY(EditAnywhere, Category=FSM)

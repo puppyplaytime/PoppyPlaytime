@@ -23,7 +23,11 @@ UJSH_CatFSM::UJSH_CatFSM()
 void UJSH_CatFSM::BeginPlay()
 {
 	Super::BeginPlay();
-
+	
+	// 월드에서 Player 찾아오기
+	//auto actor = UGameplayStatics::GetActorOfClass(GetWorld(), AJSH_Cat::StaticClass());
+	//layer = Cast<AJSH_Cat>(actor);
+	
 	// 소유 객체 가져오기
 	me = Cast<AJSH_Cat>(GetOwner());
 }
@@ -78,7 +82,7 @@ void UJSH_CatFSM::Move01State()
 	me->AddMovementInput(dir1.GetSafeNormal());
 
 	float distance = FVector::Dist(me->GetActorLocation(), destination1);
-	if (dir1.Size() < rr)  // 허용 오차 10.0f, 필요에 따라 조정
+	if (dir1.Size() < rr)
 	{
 		// 상태 전환
 		cState = ECatState::Move02;
@@ -92,7 +96,7 @@ void UJSH_CatFSM::Move02State()
 	me->AddMovementInput(dir2.GetSafeNormal());
 
 	float distance = FVector::Dist(me->GetActorLocation(), destination2);
-	if (dir2.Size() < rr)  // 허용 오차 10.0f, 필요에 따라 조정
+	if (dir2.Size() < rr)
 	{
 		// 상태 전환
 		cState = ECatState::Move01;
@@ -101,10 +105,44 @@ void UJSH_CatFSM::Move02State()
 
 void UJSH_CatFSM::StraightState()
 {
+	// 특정 태그를 가진 모든 액터 찾기
+	TArray<AActor*> Fcat1;
+	UGameplayStatics::GetAllActorsWithTag(GetWorld(), FName("FCat1"), Fcat1);
+
+	// me가 FCat1 태그를 가지고 있는지 확인
+	bool bIsTaggedCat = false;
+	for (AActor* Actor : Fcat1)
+	{
+		if (Actor == me)
+		{
+			bIsTaggedCat = true;
+			break;
+		}
+	}
+
+	if (bIsTaggedCat)
+	{
+		// me가 FCat1 태그를 가진 경우에만 아래 코드를 실행
+		FVector destination1 = target03->GetActorLocation();
+		FVector dir1 = destination1 - me->GetActorLocation();
+		me->AddMovementInput(dir1.GetSafeNormal());
+		if (dir1.Size() < rr)
+		{
+			// 상태 전환
+			cState = ECatState::Move01;
+		}
+		
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("me does not have the FCat1 tag or target03 is null."));
+	}
 }
 
 void UJSH_CatFSM::DiscoveryState()
 {
+
+	
 }
 
 void UJSH_CatFSM::AttackState()

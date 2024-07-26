@@ -47,6 +47,12 @@ public:
 	float t = 0;
 	UPROPERTY(EditAnywhere, Category = "Charge")
 	float chargeTime = 10;
+
+	// 총알 공장 만들기
+	UPROPERTY(EditAnywhere, Category ="Fire")
+	class UParticleSystem* bulletFact;
+	FVector bulletTrans;
+
 	// fsm 변경시 호출되는 함수들
 	void NormalHand();
 	void JumpHand();
@@ -54,6 +60,7 @@ public:
 	void EnergyHand();
 
 	bool isJump = false;
+	bool isFire = false;
 
 		
 };

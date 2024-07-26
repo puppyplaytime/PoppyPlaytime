@@ -15,7 +15,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "KMK_PlayerRay.h"
 #include "Components/ArrowComponent.h"
-
+#include "KMK_PlayerHand.h"
 // Sets default values
 AKMK_Player::AKMK_Player()
 {
@@ -51,32 +51,6 @@ AKMK_Player::AKMK_Player()
 	armMesh->SetupAttachment(GrabSpringArm);
 	armMesh->SetRelativeLocationAndRotation(FVector(0, 0, 0), FRotator(0, -90, 0));
 	armMesh->SetRelativeScale3D(FVector(1.5f));
-	// 왼손
-	Lhand = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("LHandComp"));
-	ConstructorHelpers::FObjectFinder<UStaticMesh> Ltemp(TEXT("/Script/Engine.StaticMesh'/Game/Project/Modeling/Player/source/pibot_Hand_BlueMesh.pibot_Hand_BlueMesh'"));
-	if (Ltemp.Succeeded())
-	{
-		Lhand->SetStaticMesh(Ltemp.Object);
-	}
-	Lhand->SetupAttachment(GrabSpringArm);
-	Lhand->SetRelativeLocationAndRotation(FVector(30, -20, -13), FRotator(0, -90, 0));
-	Lhand->SetRelativeScale3D(FVector(1.5f));
-	// 발사 위치만들기
-	Larrow = CreateDefaultSubobject<UArrowComponent>(TEXT("LeftFirePos"));
-	Larrow->SetupAttachment(Lhand);
-	Larrow->SetRelativeLocationAndRotation(FVector(0, 10, 2.2f), FRotator(0, 90, 0));
-	Larrow->SetRelativeScale3D(FVector(0.2f));
-	// 오른손
-	Rhand = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("RHandComp"));
-	Rhand->SetupAttachment(GrabSpringArm);
-	Rhand->SetRelativeLocationAndRotation(FVector(30, 20, -13), FRotator(0, -90, 0));
-	Rhand->SetRelativeScale3D(FVector(1.5f));
-	// 발사 위치
-	Rarrow = CreateDefaultSubobject<UArrowComponent>(TEXT("RightFirePos"));
-	Rarrow->SetupAttachment(Rhand);
-	Rarrow->SetRelativeLocationAndRotation(FVector(0, 10, 2.2f), FRotator(0, 90, 0));
-	Rarrow->SetRelativeScale3D(FVector(0.2f));
-
 #pragma endregion
 
 	// 점프 횟수 제한
@@ -91,7 +65,25 @@ AKMK_Player::AKMK_Player()
 void AKMK_Player::BeginPlay()
 {
 	Super::BeginPlay();
-	Rhand->SetStaticMesh(RHandMeshes[0]);
+#pragma region Create Hand
+	auto* rActor = GetWorld()->SpawnActor(RHandFact);
+	rActor->AttachToComponent(GrabSpringArm, FAttachmentTransformRules::KeepRelativeTransform);
+	rActor->SetActorRelativeLocation(FVector(30, 20, -13));
+	rActor->SetActorRotation(FRotator(0, -90, 0));
+	rActor->SetActorRelativeScale3D(FVector(1.5f));
+	auto* lActor = GetWorld()->SpawnActor(LHandFact);
+	lActor->AttachToComponent(GrabSpringArm, FAttachmentTransformRules::KeepRelativeTransform);
+	lActor->SetActorRelativeLocation(FVector(30, -20, -13));
+	lActor->SetActorRotation(FRotator(0, -90, 0));
+	lActor->SetActorRelativeScale3D(FVector(1.5f));
+
+	RHand = Cast<AKMK_PlayerHand>(rActor);
+	LHand = Cast<AKMK_PlayerHand>(lActor);
+
+	RMeshComp = RHand->hand;
+	//LMeshComp = LHand->hand;
+#pragma endregion
+
 	movementComp = GetCharacterMovement();
 	jumpPower = movementComp->JumpZVelocity;
 	auto* pc = Cast<APlayerController>(Controller);
@@ -154,11 +146,11 @@ void AKMK_Player::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 		// 마우스 클릭
 		// 오른손
 		playerInput->BindAction(IA_ClickR, ETriggerEvent::Started, this, &AKMK_Player::InputMR);
-		playerInput->BindAction(IA_ClickR, ETriggerEvent::Canceled, this, &AKMK_Player::InputMRComp);
+		// playerInput->BindAction(IA_ClickR, ETriggerEvent::Canceled, this, &AKMK_Player::InputMRComp);
 		playerInput->BindAction(IA_ClickR, ETriggerEvent::Completed, this, &AKMK_Player::InputMRComp);
 		// 왼손
 		playerInput->BindAction(IA_ClickL, ETriggerEvent::Started, this, &AKMK_Player::InputML);
-		playerInput->BindAction(IA_ClickR, ETriggerEvent::Canceled, this, &AKMK_Player::InputMRComp);
+		// playerInput->BindAction(IA_ClickL, ETriggerEvent::Canceled, this, &AKMK_Player::InputMLComp);
 		playerInput->BindAction(IA_ClickL, ETriggerEvent::Completed, this, &AKMK_Player::InputMLComp);
 	}
 
@@ -232,19 +224,21 @@ void AKMK_Player::InputE(const struct FInputActionValue& value)
 // 기본 손
 void AKMK_Player::InputNum1(const struct FInputActionValue& value)
 {
-	Rhand->SetStaticMesh(RHandMeshes[0]);
+	RMeshComp->SetStaticMesh(RHand->HandMesh[0]);
 	FSM->PState = PlayerHandFSM::Normal;
 }
 
 // 에너지 충전 손
 void AKMK_Player::InputNum2(const struct FInputActionValue& value)
 {
-	Rhand->SetStaticMesh(RHandMeshes[1]);
+	RMeshComp->SetStaticMesh(RHand->HandMesh[1]);
+	FSM->PState = PlayerHandFSM::GunPack;
 }
 // 점프 손
 void AKMK_Player::InputNum3(const struct FInputActionValue& value)
 {
-	Rhand->SetStaticMesh(RHandMeshes[2]);
+	RMeshComp->SetStaticMesh(RHand->HandMesh[2]);
+	FSM->PState = PlayerHandFSM::JumpPack;
 }
 
 #pragma endregion
@@ -253,7 +247,7 @@ void AKMK_Player::InputNum3(const struct FInputActionValue& value)
 void AKMK_Player::InputMR(const struct FInputActionValue& value)
 {
 	GEngine->AddOnScreenDebugMessage(0, 1, FColor::White, FString::Printf(TEXT("Right")));
-	playerRay->SetRayPos(Rarrow->GetComponentLocation(), Rarrow->GetComponentLocation() + camera->GetForwardVector() * rayDis);
+	playerRay->SetRayPos(RHand->arrow->GetComponentLocation(), RHand->arrow->GetComponentLocation() + camera->GetForwardVector() * rayDis);
 	isRight = true;
 }
 void AKMK_Player::InputMRComp(const struct FInputActionValue& value)
@@ -269,7 +263,7 @@ void AKMK_Player::InputMRComp(const struct FInputActionValue& value)
 void AKMK_Player::InputML(const struct FInputActionValue& value)
 {
 	GEngine->AddOnScreenDebugMessage(0, 1, FColor::White, FString::Printf(TEXT("Left")));
-	playerRay->SetRayPos(Larrow->GetComponentLocation(), endPos);
+	playerRay->SetRayPos(LHand->arrow->GetComponentLocation(), endPos);
 	isLeft = true;
 }
 void AKMK_Player::InputMLComp(const struct FInputActionValue& value)

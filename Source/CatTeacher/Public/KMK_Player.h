@@ -14,6 +14,8 @@ class CATTEACHER_API AKMK_Player : public ACharacter
 public:
 	// Sets default values for this character's properties
 	AKMK_Player();
+#pragma region CreateVar
+
 	UPROPERTY(VisibleAnywhere, Category = "Camera")
 	class USpringArmComponent* springArm = nullptr;
 
@@ -27,21 +29,10 @@ public:
 	class USpringArmComponent* GrabSpringArm = nullptr;
 	UPROPERTY(VisibleAnywhere, Category = "Modeling")
 	class UStaticMeshComponent* armMesh = nullptr;
-	UPROPERTY(VisibleAnywhere, Category = "Modeling")
-	class UStaticMeshComponent* Lhand = nullptr;
-	UPROPERTY(VisibleAnywhere, Category = "Modeling")
-	class UStaticMeshComponent* Rhand = nullptr;
-	UPROPERTY(EditAnywhere, Category = "Modeling")
-	TArray<class UStaticMesh*> RHandMeshes;
-	UPROPERTY(EditAnywhere, Category = "Modeling")
-	class UArrowComponent* Rarrow;
-	UPROPERTY(EditAnywhere, Category = "Modeling")
-	class UArrowComponent* Larrow;
-
 
 	UPROPERTY(VisibleAnywhere, Category = "Ray")
 	class UKMK_PlayerRay* playerRay = nullptr;
-
+#pragma endregion
 
 protected:
 	// Called when the game starts or when spawned
@@ -54,6 +45,19 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+#pragma region HandActorFact
+	UPROPERTY(EditAnywhere, Category = "Hand")
+	TSubclassOf<class AKMK_PlayerHand> LHandFact;
+	UPROPERTY(EditAnywhere, Category = "Hand")
+	TSubclassOf<class AKMK_PlayerHand> RHandFact;
+
+	class AKMK_PlayerHand* LHand;
+	class AKMK_PlayerHand* RHand;
+
+	class UStaticMeshComponent* LMeshComp;
+	class UStaticMeshComponent* RMeshComp;
+#pragma endregion
+
 #pragma region InputVaribles
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	class UInputMappingContext* IMC_Mapping = nullptr;

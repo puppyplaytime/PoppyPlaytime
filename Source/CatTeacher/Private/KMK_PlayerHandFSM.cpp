@@ -4,6 +4,8 @@
 #include "KMK_PlayerHandFSM.h"
 #include "KMK_Player.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Kismet/GameplayStatics.h"
+#include "Particles/ParticleSystem.h"
 
 // Sets default values for this component's properties
 UKMK_PlayerHandFSM::UKMK_PlayerHandFSM()
@@ -58,11 +60,11 @@ void UKMK_PlayerHandFSM::NormalHand()
 // 일정 트리거가 발견되면 점프력을 2배로
 void UKMK_PlayerHandFSM::JumpHand()
 {
-	if(movementComp->JumpZVelocity != JumpPower * 2)
+	if(movementComp->JumpZVelocity != JumpPower * 2 && Player->isRight)
 	{
 		movementComp->JumpZVelocity = JumpPower * 2;
 	}
-	if (!isJump)
+	if (!isJump && Player->isRight)
 	{
 		Player->Jump();
 		isJump = true;
@@ -72,7 +74,14 @@ void UKMK_PlayerHandFSM::JumpHand()
 #pragma region Gun
 void UKMK_PlayerHandFSM::GunHand()
 {
-
+	FTransform trans;
+	trans.SetLocation(bulletTrans);
+	if (isFire)
+	{
+		// 총알 효과 재생
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), bulletFact, trans);
+		isFire = false;
+	}
 }
 #pragma endregion
 #pragma region Energy

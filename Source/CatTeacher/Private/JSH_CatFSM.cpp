@@ -23,40 +23,9 @@ UJSH_CatFSM::UJSH_CatFSM()
 void UJSH_CatFSM::BeginPlay()
 {
 	Super::BeginPlay();
-	
-	// 월드에서 ATPSPlayer 타깃 찾아오기
-	//auto actor = UGameplayStatics::GetActorOfClass(GetWorld(), AKMK_Player::StaticClass());
-	//auto actor = UGameplayStatics::GetAllActorsWithTag(GetWorld(), FName("Target"), AJSH_Target::StaticClass());
-	// ATPSPlayer 타입으로 캐스팅
-	//target = Cast<AKMK_Player>(actor);
+
 	// 소유 객체 가져오기
 	me = Cast<AJSH_Cat>(GetOwner());
-	
-	// 특정 태그를 가진 모든 액터 찾기
-	TArray<AActor*> FoundT2;
-	UGameplayStatics::GetAllActorsWithTag(GetWorld(), FName("T2"), FoundT2);
-	// 찾아낸 액터 중 AJSH_Target 클래스로 캐스팅 가능한 액터를 target01에 할당
-	for (AActor* Actor : FoundT2)
-	{
-		target02 = Cast<AJSH_Target>(Actor);
-		if (target02)
-		{
-			UE_LOG(LogTemp, Warning, TEXT("Found target01 with tag: %s"), *target02->GetName());
-			break;  // 원하는 액터를 찾았으므로 루프를 종료합니다.
-		}
-	}
-
-	TArray<AActor*> FoundT1;
-	UGameplayStatics::GetAllActorsWithTag(GetWorld(), FName("T1"), FoundT1);
-	for (AActor* Actor : FoundT1)
-	{
-		target01 = Cast<AJSH_Target>(Actor);
-		if (target01)
-		{
-			UE_LOG(LogTemp, Warning, TEXT("Found target01 with tag: %s"), *target01->GetName());
-			break;  // 원하는 액터를 찾았으므로 루프를 종료합니다.
-		}
-	}
 }
 
 

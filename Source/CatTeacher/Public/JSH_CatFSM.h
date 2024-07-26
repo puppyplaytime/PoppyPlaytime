@@ -94,23 +94,20 @@ public:
 	UPROPERTY()
 	class AJSH_Cat* me;
 	
-
-
 	
-
-	// 공격 범위
-	UPROPERTY(EditAnywhere, Category=FSM)
-	float attakcRange = 150.0f;
-
-	// 공격 대기 시간
-	UPROPERTY(EditAnywhere, Category=FSM)
-	float attackDelayTime = 2.0f;
 
 	UPROPERTY(EditAnywhere, Category=FSM)
 	float rr = 150.f;
 
 	// 피격 알림 이벤트 함수
 	void OnDamgaeProcess();
+
+	//
+	UPROPERTY(EditAnywhere, Category=FSM)
+	float stTime = 5;
+
+	UPROPERTY(EditAnywhere, Category=FSM)
+	float currentTime = 0;
 
 
 };

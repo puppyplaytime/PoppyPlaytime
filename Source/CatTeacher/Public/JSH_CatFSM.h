@@ -11,7 +11,6 @@
 UENUM(BlueprintType)
 enum class ECatState : uint8
 {
-	
 	RoundMove,
 	MoveWait,
 	TrueMove,
@@ -121,7 +120,7 @@ public:
 
 	UPROPERTY(EditAnywhere, Category=FSM)
 	float currentTime = 0;
-	
 
-
+	FName SelectedTag;
 };
+

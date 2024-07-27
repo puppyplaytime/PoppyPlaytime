@@ -31,6 +31,7 @@ void UJSH_CatFSM::BeginPlay()
 	me = Cast<AJSH_Cat>(GetOwner());
 
 	cState = ECatState::RoundMove;
+	
 }
 
 
@@ -78,112 +79,133 @@ void UJSH_CatFSM::TickComponent(float DeltaTime, ELevelTick TickType, FActorComp
 		break;
 	}
 
-	
-
 	FString logMsg = UEnum::GetValueAsString(cState);
 	GEngine->AddOnScreenDebugMessage(0, 1, FColor::Cyan, logMsg);
+
+	
 }
+
 
 void UJSH_CatFSM::RoundMoveState()
 {
-	static bool bMovingToTarget01 = true; // target01으로 이동 중인지 여부를 나타내는 플래그
+    static bool bMovingToTarget01_FCat1 = true; // FCat1 대상에 대한 이동 플래그
+    static bool bMovingToTarget01_FCat2 = true; // FCat2 대상에 대한 이동 플래그
+    static bool bMovingToTarget01_FCat3 = true; // FCat3 대상에 대한 이동 플래그
 
-	TArray<AActor*> TaggedActors;
-	UGameplayStatics::GetAllActorsWithTag(GetWorld(), FName("FCat1"), TaggedActors);
+    TArray<AActor*> TaggedActors_FCat1;
+    TArray<AActor*> TaggedActors_FCat2;
+    TArray<AActor*> TaggedActors_FCat3;
 
-	// me가 tag1 태그를 가지고 있는지 확인
-	bool bIsTagged = false;
-	for (AActor* Actor : TaggedActors)
-	{
-		if (Actor == me)
-		{
-			bIsTagged = true;
-			break;
-		}
-	}
-	if (bIsTagged)
-	{
-		// me가 tag1 태그를 가진 경우에만 아래 코드를 실행
-		FVector destination;
-		if (bMovingToTarget01)
-		{
-			destination = target01->GetActorLocation();
-		}
-		else
-		{
-			destination = target02->GetActorLocation();
-		}
+    UGameplayStatics::GetAllActorsWithTag(GetWorld(), FName("FCat1"), TaggedActors_FCat1);
+    UGameplayStatics::GetAllActorsWithTag(GetWorld(), FName("FCat2"), TaggedActors_FCat2);
+    UGameplayStatics::GetAllActorsWithTag(GetWorld(), FName("FCat3"), TaggedActors_FCat3);
 
-		FVector dir = destination - me->GetActorLocation();
-		me->AddMovementInput(dir.GetSafeNormal());
+    // me가 FCat1 태그를 가지고 있는지 확인
+    bool bIsTagged_FCat1 = TaggedActors_FCat1.Contains(me);
 
-		float distance = FVector::Dist(me->GetActorLocation(), destination);
-		if (distance < ReachDistance)
-		{
-			// 목표 지점 도착, 이동 목표를 전환
-			bMovingToTarget01 = !bMovingToTarget01;
-		}
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("me does not have the tag1 tag."));
-	}
-	
+    // me가 FCat2 태그를 가지고 있는지 확인
+    bool bIsTagged_FCat2 = TaggedActors_FCat2.Contains(me);
 
+    // me가 FCat3 태그를 가지고 있는지 확인
+    bool bIsTagged_FCat3 = TaggedActors_FCat3.Contains(me);
 
-	
-	// ---------------------------------------------
-	currentTime += GetWorld()->DeltaTimeSeconds;
-	
-	if (currentTime >= stTime)
-	{
-		// 태그 목록
-		TArray<FName> Tags = { FName("F")};
+    if (bIsTagged_FCat1)
+    {
+        // me가 FCat1 태그를 가진 경우에만 아래 코드를 실행
+        FVector destination = bMovingToTarget01_FCat1 ? target01->GetActorLocation() : target02->GetActorLocation();
 
-		// 무작위로 태그 선택
-		int32 RandomIndex = FMath::RandRange(0, Tags.Num() - 1);
-		FName RandomTag = Tags[RandomIndex];
+        FVector dir = destination - me->GetActorLocation();
+        me->AddMovementInput(dir.GetSafeNormal());
 
-		// 선택된 태그를 가진 모든 액터 찾기
-		TArray<AActor*> TaggedCats;
-		UGameplayStatics::GetAllActorsWithTag(GetWorld(), RandomTag, TaggedCats);
-		currentTime = 0;
+        if (FVector::Dist(me->GetActorLocation(), destination) < ReachDistance)
+        {
+            // 목표 지점 도착, 이동 목표를 전환
+            bMovingToTarget01_FCat1 = !bMovingToTarget01_FCat1;
+        }
+    }
+    else if (bIsTagged_FCat2)
+    {
+        // me가 FCat2 태그를 가진 경우에만 아래 코드를 실행
+        FVector destination = bMovingToTarget01_FCat2 ? target01->GetActorLocation() : target02->GetActorLocation();
 
-		// me가 선택된 태그를 가지고 있는지 확인
-		bool bIsTaggedCat = false;
-		for (AActor* Actor : TaggedCats)
-		{
-			if (Actor == me)
-			{
-				bIsTaggedCat = true;
-				break;
-			}
-		}
+        FVector dir = destination - me->GetActorLocation();
+        me->AddMovementInput(dir.GetSafeNormal());
 
-		if (bIsTaggedCat)
-		{
-			UE_LOG(LogTemp, Warning, TEXT("%s is moving to Straight - State with tag %s"), *me->GetName(), *RandomTag.ToString());
-			cState = ECatState::MoveWait;
-		}
-		else
-		{
-			UE_LOG(LogTemp, Warning, TEXT("%s does not have the %s tag or target03 is null."), *me->GetName(), *RandomTag.ToString());
-		}
-	}
+        if (FVector::Dist(me->GetActorLocation(), destination) < ReachDistance)
+        {
+            // 목표 지점 도착, 이동 목표를 전환
+            bMovingToTarget01_FCat2 = !bMovingToTarget01_FCat2;
+        }
+    }
+    else if (bIsTagged_FCat3)
+    {
+        // me가 FCat3 태그를 가진 경우에만 아래 코드를 실행
+        FVector destination = bMovingToTarget01_FCat3 ? target01->GetActorLocation() : target02->GetActorLocation();
+
+        FVector dir = destination - me->GetActorLocation();
+        me->AddMovementInput(dir.GetSafeNormal());
+
+        if (FVector::Dist(me->GetActorLocation(), destination) < ReachDistance)
+        {
+            // 목표 지점 도착, 이동 목표를 전환
+            bMovingToTarget01_FCat3 = !bMovingToTarget01_FCat3;
+        }
+    }
+
+    // ---------------------------------------------
+    currentTime += GetWorld()->DeltaTimeSeconds;
+
+    if (currentTime >= stTime)
+    {
+        // 태그 목록
+        TArray<FName> Tags = { FName("FCat1"), FName("FCat2"), FName("FCat3")};
+
+        // 무작위로 태그 선택
+        int32 RandomIndex = FMath::RandRange(0, Tags.Num() - 1);
+        SelectedTag = Tags[RandomIndex]; // 선택된 태그를 저장
+
+        // 선택된 태그를 가진 모든 액터 찾기
+        TArray<AActor*> TaggedCats;
+        UGameplayStatics::GetAllActorsWithTag(GetWorld(), SelectedTag, TaggedCats);
+        currentTime = 0;
+
+        // me가 선택된 태그를 가지고 있는지 확인
+        bool bIsTaggedCat = TaggedCats.Contains(me);
+
+        if (bIsTaggedCat)
+        {
+            UE_LOG(LogTemp, Warning, TEXT("%s is moving to Straight - State with tag %s"), *me->GetName(), *SelectedTag.ToString());
+            cState = ECatState::MoveWait;
+        }
+    }
 }
 
 void UJSH_CatFSM::MoveWaitState()
 {
-	FVector destinationM = targetMiddle->GetActorLocation();
-	FVector dirM = destinationM - me->GetActorLocation();
-	me->AddMovementInput(dirM.GetSafeNormal());
-	if (dirM.Size() < ReachDistance)
-	{
-		// 상태 전환
-		cState = ECatState::TrueMove;
-	}
-	
+    // me가 선택된 태그를 가지고 있는지 확인
+    TArray<AActor*> TaggedCats;
+    UGameplayStatics::GetAllActorsWithTag(GetWorld(), SelectedTag, TaggedCats);
+
+    bool bIsTaggedCat = TaggedCats.Contains(me);
+
+    if (bIsTaggedCat)
+    {
+        FVector destinationM = targetMiddle->GetActorLocation();
+        FVector dirM = destinationM - me->GetActorLocation();
+        me->AddMovementInput(dirM.GetSafeNormal());
+        if (dirM.Size() < ReachDistance)
+        {
+            // 상태 전환
+            cState = ECatState::TrueMove;
+        }
+    }
+    else
+    {
+        UE_LOG(LogTemp, Warning, TEXT("%s does not have the %s tag."), *me->GetName(), *SelectedTag.ToString());
+    }
 }
+
+
 
 
 void UJSH_CatFSM::TrueMoveState()
@@ -225,4 +247,3 @@ void UJSH_CatFSM::DieState()
 void UJSH_CatFSM::OnDamgaeProcess()
 {
 }
-

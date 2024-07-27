@@ -85,6 +85,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = FSM)
 	class AJSH_Target* target03;
 	
+	
 
 	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = FSM)
 	//class AJSH_Cat*  AttackCat;
@@ -104,7 +105,7 @@ public:
 
 	//
 	UPROPERTY(EditAnywhere, Category=FSM)
-	float stTime = 5;
+	float stTime = 10;
 
 	UPROPERTY(EditAnywhere, Category=FSM)
 	float currentTime = 0;

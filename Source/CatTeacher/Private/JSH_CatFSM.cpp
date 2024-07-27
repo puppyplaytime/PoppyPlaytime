@@ -79,42 +79,34 @@ void UJSH_CatFSM::TickComponent(float DeltaTime, ELevelTick TickType, FActorComp
 
 void UJSH_CatFSM::Move01State()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Move01 - State"));
-	FVector destination1 = target01->GetActorLocation();
-	FVector dir1 = destination1 - me->GetActorLocation();
-	me->AddMovementInput(dir1.GetSafeNormal());
+	static bool bMovingToTarget01 = true; // target01으로 이동 중인지 여부를 나타내는 플래그
 
-	float distance = FVector::Dist(me->GetActorLocation(), destination1);
-	if (dir1.Size() < rr)
+	FVector destination;
+	if (bMovingToTarget01)
 	{
-		// 상태 전환
-		UE_LOG(LogTemp, Warning, TEXT("Move01 to Move02 - State"));
-		cState = ECatState::Move02;
+		destination = target01->GetActorLocation();
 	}
-}
-
-void UJSH_CatFSM::Move02State()
-{
-	UE_LOG(LogTemp, Warning, TEXT("Move02 - State"));
-	FVector destination2 = target02->GetActorLocation();
-	FVector dir2 = destination2 - me->GetActorLocation();
-	me->AddMovementInput(dir2.GetSafeNormal());
-
-	float distance = FVector::Dist(me->GetActorLocation(), destination2);
-	if (dir2.Size() < rr)
+	else
 	{
-		// 상태 전환
-		UE_LOG(LogTemp, Warning, TEXT("Move01 to Move02 - State"));
-		cState = ECatState::Move01;
-		return;
+		destination = target02->GetActorLocation();
 	}
 
+	FVector dir = destination - me->GetActorLocation();
+	me->AddMovementInput(dir.GetSafeNormal());
+
+	float distance = FVector::Dist(me->GetActorLocation(), destination);
+	if (distance < rr)
+	{
+		// 목표 지점 도착, 이동 목표를 전환
+		bMovingToTarget01 = !bMovingToTarget01;
+	}
+	// ---------------------------------------------
 	currentTime += GetWorld()->DeltaTimeSeconds;
 	
 	if (currentTime >= stTime)
 	{
 		// 태그 목록
-		TArray<FName> Tags = { FName("FCat1"), FName("FCat2")};
+		TArray<FName> Tags = { FName("FCat1"), FName("FCat2"), FName("FCat3"), FName("FCat4")};
 
 		// 무작위로 태그 선택
 		int32 RandomIndex = FMath::RandRange(0, Tags.Num() - 1);
@@ -123,6 +115,7 @@ void UJSH_CatFSM::Move02State()
 		// 선택된 태그를 가진 모든 액터 찾기
 		TArray<AActor*> TaggedCats;
 		UGameplayStatics::GetAllActorsWithTag(GetWorld(), RandomTag, TaggedCats);
+		currentTime = 0;
 
 		// me가 선택된 태그를 가지고 있는지 확인
 		bool bIsTaggedCat = false;
@@ -134,17 +127,21 @@ void UJSH_CatFSM::Move02State()
 				break;
 			}
 		}
+
 		if (bIsTaggedCat)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Straight - State"));
+			UE_LOG(LogTemp, Warning, TEXT("%s is moving to Straight - State with tag %s"), *me->GetName(), *RandomTag.ToString());
 			cState = ECatState::Straight;
 		}
 		else
 		{
-			UE_LOG(LogTemp, Warning, TEXT("me does not have the %s tag or target03 is null."), *RandomTag.ToString());
+			UE_LOG(LogTemp, Warning, TEXT("%s does not have the %s tag or target03 is null."), *me->GetName(), *RandomTag.ToString());
 		}
 	}
-	
+}
+
+void UJSH_CatFSM::Move02State()
+{
 }
 
 void UJSH_CatFSM::StraightState()
@@ -153,19 +150,21 @@ void UJSH_CatFSM::StraightState()
 	FVector destination1 = target03->GetActorLocation();
 	FVector dir1 = destination1 - me->GetActorLocation();
 	me->AddMovementInput(dir1.GetSafeNormal());
-
+	
 	if (dir1.Size() < rr)
 	{
 		// 상태 전환
-		cState = ECatState::Move01;
-		UE_LOG(LogTemp, Warning, TEXT("Straight to Move01 - State"));
+                                               
+		return;
 	}
+
+	// 특정 위치 도달 -> AttackState()  ___ Game Over
+	// (환영) 앞으로가다가 , 신호탄 맞음 -> DiscoveryState()  ___ 천천히 사라짐
+	// (진짜)  앞으로가다가 player가 기믹 실행 ->  DieState() ___ destroy 후 본래 왕복 위치 spawn 
 }
 
 void UJSH_CatFSM::DiscoveryState()
 {
-
-	
 }
 
 void UJSH_CatFSM::AttackState()

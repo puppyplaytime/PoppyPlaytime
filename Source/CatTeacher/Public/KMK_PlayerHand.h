@@ -20,6 +20,7 @@ public:
 	TArray<class UStaticMesh*> HandMesh;
 	UPROPERTY(EditAnywhere, Category = "Hand")
 	class UArrowComponent* arrow;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -27,5 +28,13 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
+	UPROPERTY()
+	bool isGo = false;
+	bool isReverse = false;
+	FVector handPos;
+	FVector startPos;
+	FVector endPos;
+	FVector dir;
+	UPROPERTY(EditAnywhere, Category = "Move")
+	float speed = 100;
 };

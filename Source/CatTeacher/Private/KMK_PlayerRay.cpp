@@ -70,10 +70,10 @@ void UKMK_PlayerRay::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 					}
 					else
 					{
-						FVector s = playerComp->RHand->GetActorLocation();
-						FVector e = hitInfo.ImpactPoint;
-						FVector dir = e - s;
-						playerComp->RHand->SetActorLocation(playerComp->RHand->GetActorLocation() + dir * 100 * DeltaTime );
+						playerComp->RHand->handPos = FVector(30, 20, -13);
+						playerComp->RHand->startPos = startPos;
+						playerComp->RHand->endPos = hitInfo.ImpactPoint;
+						playerComp->RHand->isGo = true;
 					}
 				}
 
@@ -87,11 +87,23 @@ void UKMK_PlayerRay::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 				// jump패드를 감지했을때
 				if (playerComp->RMeshComp->GetStaticMesh() == playerComp->RHand->HandMesh[2] && hitInfo.GetActor()->GetActorLabel().Contains("jump"))
 				{
+					playerComp->RHand->handPos = FVector(30, 20, -13);
+					playerComp->RHand->startPos = startPos;
+					playerComp->RHand->endPos = hitInfo.ImpactPoint;
+					playerComp->RHand->isGo = true;
 					FSM->isJump = false;
 					FSM->PState = PlayerHandFSM::JumpPack;
 				}
 
 			}
+			if (playerComp->isLeft)
+			{
+				playerComp->LHand->handPos = FVector(30, -20, -13);
+				playerComp->LHand->startPos = startPos;
+				playerComp->LHand->endPos = hitInfo.ImpactPoint;
+				playerComp->LHand->isGo = true;
+			}
+
 		}
 	}
 }

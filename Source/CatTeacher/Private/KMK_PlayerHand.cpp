@@ -4,6 +4,7 @@
 #include "KMK_PlayerHand.h"
 #include "Components/ArrowComponent.h"
 
+
 // Sets default values
 AKMK_PlayerHand::AKMK_PlayerHand()
 {
@@ -15,7 +16,7 @@ AKMK_PlayerHand::AKMK_PlayerHand()
 	hand->SetRelativeRotation(FRotator(0, -90, 0));
 	hand->SetRelativeScale3D(FVector(1.5f));
 	// 발사 위치만들기
-	arrow = CreateDefaultSubobject<UArrowComponent>(TEXT("LeftFirePos"));
+	arrow = CreateDefaultSubobject<UArrowComponent>(TEXT("FirePos"));
 	arrow->SetupAttachment(hand);
 	arrow->SetRelativeLocationAndRotation(FVector(0, 10, 2.2f), FRotator(0, 90, 0));
 	arrow->SetRelativeScale3D(FVector(0.2f));
@@ -25,6 +26,7 @@ AKMK_PlayerHand::AKMK_PlayerHand()
 void AKMK_PlayerHand::BeginPlay()
 {
 	Super::BeginPlay();
+
 	hand->SetStaticMesh(HandMesh[0]);
 }
 
@@ -32,6 +34,28 @@ void AKMK_PlayerHand::BeginPlay()
 void AKMK_PlayerHand::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	if (isGo)
+	{
+		dir = endPos - GetActorLocation();
+		if (dir.Length() < 10)
+		{
+			isGo = false;
+			isReverse = true;
+		}
+		dir.Normalize();
+		SetActorLocation(GetActorLocation() + dir * speed * DeltaTime);
+		
+	}
+	if (isReverse)
+	{
+		dir = startPos - GetActorLocation();
+		dir.Normalize();
+		SetActorLocation(GetActorLocation() + dir * speed * DeltaTime);
+		if ((startPos - GetActorLocation()).Length() < 4)
+		{
+			isReverse = false;
+			SetActorRelativeLocation(handPos);
+		}
+	}
 }
 

@@ -32,6 +32,11 @@ public:
 
 	UPROPERTY(VisibleAnywhere, Category = "Ray")
 	class UKMK_PlayerRay* playerRay = nullptr;
+
+	UPROPERTY(EditAnywhere, Category = "Hand")
+	class UCableComponent* Rcable;
+	UPROPERTY(EditAnywhere, Category = "Hand")
+	class UCableComponent* Lcable;
 #pragma endregion
 
 protected:

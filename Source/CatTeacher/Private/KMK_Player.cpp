@@ -16,6 +16,8 @@
 #include "KMK_PlayerRay.h"
 #include "Components/ArrowComponent.h"
 #include "KMK_PlayerHand.h"
+#include "../../../../Plugins/Runtime/CableComponent/Source/CableComponent/Classes/CableComponent.h"
+
 // Sets default values
 AKMK_Player::AKMK_Player()
 {
@@ -51,6 +53,16 @@ AKMK_Player::AKMK_Player()
 	armMesh->SetupAttachment(GrabSpringArm);
 	armMesh->SetRelativeLocationAndRotation(FVector(0, 0, 0), FRotator(0, -90, 0));
 	armMesh->SetRelativeScale3D(FVector(1.5f));
+
+	Rcable = CreateDefaultSubobject<UCableComponent>(TEXT("RCable"));
+	Rcable->CableWidth = 3;
+	Rcable->SetupAttachment(GrabSpringArm);
+	Rcable->SetRelativeLocation(FVector(30, 20, -13));
+
+	Lcable = CreateDefaultSubobject<UCableComponent>(TEXT("LCable"));
+	Lcable->CableWidth = 3;
+	Lcable->SetupAttachment(GrabSpringArm);
+	Lcable->SetRelativeLocation(FVector(30, -20, -13));
 #pragma endregion
 
 	// 점프 횟수 제한
@@ -78,8 +90,11 @@ void AKMK_Player::BeginPlay()
 	lActor->SetActorRelativeScale3D(FVector(1.5f));
 
 	RHand = Cast<AKMK_PlayerHand>(rActor);
+	Rcable->SetAttachEndTo(rActor, rActor->GetFName());
+	Rcable->EndLocation = FVector(0);
 	LHand = Cast<AKMK_PlayerHand>(lActor);
-
+	Lcable->SetAttachEndTo(rActor, lActor->GetFName());
+	Lcable->EndLocation = FVector(0);
 	RMeshComp = RHand->hand;
 	//LMeshComp = LHand->hand;
 #pragma endregion

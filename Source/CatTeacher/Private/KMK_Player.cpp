@@ -51,18 +51,30 @@ AKMK_Player::AKMK_Player()
 		armMesh->SetStaticMesh(tempMesh.Object);
 	}
 	armMesh->SetupAttachment(GrabSpringArm);
-	armMesh->SetRelativeLocationAndRotation(FVector(0, 0, 0), FRotator(0, -90, 0));
+	armMesh->SetRelativeRotation(FRotator(0, -90, 0));
 	armMesh->SetRelativeScale3D(FVector(1.5f));
 
-	Rcable = CreateDefaultSubobject<UCableComponent>(TEXT("RCable"));
-	Rcable->CableWidth = 3;
-	Rcable->SetupAttachment(GrabSpringArm);
-	Rcable->SetRelativeLocation(FVector(30, 20, -13));
+	CableComp.Add(CreateDefaultSubobject<UCableComponent>(TEXT("RCable")));
+	SceneComp.Add(CreateDefaultSubobject<USceneComponent>(TEXT("RScene")));
+	CableComp[0]->SetupAttachment(GrabSpringArm);
+	SceneComp[0]->SetupAttachment(GrabSpringArm);
+	CableComp[0]->SetRelativeLocationAndRotation(FVector(30, 20, -13), FRotator(0, 0, 0));
+	SceneComp[0]->SetRelativeLocationAndRotation(FVector(30, 20, -13), FRotator(0, 0, 0));
+	CableComp[0]->SetCollisionProfileName("Hand");
+	CableComp[0]->CableWidth = 3;
+	CableComp[0]->EndLocation = FVector(0);
+	
+	// SceneComp.Add(CreateDefaultSubobject<USceneComponent>(TEXT("LScene")));
+	CableComp.Add(CreateDefaultSubobject<UCableComponent>(TEXT("LCable")));
+	SceneComp.Add(CreateDefaultSubobject<USceneComponent>(TEXT("LScene")));
+	CableComp[1]->SetupAttachment(GrabSpringArm);
+	SceneComp[1]->SetupAttachment(GrabSpringArm);
+	CableComp[1]->SetRelativeLocationAndRotation(FVector(30, -20, -13), FRotator(0, 0, 0));
+	SceneComp[1]->SetRelativeLocationAndRotation(FVector(30, -20, -13), FRotator(0, 0, 0));
+	CableComp[1]->SetCollisionProfileName("Hand");
+	CableComp[1]->CableWidth = 3;
+	CableComp[1]->EndLocation = FVector(0);
 
-	Lcable = CreateDefaultSubobject<UCableComponent>(TEXT("LCable"));
-	Lcable->CableWidth = 3;
-	Lcable->SetupAttachment(GrabSpringArm);
-	Lcable->SetRelativeLocation(FVector(30, -20, -13));
 #pragma endregion
 
 	// 점프 횟수 제한
@@ -78,23 +90,21 @@ void AKMK_Player::BeginPlay()
 {
 	Super::BeginPlay();
 #pragma region Create Hand
-	auto* rActor = GetWorld()->SpawnActor(RHandFact);
+	rActor = GetWorld()->SpawnActor(RHandFact);
 	rActor->AttachToComponent(GrabSpringArm, FAttachmentTransformRules::KeepRelativeTransform);
 	rActor->SetActorRelativeLocation(FVector(30, 20, -13));
 	rActor->SetActorRotation(FRotator(0, -90, 0));
 	rActor->SetActorRelativeScale3D(FVector(1.5f));
-	auto* lActor = GetWorld()->SpawnActor(LHandFact);
+
+	lActor = GetWorld()->SpawnActor(LHandFact);
 	lActor->AttachToComponent(GrabSpringArm, FAttachmentTransformRules::KeepRelativeTransform);
 	lActor->SetActorRelativeLocation(FVector(30, -20, -13));
 	lActor->SetActorRotation(FRotator(0, -90, 0));
 	lActor->SetActorRelativeScale3D(FVector(1.5f));
+	//CableComp[1]->SetAttachEndTo(lActor, lActor->GetFName(), "LeftCable");
 
 	RHand = Cast<AKMK_PlayerHand>(rActor);
-	Rcable->SetAttachEndTo(rActor, rActor->GetFName());
-	Rcable->EndLocation = FVector(0);
 	LHand = Cast<AKMK_PlayerHand>(lActor);
-	Lcable->SetAttachEndTo(rActor, lActor->GetFName());
-	Lcable->EndLocation = FVector(0);
 	RMeshComp = RHand->hand;
 	//LMeshComp = LHand->hand;
 #pragma endregion
@@ -119,6 +129,8 @@ void AKMK_Player::Tick(float DeltaTime)
 	// 이동하기
 	// 회전방향으로 이동
 	// 1. controller rotation을 통해 transform 생성
+	RHand->startPos = SceneComp[0]->GetComponentLocation();
+	LHand->startPos = SceneComp[1]->GetComponentLocation();
 	FTransform t = FTransform(GetControlRotation());
 	dir = t.TransformVector(dir);
 	// 이동 인풋
@@ -128,6 +140,8 @@ void AKMK_Player::Tick(float DeltaTime)
 	// 계속 레이 쏘기
 	startPos = camera->GetComponentLocation();
 	endPos = startPos + camera->GetForwardVector() * rayDis;
+	CableComp[0]->SetAttachEndTo(rActor, NAME_None);
+	CableComp[1]->SetAttachEndTo(lActor, NAME_None);
 }
 
 // Called to bind functionality to input
@@ -262,7 +276,8 @@ void AKMK_Player::InputNum3(const struct FInputActionValue& value)
 void AKMK_Player::InputMR(const struct FInputActionValue& value)
 {
 	GEngine->AddOnScreenDebugMessage(0, 1, FColor::White, FString::Printf(TEXT("Right")));
-	playerRay->SetRayPos(RHand->arrow->GetComponentLocation(), RHand->arrow->GetComponentLocation() + camera->GetForwardVector() * rayDis);
+	//playerRay->SetRayPos(RHand->arrow->GetComponentLocation(), RHand->arrow->GetComponentLocation() + camera->GetForwardVector() * rayDis);
+	playerRay->SetRayPos(startPos, endPos);
 	isRight = true;
 }
 void AKMK_Player::InputMRComp(const struct FInputActionValue& value)
@@ -278,7 +293,7 @@ void AKMK_Player::InputMRComp(const struct FInputActionValue& value)
 void AKMK_Player::InputML(const struct FInputActionValue& value)
 {
 	GEngine->AddOnScreenDebugMessage(0, 1, FColor::White, FString::Printf(TEXT("Left")));
-	playerRay->SetRayPos(LHand->arrow->GetComponentLocation(), endPos);
+	playerRay->SetRayPos(startPos, endPos);
 	isLeft = true;
 }
 void AKMK_Player::InputMLComp(const struct FInputActionValue& value)

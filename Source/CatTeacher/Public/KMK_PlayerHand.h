@@ -20,6 +20,9 @@ public:
 	TArray<class UStaticMesh*> HandMesh;
 	UPROPERTY(EditAnywhere, Category = "Hand")
 	class UArrowComponent* arrow;
+	UPROPERTY(EditAnywhere, Category = "Hand")
+	class UBoxComponent* box;
+	class AKMK_Player* player;
 
 protected:
 	// Called when the game starts or when spawned
@@ -32,9 +35,24 @@ public:
 	bool isGo = false;
 	bool isReverse = false;
 	FVector handPos;
+	FVector pos;
 	FVector startPos;
 	FVector endPos;
 	FVector dir;
+	
 	UPROPERTY(EditAnywhere, Category = "Move")
 	float speed = 100;
+
+	float t = 0;
+	UPROPERTY(EditAnywhere, Category = "Shoot")
+	float ShootTime = 3;
+
+	UFUNCTION()
+	// 오버랩 감지를 위한 함수 선언
+	virtual void BeginOverlap(UPrimitiveComponent* OverlappedComponent,
+	AActor* OtherActor,
+	UPrimitiveComponent* OtherComp,
+	int32 OtherBodyIndex,
+	bool bFromSweep,
+	const FHitResult& SweepResult);
 };

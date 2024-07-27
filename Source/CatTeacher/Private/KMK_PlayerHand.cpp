@@ -3,6 +3,9 @@
 
 #include "KMK_PlayerHand.h"
 #include "Components/ArrowComponent.h"
+#include "../../../../Plugins/Runtime/CableComponent/Source/CableComponent/Classes/CableComponent.h"
+#include "KMK_Player.h"
+#include "Components/BoxComponent.h"
 
 
 // Sets default values
@@ -15,47 +18,71 @@ AKMK_PlayerHand::AKMK_PlayerHand()
 	SetRootComponent(hand);
 	hand->SetRelativeRotation(FRotator(0, -90, 0));
 	hand->SetRelativeScale3D(FVector(1.5f));
+	hand->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	// 발사 위치만들기
 	arrow = CreateDefaultSubobject<UArrowComponent>(TEXT("FirePos"));
 	arrow->SetupAttachment(hand);
 	arrow->SetRelativeLocationAndRotation(FVector(0, 10, 2.2f), FRotator(0, 90, 0));
 	arrow->SetRelativeScale3D(FVector(0.2f));
+	// 콜리전
+	box = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxComp"));
+	box->SetupAttachment(RootComponent);
+	box->SetCollisionProfileName("Hand");
+	box->SetRelativeLocation(FVector(0, 2, 4));
+	box->SetBoxExtent(FVector(5, 2, 5));
 }
 
 // Called when the game starts or when spawned
 void AKMK_PlayerHand::BeginPlay()
 {
 	Super::BeginPlay();
-
+	player = Cast<AKMK_Player>(GetWorld()->GetFirstPlayerController()->GetPawn());
 	hand->SetStaticMesh(HandMesh[0]);
+	box->OnComponentBeginOverlap.AddDynamic(this, &AKMK_PlayerHand::BeginOverlap);
 }
 
 // Called every frame
 void AKMK_PlayerHand::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	if (t > ShootTime)
+	{
+		isGo = false;
+		isReverse = true;
+	}
 	if (isGo)
 	{
+		t += DeltaTime;
 		dir = endPos - GetActorLocation();
-		if (dir.Length() < 10)
+		float distance = dir.Length();
+		dir.Normalize();
+		SetActorLocation(GetActorLocation() + dir * speed * DeltaTime);
+		
+		if(distance < 5)
 		{
 			isGo = false;
 			isReverse = true;
 		}
-		dir.Normalize();
-		SetActorLocation(GetActorLocation() + dir * speed * DeltaTime);
 		
 	}
 	if (isReverse)
 	{
+		t= 0;
 		dir = startPos - GetActorLocation();
+		float distance = dir.Length();
 		dir.Normalize();
-		SetActorLocation(GetActorLocation() + dir * speed * DeltaTime);
-		if ((startPos - GetActorLocation()).Length() < 4)
+		SetActorLocation(GetActorLocation() + dir * speed / 2 * DeltaTime);
+		if (distance < 5.f)
 		{
 			isReverse = false;
 			SetActorRelativeLocation(handPos);
 		}
 	}
+	
 }
 
+void AKMK_PlayerHand::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	isGo = false;
+	isReverse = true;
+}

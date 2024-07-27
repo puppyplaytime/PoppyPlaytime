@@ -34,9 +34,9 @@ public:
 	class UKMK_PlayerRay* playerRay = nullptr;
 
 	UPROPERTY(EditAnywhere, Category = "Hand")
-	class UCableComponent* Rcable;
+	TArray<class UCableComponent*> CableComp;
 	UPROPERTY(EditAnywhere, Category = "Hand")
-	class UCableComponent* Lcable;
+	TArray<class USceneComponent*> SceneComp;
 #pragma endregion
 
 protected:
@@ -58,6 +58,8 @@ public:
 
 	class AKMK_PlayerHand* LHand;
 	class AKMK_PlayerHand* RHand;
+	class AActor* rActor;
+	class AActor* lActor;
 
 	class UStaticMeshComponent* LMeshComp;
 	class UStaticMeshComponent* RMeshComp;

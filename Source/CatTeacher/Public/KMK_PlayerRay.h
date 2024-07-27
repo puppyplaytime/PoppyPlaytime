@@ -39,6 +39,7 @@ public:
 	class AKMK_Player* playerComp;
 	UPROPERTY()
 	bool isRay = false;
+	float RayDistance =0;
 #pragma endregion
 
 

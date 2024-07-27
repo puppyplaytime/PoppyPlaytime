@@ -11,12 +11,15 @@
 UENUM(BlueprintType)
 enum class ECatState : uint8
 {
-	Move01,
-	Move02,
-	Straight,
+	
+	RoundMove,
+	MoveWait,
+	TrueMove,
+	FalseMove,
+	Ceiling,
 	Attack,
 	Discovery,
-	Damage,
+	Blocked,
 	Die,
 };
 
@@ -42,7 +45,7 @@ public:
 public:
 	// 상태 변수
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=FSM)
-	ECatState cState = ECatState::Move01;
+	ECatState cState = ECatState::RoundMove;
 
 
 	
@@ -50,22 +53,28 @@ public:
 	//-----------------------------------------------------------------
 
 	// 대기 왕복 움직임 상태
-	void Move01State();
+	void RoundMoveState();
+	
+	// 진짜 이동
+	void MoveWaitState();
 
-	// 대기 왕복 움직임 상태
-	void Move02State();
+	// 진짜 이동
+	void TrueMoveState();
 
-	// 이동 상태
-	void StraightState();
+	// 가짜 이동
+	void FalseMoveState();
 
-	// 이동 상태
+	// 천장
+	void CeilingState();
+
+	// 가짜 발견 상태
 	void DiscoveryState();
 	
 	// 공격 상태
 	void AttackState();
 
-	// 피격 상태
-	void DamageState();
+	// 길 막혔을때
+	void BlockedState();
 
 	// 죽음 상태
 	void DieState();
@@ -81,9 +90,12 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = FSM)
 	class AJSH_Target* target02;
 	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = FSM)
+	class AJSH_Target* targetMiddle;
+	
 	// player
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = FSM)
-	class AJSH_Target* target03;
+	class AJSH_Target* targetPlayer;
 	
 	
 
@@ -98,17 +110,18 @@ public:
 	
 
 	UPROPERTY(EditAnywhere, Category=FSM)
-	float rr = 150.f;
+	float ReachDistance = 150.0f;
 
 	// 피격 알림 이벤트 함수
 	void OnDamgaeProcess();
 
 	//
 	UPROPERTY(EditAnywhere, Category=FSM)
-	float stTime = 10;
+	float stTime = 5;
 
 	UPROPERTY(EditAnywhere, Category=FSM)
 	float currentTime = 0;
+	
 
 
 };

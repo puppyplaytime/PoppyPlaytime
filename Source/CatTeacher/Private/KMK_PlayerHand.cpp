@@ -1,14 +1,15 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
+#include "KMK_PlayerHand.h"
 #include "../../../../Plugins/Runtime/CableComponent/Source/CableComponent/Classes/CableComponent.h"
 #include "Components/ArrowComponent.h"
 #include "PhysicsEngine/PhysicsHandleComponent.h"
 #include "Components/BoxComponent.h"
 #include "KMK_Player.h"
-#include "KMK_PlayerHand.h"
 #include "KMK_PlayerHandFSM.h"
-
+#include "Components/PrimitiveComponent.h"
+#include "GameFramework/MovementComponent.h"
+#include "KMK_Battery.h"
 
 // Sets default values
 AKMK_PlayerHand::AKMK_PlayerHand()
@@ -51,6 +52,7 @@ void AKMK_PlayerHand::BeginPlay()
 void AKMK_PlayerHand::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	
 	if (t > ShootTime && !isRay)
 	{
 		isGo = false;
@@ -85,7 +87,27 @@ void AKMK_PlayerHand::Tick(float DeltaTime)
 			SetActorRelativeLocation(FVector(30, handPos, -13));
 		}
 	}
-	
+	if (isGrab)
+	{
+		handle->SetTargetLocationAndRotation(GetTargetLocation(), hand->GetComponentRotation());
+	}
+	else
+	{
+		if (grabActor != nullptr)
+		{
+			SetActorEnableCollision(false);
+			grabActor->isThrow = true;
+			grabActor->isGrab = false;
+			handle->ReleaseComponent();
+			grabActor->throwPos = endPos;
+			grabActor = nullptr;
+		}
+		else
+		{
+			SetActorEnableCollision(true);
+		}
+	}
+
 }
 
 // 손이 다른 물체들과 닿는 경우
@@ -102,9 +124,17 @@ void AKMK_PlayerHand::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 		FSM->t = 0;
 		FSM->isCharge = true;
 	}
+	
 	if (OtherActor->GetActorLabel().Contains("battery") && player->RMeshComp->GetStaticMesh() != player->RHand->HandMesh[2])
 	{
-		OtherActor->AttachToComponent(hand, FAttachmentTransformRules::KeepWorldTransform);
+		grabActor = Cast<AKMK_Battery>(OtherActor);
+		if(!grabActor->isGrab)
+		{
+			handle->GrabComponentAtLocationWithRotation(hitinfo, NAME_None, GetTargetLocation(), hand->GetComponentRotation());
+			grabActor->isGrab = true;
+			isGrab = true;
+		}
+
 	}
 	isGo = false;
 	isReverse = true;

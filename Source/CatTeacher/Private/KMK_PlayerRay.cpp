@@ -58,6 +58,11 @@ void UKMK_PlayerRay::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 		GEngine->AddOnScreenDebugMessage(1, 1, FColor::Blue, FString::Printf(TEXT("hi")));
 		if(playerComp->isRight)
 		{
+			if (playerComp->RHand->isGrab)
+			{
+				playerComp->RHand->isGrab = false;
+				playerComp->RHand->endPos = playerComp->endPos;
+			}
 			if(bhit1)
 			{
 				// jump패드를 감지했을때
@@ -69,26 +74,18 @@ void UKMK_PlayerRay::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 				}
 				else
 				{
+					playerComp->RHand->hitinfo = hitInfo.GetComponent();
 					// 레이가 맞은곳으로 손뻗기
 					playerComp->RHand->handPos = 20;
 					playerComp->RHand->endPos = hitInfo.ImpactPoint;
 					playerComp->RHand->isGo = true;
 				}
-				//// jump패드를 감지했을때
-				//if (playerComp->RMeshComp->GetStaticMesh() == playerComp->RHand->HandMesh[2] && hitInfo.GetActor()->GetActorLabel().Contains("jump"))
-				//{
-				//	playerComp->RHand->handPos = 20;
-				//	playerComp->RHand->endPos = hitInfo.ImpactPoint;
-				//	playerComp->RHand->isGo = true;
-				//	playerComp->RHand->isRay = true;
-				//}
 			}
 			else
 			{
 				if (playerComp->RMeshComp->GetStaticMesh() != playerComp->RHand->HandMesh[1])
 				{
 					playerComp->RHand->handPos = 20;
-					playerComp->RHand->endPos = hitInfo.ImpactPoint;
 					playerComp->RHand->endPos = playerComp->endPos;
 					playerComp->RHand->isGo = true;
 				}
@@ -97,7 +94,11 @@ void UKMK_PlayerRay::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 		if (playerComp->isLeft)
 		{
 			playerComp->LHand->handPos = -20;
-			if (bhit1)playerComp->LHand->endPos = hitInfo.ImpactPoint;
+			if (bhit1)
+			{
+				playerComp->LHand->endPos = hitInfo.ImpactPoint;
+				playerComp->LHand->hitinfo = hitInfo.GetComponent();
+			}
 			else playerComp->LHand->endPos = playerComp->endPos;
 			playerComp->LHand->isGo = true;
 			playerComp->RHand->isRay = true;

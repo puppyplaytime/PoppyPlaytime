@@ -50,7 +50,9 @@ public:
 	
 	class UKMK_PlayerHandFSM* FSM;
 	// 물건을 잡을 수 있게하는 컴포넌트 
-	class UPhysicsHandleComponent* handle;
+	class UPhysicsHandleComponent* handle = nullptr;
+	class UPrimitiveComponent* hitinfo;
+	bool isGrab = false;
 
 	UFUNCTION()
 	// 오버랩 감지를 위한 함수 선언
@@ -60,4 +62,6 @@ public:
 	int32 OtherBodyIndex,
 	bool bFromSweep,
 	const FHitResult& SweepResult);
+
+	class AKMK_Battery* grabActor;
 };

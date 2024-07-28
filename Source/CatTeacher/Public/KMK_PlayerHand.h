@@ -49,6 +49,8 @@ public:
 	float ShootTime = 3;
 	
 	class UKMK_PlayerHandFSM* FSM;
+	// 물건을 잡을 수 있게하는 컴포넌트 
+	class UPhysicsHandleComponent* handle;
 
 	UFUNCTION()
 	// 오버랩 감지를 위한 함수 선언

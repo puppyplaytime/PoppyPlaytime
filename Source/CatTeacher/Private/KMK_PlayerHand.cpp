@@ -1,12 +1,13 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "KMK_PlayerHand.h"
-#include "Components/ArrowComponent.h"
 #include "../../../../Plugins/Runtime/CableComponent/Source/CableComponent/Classes/CableComponent.h"
-#include "KMK_Player.h"
-#include "KMK_PlayerHandFSM.h"
+#include "Components/ArrowComponent.h"
+#include "PhysicsEngine/PhysicsHandleComponent.h"
 #include "Components/BoxComponent.h"
+#include "KMK_Player.h"
+#include "KMK_PlayerHand.h"
+#include "KMK_PlayerHandFSM.h"
 
 
 // Sets default values
@@ -31,6 +32,9 @@ AKMK_PlayerHand::AKMK_PlayerHand()
 	box->SetCollisionProfileName("Hand");
 	box->SetRelativeLocation(FVector(0, 2, 4));
 	box->SetBoxExtent(FVector(5, 2, 5));
+	// 물건을 잡기 위한 handle
+	handle = CreateDefaultSubobject<UPhysicsHandleComponent>(TEXT("Handle"));
+
 }
 
 // Called when the game starts or when spawned
@@ -100,7 +104,7 @@ void AKMK_PlayerHand::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 	}
 	if (OtherActor->GetActorLabel().Contains("battery") && player->RMeshComp->GetStaticMesh() != player->RHand->HandMesh[2])
 	{
-		OtherActor->AttachToActor(GetOwner(), FAttachmentTransformRules::KeepRelativeTransform);
+		OtherActor->AttachToComponent(hand, FAttachmentTransformRules::KeepWorldTransform);
 	}
 	isGo = false;
 	isReverse = true;

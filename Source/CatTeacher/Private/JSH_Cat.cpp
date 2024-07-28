@@ -2,7 +2,6 @@
 
 
 #include "JSH_Cat.h"
-
 #include "JSH_CatFSM.h"
 
 // Sets default values

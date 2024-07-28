@@ -11,7 +11,6 @@
 UENUM(BlueprintType)
 enum class ECatState : uint8
 {
-	
 	RoundMove,
 	MoveWait,
 	TrueMove,
@@ -83,6 +82,7 @@ public:
 
 
 	
+	
 	// 왕복 타깃
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = FSM)
 	class AJSH_Target* target01;
@@ -111,17 +111,25 @@ public:
 
 	UPROPERTY(EditAnywhere, Category=FSM)
 	float ReachDistance = 150.0f;
-
-	// 피격 알림 이벤트 함수
-	void OnDamgaeProcess();
-
-	//
+	
 	UPROPERTY(EditAnywhere, Category=FSM)
 	float stTime = 5;
 
 	UPROPERTY(EditAnywhere, Category=FSM)
 	float currentTime = 0;
+
+public:
+	FTimerHandle TagSelectionTimerHandle;
 	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=FSM)
+	FName SelectedTag;
 
+	// 상태 변경 함수
+	void UpdateState();
 
+	
 };
+
+
+
+

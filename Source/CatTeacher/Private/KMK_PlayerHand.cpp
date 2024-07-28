@@ -5,6 +5,7 @@
 #include "Components/ArrowComponent.h"
 #include "../../../../Plugins/Runtime/CableComponent/Source/CableComponent/Classes/CableComponent.h"
 #include "KMK_Player.h"
+#include "KMK_PlayerHandFSM.h"
 #include "Components/BoxComponent.h"
 
 
@@ -39,13 +40,14 @@ void AKMK_PlayerHand::BeginPlay()
 	player = Cast<AKMK_Player>(GetWorld()->GetFirstPlayerController()->GetPawn());
 	hand->SetStaticMesh(HandMesh[0]);
 	box->OnComponentBeginOverlap.AddDynamic(this, &AKMK_PlayerHand::BeginOverlap);
+	// FSM = player->FSM;
 }
 
 // Called every frame
 void AKMK_PlayerHand::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	if (t > ShootTime)
+	if (t > ShootTime && !isRay)
 	{
 		isGo = false;
 		isReverse = true;
@@ -75,14 +77,31 @@ void AKMK_PlayerHand::Tick(float DeltaTime)
 		if (distance < 5.f)
 		{
 			isReverse = false;
-			SetActorRelativeLocation(handPos);
+			isRay = false;
+			SetActorRelativeLocation(FVector(30, handPos, -13));
 		}
 	}
 	
 }
 
+// 손이 다른 물체들과 닿는 경우
 void AKMK_PlayerHand::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+	if (OtherActor->GetActorLabel().Contains("jump"))
+	{
+		FSM->isJump = true;
+		FSM->PState = PlayerHandFSM::JumpPack;
+	}
+	if (player->RMeshComp->GetStaticMesh() == player->RHand->HandMesh[0] && OtherActor->GetActorLabel().Contains("ElectricalPanel"))
+	{
+		FSM->PState = PlayerHandFSM::Energy;
+		FSM->t = 0;
+		FSM->isCharge = true;
+	}
+	if (OtherActor->GetActorLabel().Contains("battery") && player->RMeshComp->GetStaticMesh() != player->RHand->HandMesh[2])
+	{
+		OtherActor->AttachToActor(GetOwner(), FAttachmentTransformRules::KeepRelativeTransform);
+	}
 	isGo = false;
 	isReverse = true;
 }

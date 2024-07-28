@@ -34,7 +34,8 @@ public:
 	UPROPERTY()
 	bool isGo = false;
 	bool isReverse = false;
-	FVector handPos;
+	bool isRay = false;
+	float handPos;
 	FVector pos;
 	FVector startPos;
 	FVector endPos;
@@ -46,6 +47,8 @@ public:
 	float t = 0;
 	UPROPERTY(EditAnywhere, Category = "Shoot")
 	float ShootTime = 3;
+	
+	class UKMK_PlayerHandFSM* FSM;
 
 	UFUNCTION()
 	// 오버랩 감지를 위한 함수 선언

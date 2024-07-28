@@ -120,6 +120,9 @@ void AKMK_Player::BeginPlay()
 			subSys->AddMappingContext(IMC_Mapping, 0);
 		}
 	}
+
+	LHand->FSM = FSM;
+	RHand->FSM = FSM;
 }
 
 // Called every frame

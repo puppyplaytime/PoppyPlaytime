@@ -58,47 +58,49 @@ void UKMK_PlayerRay::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 		GEngine->AddOnScreenDebugMessage(1, 1, FColor::Blue, FString::Printf(TEXT("hi")));
 		if(playerComp->isRight)
 		{
-			// energy패드 들고있을때
-			if (playerComp->RMeshComp->GetStaticMesh() == playerComp->RHand->HandMesh[0])
+			if(bhit1)
 			{
-				playerComp->RHand->handPos = FVector(30, 20, -13);
-				if (bhit1)playerComp->RHand->endPos = hitInfo.ImpactPoint;
-				else playerComp->RHand->endPos = playerComp->endPos;
-				playerComp->RHand->isGo = true;
-
-				if (bhit1 && hitInfo.GetActor()->GetActorLabel().Contains("ElectricalPanel"))
+				// jump패드를 감지했을때
+				if (playerComp->RMeshComp->GetStaticMesh() == playerComp->RHand->HandMesh[1])
 				{
-					FSM->PState = PlayerHandFSM::Energy;
-					FSM->t = 0;
-					FSM->isCharge = true;
+					FSM->bulletTrans = hitInfo.ImpactPoint;
+					FSM->isFire	= true;
+					FSM->PState = PlayerHandFSM::GunPack;
+				}
+				else
+				{
+					// 레이가 맞은곳으로 손뻗기
+					playerComp->RHand->handPos = 20;
+					playerComp->RHand->endPos = hitInfo.ImpactPoint;
+					playerComp->RHand->isGo = true;
+				}
+				//// jump패드를 감지했을때
+				//if (playerComp->RMeshComp->GetStaticMesh() == playerComp->RHand->HandMesh[2] && hitInfo.GetActor()->GetActorLabel().Contains("jump"))
+				//{
+				//	playerComp->RHand->handPos = 20;
+				//	playerComp->RHand->endPos = hitInfo.ImpactPoint;
+				//	playerComp->RHand->isGo = true;
+				//	playerComp->RHand->isRay = true;
+				//}
+			}
+			else
+			{
+				if (playerComp->RMeshComp->GetStaticMesh() != playerComp->RHand->HandMesh[1])
+				{
+					playerComp->RHand->handPos = 20;
+					playerComp->RHand->endPos = hitInfo.ImpactPoint;
+					playerComp->RHand->endPos = playerComp->endPos;
+					playerComp->RHand->isGo = true;
 				}
 			}
-
-			// jump패드를 감지했을때
-			if (bhit1 && playerComp->RMeshComp->GetStaticMesh() == playerComp->RHand->HandMesh[1])
-			{
-				FSM->bulletTrans = hitInfo.ImpactPoint;
-				FSM->isFire	= true;
-				FSM->PState = PlayerHandFSM::GunPack;
-			}
-			// jump패드를 감지했을때
-			if (playerComp->RMeshComp->GetStaticMesh() == playerComp->RHand->HandMesh[2] && hitInfo.GetActor()->GetActorLabel().Contains("jump"))
-			{
-				playerComp->RHand->handPos = FVector(30, 20, -13);
-				if (bhit1)playerComp->RHand->endPos = hitInfo.ImpactPoint;
-				else playerComp->RHand->endPos = playerComp->endPos;
-				playerComp->RHand->isGo = true;
-				FSM->isJump = false;
-				FSM->PState = PlayerHandFSM::JumpPack;
-			}
-
 		}
 		if (playerComp->isLeft)
 		{
-			playerComp->LHand->handPos = FVector(30, -20, -13);
+			playerComp->LHand->handPos = -20;
 			if (bhit1)playerComp->LHand->endPos = hitInfo.ImpactPoint;
 			else playerComp->LHand->endPos = playerComp->endPos;
 			playerComp->LHand->isGo = true;
+			playerComp->RHand->isRay = true;
 		}
 
 		

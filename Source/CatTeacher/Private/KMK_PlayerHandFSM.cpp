@@ -60,14 +60,18 @@ void UKMK_PlayerHandFSM::NormalHand()
 // 일정 트리거가 발견되면 점프력을 2배로
 void UKMK_PlayerHandFSM::JumpHand()
 {
-	if(movementComp->JumpZVelocity != JumpPower * 2 && Player->isRight)
+	if(isJump)
 	{
-		movementComp->JumpZVelocity = JumpPower * 2;
+		if(movementComp->JumpZVelocity != JumpPower * 2)
+		{
+			movementComp->JumpZVelocity = JumpPower * 2;
+			Player->Jump();
+			isJump = false;
+		}
 	}
-	if (!isJump && Player->isRight)
+	else
 	{
-		Player->Jump();
-		isJump = true;
+		movementComp->JumpZVelocity = JumpPower;
 	}
 }
 #pragma endregion

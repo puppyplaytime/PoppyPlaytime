@@ -22,7 +22,7 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Camera")
 	class UCameraComponent* camera = nullptr;
 
-	UPROPERTY(VisibleAnywhere, Category = "Component")
+	UPROPERTY(EditDefaultsOnly, Category = "Component")
 	class UKMK_PlayerHandFSM* FSM = nullptr;
 
 	UPROPERTY(VisibleAnywhere, Category = "Modeling")

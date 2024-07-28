@@ -4,11 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "JSH_CatFSM.generated.h"
+#include "JSH_CatFSM2.generated.h"
+
 
 
 UENUM(BlueprintType)
-enum class ECatState : uint8
+enum class ECatState2 : uint8
 {
 	RoundMove,
 	MoveWait,
@@ -24,13 +25,13 @@ enum class ECatState : uint8
 
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class CATTEACHER_API UJSH_CatFSM : public UActorComponent
+class CATTEACHER_API UJSH_CatFSM2 : public UActorComponent
 {
 	GENERATED_BODY()
 
 public:	
 	// Sets default values for this component's properties
-	UJSH_CatFSM();
+	UJSH_CatFSM2();
 
 protected:
 	// Called when the game starts
@@ -43,7 +44,7 @@ public:
 public:
 	// 상태 변수
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=FSM)
-	ECatState cState = ECatState::RoundMove;
+	ECatState2 cState2 = ECatState2::RoundMove;
 
 
 	
@@ -103,7 +104,7 @@ public:
 	
 	// 소유 액터
 	UPROPERTY()
-	class AJSH_Cat* me;
+	class AJSH_Cat2* me;
 	
 	
 

@@ -6,6 +6,7 @@
 #include "KMK_Player.h"
 #include "KMK_PlayerHand.h"
 #include "../../../../Plugins/Runtime/CableComponent/Source/CableComponent/Classes/CableComponent.h"
+#include "KHH_EnemyFSM.h"
 
 // Sets default values for this component's properties
 UKMK_PlayerRay::UKMK_PlayerRay()
@@ -37,15 +38,28 @@ void UKMK_PlayerRay::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 	params.AddIgnoredActor(playerComp->RHand);
 	params.AddIgnoredActor(playerComp->LHand);
 	endPos = playerComp->endPos;
+
 	// hit된 물체 정보 들고오기
 	FHitResult hitInfo;
 	// 클릭이 된다면
 	// 레이를 쏘고
-	bool bhit = GetWorld()->LineTraceSingleByChannel(hitInfo, playerComp->startPos, endPos, ECC_Visibility, params);
+	DrawDebugLine(GetWorld(), playerComp->startPos, playerComp->endPos1, FColor::Red, false, 1.f);
+	bool bhit = GetWorld()->LineTraceSingleByChannel(hitInfo, playerComp->startPos, playerComp->endPos1, ECC_Visibility, params);
 	if (bhit)
 	{
 		// 선생님이 감지됐다면
+
 		// 선생님이 가지고 있는 fsm state를 movestop으로 변경할거예요
+		if (hitInfo.GetActor()->GetActorLabel().Contains("Enemy"))
+		{
+			auto* a = hitInfo.GetActor();
+			teacher = a->FindComponentByClass<UKHH_EnemyFSM>();
+			teacher->mState = EEnemyState::Stop;
+		}
+	}
+	else
+	{
+		if(teacher != nullptr) teacher->mState = EEnemyState::Move;
 	}
 	//DrawDebugLine(GetWorld(), playerComp->startPos, endPos, FColor::Red, false, 1.f);
 	bool bhit1 = GetWorld()->LineTraceSingleByChannel(hitInfo, startPos, endPos, ECC_Visibility, params);

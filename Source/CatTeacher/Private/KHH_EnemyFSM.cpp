@@ -27,6 +27,7 @@ void UKHH_EnemyFSM::BeginPlay()
 
 	me = Cast<AKHH_Enemy>(GetOwner());
 	ai = Cast<AAIController>(me->GetController());
+	target = GetWorld()->GetFirstPlayerController()->GetPawn();
 	//AAIController
 	Speed = P_Speed;
 }

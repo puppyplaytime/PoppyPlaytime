@@ -140,6 +140,7 @@ void AKMK_Player::Tick(float DeltaTime)
 	// 계속 레이 쏘기
 	startPos = camera->GetComponentLocation();
 	endPos = startPos + camera->GetForwardVector() * rayDis;
+	endPos1 = startPos + camera->GetForwardVector() * rayDis1;
 	CableComp[0]->SetAttachEndTo(RHand, NAME_None);
 	CableComp[1]->SetAttachEndTo(LHand, NAME_None);
 }

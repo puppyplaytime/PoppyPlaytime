@@ -40,6 +40,7 @@ public:
 	UPROPERTY()
 	bool isRay = false;
 	float RayDistance =0;
+	class UKHH_EnemyFSM* teacher;
 #pragma endregion
 
 

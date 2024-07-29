@@ -46,7 +46,7 @@ public:
 	float currentTime = 0;
 
 	UPROPERTY(EditAnywhere, Category=FSM)
-	class ACharacter* target;
+	class APawn* target;
 
 	UPROPERTY(EditAnywhere)
 	class AKHH_Enemy* me;

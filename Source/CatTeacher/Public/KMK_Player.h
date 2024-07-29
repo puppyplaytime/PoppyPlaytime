@@ -150,8 +150,11 @@ public:
 #pragma region ray variables
 	FVector startPos;
 	FVector endPos;
+	FVector endPos1;
 	UPROPERTY(EditAnywhere)
 	float rayDis = 1000;
+	UPROPERTY(EditAnywhere)
+	float rayDis1 = 2000;
 #pragma endregion
 #pragma region Overlap
 	UFUNCTION()

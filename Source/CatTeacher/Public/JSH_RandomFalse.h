@@ -4,16 +4,16 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "JSH_Random.generated.h"
+#include "JSH_RandomFalse.generated.h"
 
 UCLASS()
-class CATTEACHER_API AJSH_Random : public AActor
+class CATTEACHER_API AJSH_RandomFalse : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	AJSH_Random();
+	AJSH_RandomFalse();
 
 protected:
 	// Called when the game starts or when spawned

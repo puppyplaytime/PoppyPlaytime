@@ -120,12 +120,25 @@ public:
 
 public:
 	FTimerHandle TagSelectionTimerHandle;
-	
+
+	//------------
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=FSM)
 	FName SelectedTag;
 
 	// 상태 변경 함수
 	void UpdateState();
+	//------------
+
+
+	//------------
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=FSM)
+	FName SelectedTagFalse;
+	
+	void UpdateStateFalse();
+	//------------
+
+	
+	bool bHasAttacked = false;
 
 	
 };

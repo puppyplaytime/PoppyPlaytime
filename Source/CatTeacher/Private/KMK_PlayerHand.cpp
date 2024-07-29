@@ -32,8 +32,8 @@ AKMK_PlayerHand::AKMK_PlayerHand()
 	box = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxComp"));
 	box->SetupAttachment(RootComponent);
 	box->SetCollisionProfileName("Hand");
-	box->SetRelativeLocation(FVector(0, 2, 4));
-	box->SetBoxExtent(FVector(5, 2, 5));
+	box->SetRelativeLocation(FVector(0, 2, 2));
+	box->SetBoxExtent(FVector(0.5f, 0.375, 0.5f));
 	// 물건을 잡기 위한 handle
 	handle = CreateDefaultSubobject<UPhysicsHandleComponent>(TEXT("Handle"));
 
@@ -67,8 +67,8 @@ void AKMK_PlayerHand::Tick(float DeltaTime)
 		float distance = dir.Length();
 		dir.Normalize();
 		SetActorLocation(GetActorLocation() + dir * speed * DeltaTime);
-		
-		if(distance < 5)
+		GEngine->AddOnScreenDebugMessage(9, 1, FColor::White, FString::Printf(TEXT("%f"), distance));
+		if(distance < 5 || distance > player->rayDis)
 		{
 			isGo = false;
 			isReverse = true;
@@ -77,13 +77,14 @@ void AKMK_PlayerHand::Tick(float DeltaTime)
 	}
 	if (isReverse)
 	{
-		t= 0;
 		dir = startPos - GetActorLocation();
-		float distance = dir.Length();
+		float d = dir.Length();
+		// GEngine->AddOnScreenDebugMessage(10, 1, FColor::White, FString::Printf(TEXT("%f"), d));
 		dir.Normalize();
-		SetActorLocation(GetActorLocation() + dir * speed / 2 * DeltaTime);
-		if (distance < 5.f)
+		SetActorLocation(GetActorLocation() + dir * speed * DeltaTime);
+		if (d < 5.f || d  > player->rayDis)
 		{
+			t = 0;
 			isReverse = false;
 			isRay = false;
 			SetActorRelativeLocation(FVector(40, handPos, -16));

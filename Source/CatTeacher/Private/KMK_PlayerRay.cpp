@@ -7,6 +7,7 @@
 #include "KMK_PlayerHand.h"
 #include "../../../../Plugins/Runtime/CableComponent/Source/CableComponent/Classes/CableComponent.h"
 #include "KHH_EnemyFSM.h"
+#include "Components/ArrowComponent.h"
 
 // Sets default values for this component's properties
 UKMK_PlayerRay::UKMK_PlayerRay()
@@ -43,12 +44,10 @@ void UKMK_PlayerRay::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 	FHitResult hitInfo;
 	// 클릭이 된다면
 	// 레이를 쏘고
-	DrawDebugLine(GetWorld(), playerComp->startPos, playerComp->endPos1, FColor::Red, false, 1.f);
+	//DrawDebugLine(GetWorld(), playerComp->startPos, playerComp->endPos1, FColor::Red, false, 1.f);
 	bool bhit = GetWorld()->LineTraceSingleByChannel(hitInfo, playerComp->startPos, playerComp->endPos1, ECC_Visibility, params);
 	if (bhit)
 	{
-		// 선생님이 감지됐다면
-
 		// 선생님이 가지고 있는 fsm state를 movestop으로 변경할거예요
 		if (hitInfo.GetActor()->GetActorLabel().Contains("Enemy"))
 		{
@@ -81,7 +80,7 @@ void UKMK_PlayerRay::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 				// jump패드를 감지했을때
 				if (playerComp->RMeshComp->GetStaticMesh() == playerComp->RHand->HandMesh[1])
 				{
-					FSM->bulletTrans = hitInfo.ImpactPoint;
+					// FSM->bulletTrans = hitInfo.ImpactPoint;
 					FSM->isFire	= true;
 					FSM->PState = PlayerHandFSM::GunPack;
 				}
@@ -101,6 +100,11 @@ void UKMK_PlayerRay::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 					playerComp->RHand->handPos = 27;
 					playerComp->RHand->endPos = playerComp->endPos;
 					playerComp->RHand->isGo = true;
+				}
+				else
+				{
+					FSM->isFire = true;
+					FSM->bulletTrans = playerComp->RHand->arrow->GetComponentTransform();
 				}
 			}
 		}

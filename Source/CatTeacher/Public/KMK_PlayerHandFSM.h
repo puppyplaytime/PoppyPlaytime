@@ -48,10 +48,10 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Charge")
 	float chargeTime = 10;
 
-	// 총알 공장 만들기
-	UPROPERTY(EditAnywhere, Category ="Fire")
-	class UParticleSystem* bulletFact;
-	FVector bulletTrans;
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<class AKMK_Bullet> bulletFact;
+	UPROPERTY(EditDefaultsOnly)
+	FTransform bulletTrans;
 
 	// fsm 변경시 호출되는 함수들
 	void NormalHand();

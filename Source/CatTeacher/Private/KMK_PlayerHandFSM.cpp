@@ -6,6 +6,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Particles/ParticleSystem.h"
+#include "KMK_Bullet.h"
 
 // Sets default values for this component's properties
 UKMK_PlayerHandFSM::UKMK_PlayerHandFSM()
@@ -78,12 +79,10 @@ void UKMK_PlayerHandFSM::JumpHand()
 #pragma region Gun
 void UKMK_PlayerHandFSM::GunHand()
 {
-	FTransform trans;
-	trans.SetLocation(bulletTrans);
 	if (isFire)
 	{
 		// 총알 효과 재생
-		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), bulletFact, trans);
+		GetWorld()->SpawnActor<AKMK_Bullet>(bulletFact, bulletTrans);
 		isFire = false;
 	}
 }
@@ -92,8 +91,7 @@ void UKMK_PlayerHandFSM::GunHand()
 void UKMK_PlayerHandFSM::EnergyHand()
 {
 	t += GetWorld()->DeltaTimeSeconds;
-	GEngine->AddOnScreenDebugMessage(3, 1, FColor::Blue, FString::Printf(TEXT("charge")));
-	GEngine->AddOnScreenDebugMessage(3, 1, FColor::Blue, FString::Printf(TEXT("%f"), t));
+    GEngine->AddOnScreenDebugMessage(8, 1, FColor::Blue, FString::Printf(TEXT("charge")));
 	if (t > chargeTime)
 	{
 		isCharge = false;

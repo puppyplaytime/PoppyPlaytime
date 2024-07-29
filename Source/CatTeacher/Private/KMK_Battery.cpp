@@ -36,7 +36,6 @@ void AKMK_Battery::Tick(float DeltaTime)
 	if (isThrow)
 	{
 		isGrab = false;
-		meshComp->AddForce(meshComp->GetForwardVector() * 1000);
 	}
 }
 

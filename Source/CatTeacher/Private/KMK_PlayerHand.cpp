@@ -54,21 +54,21 @@ void AKMK_PlayerHand::BeginPlay()
 void AKMK_PlayerHand::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	
-	if (t > ShootTime && !isRay && !isGrab)
-	{
-		isGo = false;
-		isReverse = true;
-	}
+
 	if (isGo)
 	{
+		if (t > ShootTime && !isRay && !isGrab)
+		{
+			isGo = false;
+			isReverse = true;
+		}
 		t += DeltaTime;
 		dir = endPos - GetActorLocation();
 		float distance = dir.Length();
 		dir.Normalize();
 		SetActorLocation(GetActorLocation() + dir * speed * DeltaTime);
 		GEngine->AddOnScreenDebugMessage(9, 1, FColor::White, FString::Printf(TEXT("%f"), distance));
-		if(distance < 5 || distance > player->rayDis)
+		if(distance > player->rayDis || distance < 5)
 		{
 			isGo = false;
 			isReverse = true;
@@ -82,7 +82,7 @@ void AKMK_PlayerHand::Tick(float DeltaTime)
 		// GEngine->AddOnScreenDebugMessage(10, 1, FColor::White, FString::Printf(TEXT("%f"), d));
 		dir.Normalize();
 		SetActorLocation(GetActorLocation() + dir * speed * DeltaTime);
-		if (d < 5.f || d  > player->rayDis)
+		if (d < 40.f || d  > player->rayDis)
 		{
 			t = 0;
 			isReverse = false;
@@ -90,6 +90,7 @@ void AKMK_PlayerHand::Tick(float DeltaTime)
 			SetActorRelativeLocation(FVector(40, handPos, -16));
 		}
 	}
+
 	if (isGrab)
 	{
 		handle->SetTargetLocationAndRotation(GetTargetLocation(), hand->GetComponentRotation());
@@ -98,15 +99,11 @@ void AKMK_PlayerHand::Tick(float DeltaTime)
 	{
 		if (grabActor != nullptr)
 		{
-			SetActorEnableCollision(false);
 			grabActor->isThrow = true;
 			handle->ReleaseComponent();
 			grabActor = nullptr;
 		}
-		else
-		{
-			SetActorEnableCollision(true);
-		}
+
 	}
 
 }

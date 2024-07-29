@@ -262,6 +262,7 @@ void AKMK_Player::InputNum2(const struct FInputActionValue& value)
 {
 	RMeshComp->SetStaticMesh(RHand->HandMesh[1]);
 	FSM->PState = PlayerHandFSM::GunPack;
+
 }
 // 점프 손
 void AKMK_Player::InputNum3(const struct FInputActionValue& value)

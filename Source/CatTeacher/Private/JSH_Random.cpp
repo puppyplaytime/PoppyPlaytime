@@ -5,8 +5,8 @@
 #include "Engine/World.h"
 #include "TimerManager.h"
 #include "GameFramework/Actor.h"
-#include "KMK_Player.h" // AJSH_Cat Å¬·¡½º¸¦ Æ÷ÇÔÇÏ´Â Çì´õ ÆÄÀÏ
-#include "JSH_CatFSM.h" // UJSH_CatFSM Å¬·¡½º¸¦ Æ÷ÇÔÇÏ´Â Çì´õ ÆÄÀÏ
+#include "KMK_Player.h" // AJSH_Cat í´ë˜ìŠ¤ë¥¼ í¬í•¨í•˜ëŠ” í—¤ë” íŒŒì¼
+#include "JSH_CatFSM.h" // UJSH_CatFSM í´ë˜ìŠ¤ë¥¼ í¬í•¨í•˜ëŠ” í—¤ë” íŒŒì¼
 
 // Sets default values
 AJSH_Random::AJSH_Random()
@@ -44,9 +44,9 @@ void AJSH_Random::FindAndSelectRandomTag()
 		int32 RandomIndex = FMath::RandRange(0, TagsInLevel.Num() - 1);
 		FName RandomTag = TagsInLevel[RandomIndex];
         
-		UE_LOG(LogTemp, Log, TEXT("Random Tag: %s"), *RandomTag.ToString());  // ·£´ıÀ¸·Î ¼±ÅÃµÈ ÅÂ±×¸¦ ·Î±×·Î Ãâ·Â
+		UE_LOG(LogTemp, Log, TEXT("Random Tag: %s"), *RandomTag.ToString());  // ëœë¤ìœ¼ë¡œ ì„ íƒëœ íƒœê·¸ë¥¼ ë¡œê·¸ë¡œ ì¶œë ¥
 
-		// FSM ÄÄÆ÷³ÍÆ®¿¡ ·£´ı ÅÂ±× Àü´Ş
+		// FSM ì»´í¬ë„ŒíŠ¸ì— ëœë¤ íƒœê·¸ ì „ë‹¬
 		for (TActorIterator<AJSH_Cat> ActorItr(GetWorld()); ActorItr; ++ActorItr)
 		{
 			AJSH_Cat* CatActor = *ActorItr;

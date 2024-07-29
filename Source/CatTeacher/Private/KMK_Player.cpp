@@ -52,14 +52,14 @@ AKMK_Player::AKMK_Player()
 	}
 	armMesh->SetupAttachment(GrabSpringArm);
 	armMesh->SetRelativeRotation(FRotator(0, -90, 0));
-	armMesh->SetRelativeScale3D(FVector(1.5f));
+	armMesh->SetRelativeScale3D(FVector(2.f));
 
 	CableComp.Add(CreateDefaultSubobject<UCableComponent>(TEXT("RCable")));
 	SceneComp.Add(CreateDefaultSubobject<USceneComponent>(TEXT("RScene")));
 	CableComp[0]->SetupAttachment(GrabSpringArm);
 	SceneComp[0]->SetupAttachment(GrabSpringArm);
-	CableComp[0]->SetRelativeLocationAndRotation(FVector(30, 20, -13), FRotator(0, 0, 0));
-	SceneComp[0]->SetRelativeLocationAndRotation(FVector(30, 20, -13), FRotator(0, 0, 0));
+	CableComp[0]->SetRelativeLocationAndRotation(FVector(40, 27, -16), FRotator(0, 0, 0));
+	SceneComp[0]->SetRelativeLocationAndRotation(FVector(40, 27, -16), FRotator(0, 0, 0));
 	CableComp[0]->SetCollisionProfileName("Hand");
 	CableComp[0]->CableWidth = 3;
 	CableComp[0]->EndLocation = FVector(0);
@@ -69,8 +69,8 @@ AKMK_Player::AKMK_Player()
 	SceneComp.Add(CreateDefaultSubobject<USceneComponent>(TEXT("LScene")));
 	CableComp[1]->SetupAttachment(GrabSpringArm);
 	SceneComp[1]->SetupAttachment(GrabSpringArm);
-	CableComp[1]->SetRelativeLocationAndRotation(FVector(30, -20, -13), FRotator(0, 0, 0));
-	SceneComp[1]->SetRelativeLocationAndRotation(FVector(30, -20, -13), FRotator(0, 0, 0));
+	CableComp[1]->SetRelativeLocationAndRotation(FVector(40, -27, -16), FRotator(0, 0, 0));
+	SceneComp[1]->SetRelativeLocationAndRotation(FVector(40, -27, -16), FRotator(0, 0, 0));
 	CableComp[1]->SetCollisionProfileName("Hand");
 	CableComp[1]->CableWidth = 3;
 	CableComp[1]->EndLocation = FVector(0);
@@ -93,15 +93,15 @@ void AKMK_Player::BeginPlay()
 	FTransform t = SceneComp[0]->GetRelativeTransform();
 	RHand = GetWorld()->SpawnActor<AKMK_PlayerHand>(RHandFact, t);
 	RHand->AttachToComponent(GrabSpringArm, FAttachmentTransformRules::KeepRelativeTransform);
-	RHand->SetActorRelativeLocation(FVector(30, 20, -13));
+	RHand->SetActorRelativeLocation(FVector(40, 27, -16));
 	RHand->SetActorRotation(FRotator(0, -90, 0));
-	RHand->SetActorRelativeScale3D(FVector(1.5f));
+	RHand->SetActorRelativeScale3D(FVector(2.f));
 	FTransform t1 = SceneComp[1]->GetRelativeTransform();
 	LHand = GetWorld()->SpawnActor<AKMK_PlayerHand>(LHandFact, t1);
 	LHand->AttachToComponent(GrabSpringArm, FAttachmentTransformRules::KeepRelativeTransform);
-	LHand->SetActorRelativeLocation(FVector(30, -20, -13));
+	LHand->SetActorRelativeLocation(FVector(40, -27, -16));
 	LHand->SetActorRotation(FRotator(0, -90, 0));
-	LHand->SetActorRelativeScale3D(FVector(1.5f));
+	LHand->SetActorRelativeScale3D(FVector(2.f));
 
 	RMeshComp = RHand->hand;
 #pragma endregion

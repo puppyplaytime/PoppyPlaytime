@@ -75,7 +75,7 @@ void UKMK_PlayerRay::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 				{
 					playerComp->RHand->hitinfo = hitInfo.GetComponent();
 					// 레이가 맞은곳으로 손뻗기
-					playerComp->RHand->handPos = 20;
+					playerComp->RHand->handPos = 27;
 					playerComp->RHand->endPos = hitInfo.ImpactPoint;
 					playerComp->RHand->isGo = true;
 				}
@@ -84,7 +84,7 @@ void UKMK_PlayerRay::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 			{
 				if (playerComp->RMeshComp->GetStaticMesh() != playerComp->RHand->HandMesh[1])
 				{
-					playerComp->RHand->handPos = 20;
+					playerComp->RHand->handPos = 27;
 					playerComp->RHand->endPos = playerComp->endPos;
 					playerComp->RHand->isGo = true;
 				}
@@ -105,7 +105,7 @@ void UKMK_PlayerRay::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 					playerComp->LHand->hitinfo = hitInfo.GetComponent();
 				}
 				else playerComp->LHand->endPos = playerComp->endPos;
-				playerComp->LHand->handPos = -20;
+				playerComp->LHand->handPos = -27;
 				playerComp->LHand->isGo = true;
 				playerComp->LHand->isRay = true;
 			}

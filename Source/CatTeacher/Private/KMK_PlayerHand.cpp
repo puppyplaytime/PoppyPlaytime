@@ -21,7 +21,7 @@ AKMK_PlayerHand::AKMK_PlayerHand()
 	hand = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("HandComp"));
 	SetRootComponent(hand);
 	hand->SetRelativeRotation(FRotator(0, -90, 0));
-	hand->SetRelativeScale3D(FVector(1.5f));
+	hand->SetRelativeScale3D(FVector(2.f));
 	hand->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	// 발사 위치만들기
 	arrow = CreateDefaultSubobject<UArrowComponent>(TEXT("FirePos"));
@@ -86,7 +86,7 @@ void AKMK_PlayerHand::Tick(float DeltaTime)
 		{
 			isReverse = false;
 			isRay = false;
-			SetActorRelativeLocation(FVector(30, handPos, -13));
+			SetActorRelativeLocation(FVector(40, handPos, -16));
 		}
 	}
 	if (isGrab)

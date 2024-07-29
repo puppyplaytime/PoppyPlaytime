@@ -115,7 +115,7 @@ void AKMK_PlayerHand::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 {
 	isGo = false;
 	isReverse = true;
-	if (OtherActor->GetActorLabel().Contains("jump"))
+	if (player->RMeshComp->GetStaticMesh() == player->RHand->HandMesh[2] && OtherActor->GetActorLabel().Contains("jump"))
 	{
 		FSM->isJump = true;
 		FSM->PState = PlayerHandFSM::JumpPack;

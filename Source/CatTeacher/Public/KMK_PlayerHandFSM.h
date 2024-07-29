@@ -28,8 +28,7 @@ public:
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
-	UPROPERTY()
-	PlayerHandFSM PState = PlayerHandFSM::Normal;
+
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
@@ -37,10 +36,31 @@ public:
 	class AKMK_Player* Player = nullptr;
 	
 	class UCharacterMovementComponent* movementComp = nullptr;
+	UPROPERTY(EditAnywhere)
+	PlayerHandFSM PState = PlayerHandFSM::Normal;
+
+	UPROPERTY()
+	float JumpPower = -1;
+	// 에너지 충전 확인용 변수
+	UPROPERTY(EditAnywhere, Category = "Charge")
+	bool isCharge = false;
+	float t = 0;
+	UPROPERTY(EditAnywhere, Category = "Charge")
+	float chargeTime = 10;
+
+	// 총알 공장 만들기
+	UPROPERTY(EditAnywhere, Category ="Fire")
+	class UParticleSystem* bulletFact;
+	FVector bulletTrans;
+
 	// fsm 변경시 호출되는 함수들
 	void NormalHand();
 	void JumpHand();
 	void GunHand();
 	void EnergyHand();
+
+	bool isJump = false;
+	bool isFire = false;
+
 		
 };

@@ -4,6 +4,8 @@
 #include "KMK_PlayerHandFSM.h"
 #include "KMK_Player.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Kismet/GameplayStatics.h"
+#include "Particles/ParticleSystem.h"
 
 // Sets default values for this component's properties
 UKMK_PlayerHandFSM::UKMK_PlayerHandFSM()
@@ -22,6 +24,7 @@ void UKMK_PlayerHandFSM::BeginPlay()
 	// 플레이어 객체 들고오기
 	Player = Cast<AKMK_Player>(GetWorld()->GetFirstPlayerController()->GetPawn());
 	movementComp = GetOwner()->FindComponentByClass<UCharacterMovementComponent>();
+	JumpPower = movementComp->JumpZVelocity;
 }
 
 
@@ -50,25 +53,52 @@ void UKMK_PlayerHandFSM::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 #pragma region Normal
 void UKMK_PlayerHandFSM::NormalHand()
 {
-
+	GEngine->AddOnScreenDebugMessage(4, 1, FColor::Blue, FString::Printf(TEXT("remve")));
 }
 #pragma endregion
 #pragma region Jump
+// 일정 트리거가 발견되면 점프력을 2배로
 void UKMK_PlayerHandFSM::JumpHand()
 {
-	 float a = movementComp->JumpZVelocity;
-	movementComp->JumpZVelocity = a * 2;
+	if(isJump)
+	{
+		if(movementComp->JumpZVelocity != JumpPower * 2)
+		{
+			movementComp->JumpZVelocity = JumpPower * 2;
+			Player->Jump();
+			isJump = false;
+		}
+	}
+	else
+	{
+		movementComp->JumpZVelocity = JumpPower;
+	}
 }
 #pragma endregion
 #pragma region Gun
 void UKMK_PlayerHandFSM::GunHand()
 {
-
+	FTransform trans;
+	trans.SetLocation(bulletTrans);
+	if (isFire)
+	{
+		// 총알 효과 재생
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), bulletFact, trans);
+		isFire = false;
+	}
 }
 #pragma endregion
 #pragma region Energy
 void UKMK_PlayerHandFSM::EnergyHand()
 {
-
+	t += GetWorld()->DeltaTimeSeconds;
+	GEngine->AddOnScreenDebugMessage(3, 1, FColor::Blue, FString::Printf(TEXT("charge")));
+	GEngine->AddOnScreenDebugMessage(3, 1, FColor::Blue, FString::Printf(TEXT("%f"), t));
+	if (t > chargeTime)
+	{
+		isCharge = false;
+		PState = PlayerHandFSM::Normal;
+		t = 0;
+	}
 }
 #pragma endregion

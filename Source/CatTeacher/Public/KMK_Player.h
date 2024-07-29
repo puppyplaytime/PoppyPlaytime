@@ -14,25 +14,31 @@ class CATTEACHER_API AKMK_Player : public ACharacter
 public:
 	// Sets default values for this character's properties
 	AKMK_Player();
+#pragma region CreateVar
+
 	UPROPERTY(VisibleAnywhere, Category = "Camera")
 	class USpringArmComponent* springArm = nullptr;
 
-	UPROPERTY(VisibleAnywhere, Category = "Camera")
+	UPROPERTY(EditDefaultsOnly, Category = "Camera")
 	class UCameraComponent* camera = nullptr;
 
-	UPROPERTY(VisibleAnywhere, Category = "Component")
+	UPROPERTY(EditDefaultsOnly, Category = "Component")
 	class UKMK_PlayerHandFSM* FSM = nullptr;
 
 	UPROPERTY(VisibleAnywhere, Category = "Modeling")
 	class USpringArmComponent* GrabSpringArm = nullptr;
 	UPROPERTY(VisibleAnywhere, Category = "Modeling")
 	class UStaticMeshComponent* armMesh = nullptr;
-	UPROPERTY(EditAnywhere, Category = "Modeling")
-	FVector GrabPackLoc = FVector(0, 0, 0);
-	UPROPERTY(EditAnywhere, Category = "Modeling")
-	FRotator GrabPackRotation = FRotator(0, -90, 0);
-	UPROPERTY(EditAnywhere, Category = "Modeling")
-	FVector GrabPackScale = FVector(1.5f);
+
+	UPROPERTY(VisibleAnywhere, Category = "Ray")
+	class UKMK_PlayerRay* playerRay = nullptr;
+
+	UPROPERTY(EditAnywhere, Category = "Hand")
+	TArray<class UCableComponent*> CableComp;
+	UPROPERTY(EditAnywhere, Category = "Hand")
+	TArray<class USceneComponent*> SceneComp;
+#pragma endregion
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -44,6 +50,19 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+#pragma region HandActorFact
+	UPROPERTY(EditAnywhere, Category = "Hand")
+	TSubclassOf<class AKMK_PlayerHand> LHandFact;
+	UPROPERTY(EditAnywhere, Category = "Hand")
+	TSubclassOf<class AKMK_PlayerHand> RHandFact;
+
+	class AKMK_PlayerHand* LHand;
+	class AKMK_PlayerHand* RHand;
+
+	class UStaticMeshComponent* LMeshComp;
+	class UStaticMeshComponent* RMeshComp;
+#pragma endregion
+
 #pragma region InputVaribles
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	class UInputMappingContext* IMC_Mapping = nullptr;
@@ -88,9 +107,13 @@ public:
 	float speed = 600.f;
 	UPROPERTY()
 	float jumpPower = 0;
-
+	UPROPERTY()
 	bool isRight = false;
+	UPROPERTY()
 	bool isLeft = false;
+
+	UPROPERTY()
+	bool isIntarctive = false;
 #pragma endregion
 #pragma region Function
 	// ȸ��ó��
@@ -122,5 +145,23 @@ public:
 	// �޼�
 	void InputML(const struct FInputActionValue& value);
 	void InputMLComp(const struct FInputActionValue& value);
+
+#pragma endregion
+#pragma region ray variables
+	FVector startPos;
+	FVector endPos;
+	UPROPERTY(EditAnywhere)
+	float rayDis = 1000;
+#pragma endregion
+#pragma region Overlap
+	UFUNCTION()
+	void NotifyHit(UPrimitiveComponent* MyComp, AActor* Other, UPrimitiveComponent* OtherComp, bool bSelfMoved, FVector HitLocation, FVector HitNormal, FVector NormalImpulse, const FHitResult& Hit);
+	// 오버랩 감지를 위한 함수 선언
+	/*virtual void BeginOverlap(UPrimitiveComponent* OverlappedComponent,
+		AActor* OtherActor,
+		UPrimitiveComponent* OtherComp,
+		int32 OtherBodyIndex,
+		bool bFromSweep,
+		const FHitResult& SweepResult);*/
 #pragma endregion
 };

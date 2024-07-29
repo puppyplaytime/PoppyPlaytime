@@ -27,6 +27,10 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	bool isThrow = false;
+	UPROPERTY(EditAnywhere)
 	bool isGrab = false;
 	FVector throwPos;
+
+	UFUNCTION()
+	void NotifyHit(UPrimitiveComponent* MyComp, AActor* Other, UPrimitiveComponent* OtherComp, bool bSelfMoved, FVector HitLocation, FVector HitNormal, FVector NormalImpulse, const FHitResult& Hit);
 };

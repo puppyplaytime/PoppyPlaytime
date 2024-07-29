@@ -36,7 +36,15 @@ void AKMK_Battery::Tick(float DeltaTime)
 	if (isThrow)
 	{
 		isGrab = false;
-		meshComp->AddForce(throwPos);
+		meshComp->AddForce(meshComp->GetForwardVector() * 1000);
+	}
+}
+
+void AKMK_Battery::NotifyHit(UPrimitiveComponent* MyComp, AActor* Other, UPrimitiveComponent* OtherComp, bool bSelfMoved, FVector HitLocation, FVector HitNormal, FVector NormalImpulse, const FHitResult& Hit)
+{
+	if (!Other->GetName().Contains("hand"))
+	{
+		isThrow = false;
 	}
 }
 

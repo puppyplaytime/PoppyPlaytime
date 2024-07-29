@@ -5,7 +5,6 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "KMK_PlayerHand.generated.h"
-
 UCLASS()
 class CATTEACHER_API AKMK_PlayerHand : public AActor
 {
@@ -64,4 +63,5 @@ public:
 	const FHitResult& SweepResult);
 
 	class AKMK_Battery* grabActor;
+	float mass;
 };

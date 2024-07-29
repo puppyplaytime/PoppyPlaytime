@@ -53,9 +53,8 @@ void UKMK_PlayerRay::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 	if (isRay)
 	{
 		// 물체가 있다면
-
 		DrawDebugLine(GetWorld(), startPos, endPos, FColor::Blue, false, 1.f);
-		GEngine->AddOnScreenDebugMessage(1, 1, FColor::Blue, FString::Printf(TEXT("hi")));
+		
 		if(playerComp->isRight)
 		{
 			if (playerComp->RHand->isGrab)
@@ -93,18 +92,24 @@ void UKMK_PlayerRay::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 		}
 		if (playerComp->isLeft)
 		{
-			playerComp->LHand->handPos = -20;
-			if (bhit1)
+			if (playerComp->LHand->isGrab)
 			{
-				playerComp->LHand->endPos = hitInfo.ImpactPoint;
-				playerComp->LHand->hitinfo = hitInfo.GetComponent();
+				playerComp->LHand->isGrab = false;
+				playerComp->LHand->endPos = playerComp->endPos;
 			}
-			else playerComp->LHand->endPos = playerComp->endPos;
-			playerComp->LHand->isGo = true;
-			playerComp->RHand->isRay = true;
+			else
+			{
+				if (bhit1)
+				{
+					playerComp->LHand->endPos = hitInfo.ImpactPoint;
+					playerComp->LHand->hitinfo = hitInfo.GetComponent();
+				}
+				else playerComp->LHand->endPos = playerComp->endPos;
+				playerComp->LHand->handPos = -20;
+				playerComp->LHand->isGo = true;
+				playerComp->LHand->isRay = true;
+			}
 		}
-
-		
 	}
 }
 

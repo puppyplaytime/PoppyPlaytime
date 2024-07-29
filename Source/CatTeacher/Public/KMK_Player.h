@@ -58,8 +58,6 @@ public:
 
 	class AKMK_PlayerHand* LHand;
 	class AKMK_PlayerHand* RHand;
-	class AActor* rActor;
-	class AActor* lActor;
 
 	class UStaticMeshComponent* LMeshComp;
 	class UStaticMeshComponent* RMeshComp;

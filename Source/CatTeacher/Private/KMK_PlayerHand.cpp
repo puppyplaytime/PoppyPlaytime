@@ -10,6 +10,7 @@
 #include "Components/PrimitiveComponent.h"
 #include "GameFramework/MovementComponent.h"
 #include "KMK_Battery.h"
+#include "Engine/HitResult.h"
 
 // Sets default values
 AKMK_PlayerHand::AKMK_PlayerHand()
@@ -45,6 +46,7 @@ void AKMK_PlayerHand::BeginPlay()
 	player = Cast<AKMK_Player>(GetWorld()->GetFirstPlayerController()->GetPawn());
 	hand->SetStaticMesh(HandMesh[0]);
 	box->OnComponentBeginOverlap.AddDynamic(this, &AKMK_PlayerHand::BeginOverlap);
+	//box->OnComponentHit.AddDynamic(this, &AKMK_PlayerHand::OnHitEvent);
 	// FSM = player->FSM;
 }
 
@@ -53,7 +55,7 @@ void AKMK_PlayerHand::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	
-	if (t > ShootTime && !isRay)
+	if (t > ShootTime && !isRay && !isGrab)
 	{
 		isGo = false;
 		isReverse = true;
@@ -97,9 +99,7 @@ void AKMK_PlayerHand::Tick(float DeltaTime)
 		{
 			SetActorEnableCollision(false);
 			grabActor->isThrow = true;
-			grabActor->isGrab = false;
 			handle->ReleaseComponent();
-			grabActor->throwPos = endPos;
 			grabActor = nullptr;
 		}
 		else
@@ -113,6 +113,8 @@ void AKMK_PlayerHand::Tick(float DeltaTime)
 // 손이 다른 물체들과 닿는 경우
 void AKMK_PlayerHand::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+	isGo = false;
+	isReverse = true;
 	if (OtherActor->GetActorLabel().Contains("jump"))
 	{
 		FSM->isJump = true;
@@ -125,17 +127,29 @@ void AKMK_PlayerHand::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 		FSM->isCharge = true;
 	}
 	
-	if (OtherActor->GetActorLabel().Contains("battery") && player->RMeshComp->GetStaticMesh() != player->RHand->HandMesh[2])
+	if (OtherActor->GetActorLabel().Contains("battery"))
 	{
 		grabActor = Cast<AKMK_Battery>(OtherActor);
-		if(!grabActor->isGrab)
+		if(grabActor->isThrow) return;
+		mass = grabActor->meshComp->GetMass();
+		if(GetName().Contains("R"))
 		{
+            if (player->RMeshComp->GetStaticMesh() != player->RHand->HandMesh[2] && !grabActor->isGrab)
+            {
+                isGrab = true;
+                handle->GrabComponentAtLocationWithRotation(hitinfo, NAME_None, GetTargetLocation(), hand->GetComponentRotation());
+                grabActor->isGrab = true;
+                grabActor->isThrow = false;
+            }
+		}
+		else
+		{
+			isGrab = true;
 			handle->GrabComponentAtLocationWithRotation(hitinfo, NAME_None, GetTargetLocation(), hand->GetComponentRotation());
 			grabActor->isGrab = true;
-			isGrab = true;
+			grabActor->isThrow = false;
 		}
 
 	}
-	isGo = false;
-	isReverse = true;
 }
+

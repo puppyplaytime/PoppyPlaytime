@@ -103,6 +103,7 @@ void UKMK_PlayerRay::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 				}
 				else
 				{
+					// ÃÑ½î±â
 					FSM->isFire = true;
 					FSM->bulletTrans = playerComp->RHand->arrow->GetComponentTransform();
 				}

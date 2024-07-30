@@ -60,9 +60,14 @@ public:
 	TSubclassOf<class AKMK_PlayerHand> LHandFact;
 	UPROPERTY(EditAnywhere, Category = "Hand")
 	TSubclassOf<class AKMK_PlayerHand> RHandFact;
+	UPROPERTY(EditAnywhere, Category = "Hand")
+	TSubclassOf<class AKMK_Battery> batteryFact;
 
 	class AKMK_PlayerHand* LHand;
 	class AKMK_PlayerHand* RHand;
+
+	class AKMK_Battery* LBat;
+	class AKMK_Battery* RBat;
 
 	class UStaticMeshComponent* LMeshComp;
 	class UStaticMeshComponent* RMeshComp;

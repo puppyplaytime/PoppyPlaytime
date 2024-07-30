@@ -18,6 +18,8 @@
 #include "KMK_PlayerHand.h"
 #include "../../../../Plugins/Runtime/CableComponent/Source/CableComponent/Classes/CableComponent.h"
 #include "Perception/PawnSensingComponent.h"
+#include "KMK_Battery.h"
+#include "Components/BoxComponent.h"
 
 // Sets default values
 AKMK_Player::AKMK_Player()
@@ -96,16 +98,32 @@ void AKMK_Player::BeginPlay()
 #pragma region Create Hand
 	FTransform t = SceneComp[0]->GetRelativeTransform();
 	RHand = GetWorld()->SpawnActor<AKMK_PlayerHand>(RHandFact, t);
+	RBat = GetWorld()->SpawnActor<AKMK_Battery>(batteryFact, t);
+	RBat->meshComp->SetSimulatePhysics(false);
+	RBat->meshComp->SetEnableGravity(false);
 	RHand->AttachToComponent(GrabSpringArm, FAttachmentTransformRules::KeepRelativeTransform);
+	RBat->AttachToComponent(GrabSpringArm, FAttachmentTransformRules::KeepRelativeTransform);
 	RHand->SetActorRelativeLocation(FVector(40, 27, -16));
+	RBat->SetActorRelativeLocation(FVector(55, 26, 8));
+	RBat->SetActorScale3D(FVector(0.55f));
 	RHand->SetActorRotation(FRotator(0, -90, 0));
-	RHand->SetActorRelativeScale3D(FVector(2.f));
+	RBat->meshComp->SetVisibility(false);
+	RBat->meshComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
 	FTransform t1 = SceneComp[1]->GetRelativeTransform();
 	LHand = GetWorld()->SpawnActor<AKMK_PlayerHand>(LHandFact, t1);
+	LBat = GetWorld()->SpawnActor<AKMK_Battery>(batteryFact, t1);
+	LBat->meshComp->SetSimulatePhysics(false);
+	LBat->meshComp->SetEnableGravity(false);
 	LHand->AttachToComponent(GrabSpringArm, FAttachmentTransformRules::KeepRelativeTransform);
+	LBat->AttachToComponent(GrabSpringArm, FAttachmentTransformRules::KeepRelativeTransform);
 	LHand->SetActorRelativeLocation(FVector(40, -27, -16));
 	LHand->SetActorRotation(FRotator(0, -90, 0));
+	LBat->SetActorRelativeLocation(FVector(55, -26, 8));
+	LBat->SetActorScale3D(FVector(0.55f));
 	LHand->SetActorRelativeScale3D(FVector(2.f));
+	LBat->meshComp->SetVisibility(false);
+	LBat->meshComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 	RMeshComp = RHand->hand;
 #pragma endregion

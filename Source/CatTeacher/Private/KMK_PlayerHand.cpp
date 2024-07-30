@@ -91,19 +91,21 @@ void AKMK_PlayerHand::Tick(float DeltaTime)
 		}
 	}
 
-	if (isGrab)
+	if (isGrab && (player->isRight || player->isLeft))
 	{
-		handle->SetTargetLocationAndRotation(GetTargetLocation(), hand->GetComponentRotation());
-	}
-	else
-	{
-		if (grabActor != nullptr)
+		if (player->isRight) 
 		{
-			grabActor->isThrow = true;
-			handle->ReleaseComponent();
-			grabActor = nullptr;
+			trans = player->RBat->GetTransform();
+			player->RBat->meshComp->SetVisibility(false);
 		}
-
+		if (player->isLeft)
+		{
+			trans = player->LBat->GetTransform();
+			player->LBat->meshComp->SetVisibility(false);
+		}
+		isGrab = false;
+		GetWorld()->SpawnActor<AKMK_Battery>(BatteryFact, trans);
+	
 	}
 
 }
@@ -129,23 +131,22 @@ void AKMK_PlayerHand::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 	{
 		grabActor = Cast<AKMK_Battery>(OtherActor);
 		if(grabActor->isThrow) return;
-		mass = grabActor->meshComp->GetMass();
+		
 		if(GetName().Contains("R"))
 		{
-            if (player->RMeshComp->GetStaticMesh() != player->RHand->HandMesh[2] && !grabActor->isGrab)
+            if (player->RMeshComp->GetStaticMesh() != player->RHand->HandMesh[2])
             {
                 isGrab = true;
-                handle->GrabComponentAtLocationWithRotation(hitinfo, NAME_None, GetTargetLocation(), hand->GetComponentRotation());
-                grabActor->isGrab = true;
                 grabActor->isThrow = false;
+				grabActor->Destroy();
+				player->RBat->meshComp->SetVisibility(true);
             }
 		}
 		else
 		{
 			isGrab = true;
-			handle->GrabComponentAtLocationWithRotation(hitinfo, NAME_None, GetTargetLocation(), hand->GetComponentRotation());
-			grabActor->isGrab = true;
-			grabActor->isThrow = false;
+			grabActor->Destroy();
+			player->LBat->meshComp->SetVisibility(true);
 		}
 
 	}

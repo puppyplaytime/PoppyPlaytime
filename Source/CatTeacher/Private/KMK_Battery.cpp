@@ -16,10 +16,6 @@ AKMK_Battery::AKMK_Battery()
 	SetRootComponent(meshComp);
 	
 	meshComp->SetSimulatePhysics(true);
-	box = CreateDefaultSubobject<UBoxComponent>(TEXT("Box"));
-	box->SetupAttachment(meshComp);
-	box->SetBoxExtent(FVector(20, 20, 30));
-	box->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
 // Called when the game starts or when spawned
@@ -33,10 +29,7 @@ void AKMK_Battery::BeginPlay()
 void AKMK_Battery::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	if (isThrow)
-	{
-		isGrab = false;
-	}
+
 }
 
 void AKMK_Battery::NotifyHit(UPrimitiveComponent* MyComp, AActor* Other, UPrimitiveComponent* OtherComp, bool bSelfMoved, FVector HitLocation, FVector HitNormal, FVector NormalImpulse, const FHitResult& Hit)

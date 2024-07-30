@@ -1,36 +1,39 @@
-#include "JSH_Random.h"
+// Fill out your copyright notice in the Description page of Project Settings.
+
+
+#include "JSH_RandomFalse.h"
 
 #include "EngineUtils.h"
 #include "JSH_Cat.h"
 #include "Engine/World.h"
 #include "TimerManager.h"
 #include "GameFramework/Actor.h"
-#include "KMK_Player.h" 
+#include "KMK_Player.h" // AJSH_Cat Å¬·¡½º¸¦ Æ÷ÇÔÇÏ´Â Çì´õ ÆÄÀÏ
 #include "JSH_CatFSM.h" 
 
 // Sets default values
-AJSH_Random::AJSH_Random()
+AJSH_RandomFalse::AJSH_RandomFalse()
 {
 	PrimaryActorTick.bCanEverTick = true;
 }
 
 // Called when the game starts or when spawned
-void AJSH_Random::BeginPlay()
+void AJSH_RandomFalse::BeginPlay()
 {
 	Super::BeginPlay();
 	
 	// Set timer to call FindAndSelectRandomTag every 10 seconds
-	GetWorldTimerManager().SetTimer(TimerHandle, this, &AJSH_Random::FindAndSelectRandomTag, 15.0f, true);
+	GetWorldTimerManager().SetTimer(TimerHandle, this, &AJSH_RandomFalse::FindAndSelectRandomTag, 10.0f, true);
 	// test
 }
 
 // Called every frame
-void AJSH_Random::Tick(float DeltaTime)
+void AJSH_RandomFalse::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 }
 
-void AJSH_Random::FindAndSelectRandomTag()
+void AJSH_RandomFalse::FindAndSelectRandomTag()
 {
 	TArray<FName> TagsInLevel;
 	for (TActorIterator<AJSH_Cat> ActorItr(GetWorld()); ActorItr; ++ActorItr)
@@ -44,21 +47,21 @@ void AJSH_Random::FindAndSelectRandomTag()
 		int32 RandomIndex = FMath::RandRange(0, TagsInLevel.Num() - 1);
 		FName RandomTag = TagsInLevel[RandomIndex];
         
-		UE_LOG(LogTemp, Log, TEXT("Random Tag: %s"), *RandomTag.ToString());  // ëœë¤ìœ¼ë¡œ ì„ íƒëœ íƒœê·¸ë¥¼ ë¡œê·¸ë¡œ ì¶œë ¥
+		UE_LOG(LogTemp, Log, TEXT("False Tag: %s"), *RandomTag.ToString());  // ·£´ıÀ¸·Î ¼±ÅÃµÈ ÅÂ±×¸¦ ·Î±×·Î Ãâ·Â
 
-		// FSM ì»´í¬ë„ŒíŠ¸ì— ëœë¤ íƒœê·¸ ì „ë‹¬
+		// FSM ÄÄÆ÷³ÍÆ®¿¡ ·£´ı ÅÂ±× Àü´Ş
 		for (TActorIterator<AJSH_Cat> ActorItr(GetWorld()); ActorItr; ++ActorItr)
 		{
 			AJSH_Cat* CatActor = *ActorItr;
 			UJSH_CatFSM* CatFSM = CatActor->FindComponentByClass<UJSH_CatFSM>();
 			if (CatFSM)
 			{
-				CatFSM->SelectedTag = RandomTag;
+				CatFSM->SelectedTagFalse = RandomTag;
 			}
 		}
 	}
 	else
 	{
-		UE_LOG(LogTemp, Warning, TEXT("No Tags Found in Level"));
+		UE_LOG(LogTemp, Warning, TEXT("No Flase Tags Found in Level"));
 	}
 }

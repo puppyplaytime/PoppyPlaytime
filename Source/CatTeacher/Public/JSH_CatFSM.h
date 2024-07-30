@@ -14,6 +14,7 @@ enum class ECatState : uint8
 	RoundMove,
 	MoveWait,
 	TrueMove,
+	FalseMoveWait,
 	FalseMove,
 	Ceiling,
 	Attack,
@@ -54,11 +55,14 @@ public:
 	// 대기 왕복 움직임 상태
 	void RoundMoveState();
 	
-	// 진짜 이동
+	// 진짜 이동 준비
 	void MoveWaitState();
 
 	// 진짜 이동
 	void TrueMoveState();
+
+	// 가짜 이동 준비
+	void FalseMoveWaitState();
 
 	// 가짜 이동
 	void FalseMoveState();
@@ -120,12 +124,25 @@ public:
 
 public:
 	FTimerHandle TagSelectionTimerHandle;
-	
+
+	//------------
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=FSM)
 	FName SelectedTag;
 
 	// 상태 변경 함수
 	void UpdateState();
+	//------------
+
+
+	//------------
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=FSM)
+	FName SelectedTagFalse;
+	
+	void UpdateStateFalse();
+	//------------
+
+	
+	bool bHasAttacked = false;
 
 	
 };

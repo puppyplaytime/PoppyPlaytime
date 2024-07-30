@@ -17,6 +17,7 @@
 #include "Components/ArrowComponent.h"
 #include "KMK_PlayerHand.h"
 #include "../../../../Plugins/Runtime/CableComponent/Source/CableComponent/Classes/CableComponent.h"
+#include "Perception/PawnSensingComponent.h"
 
 // Sets default values
 AKMK_Player::AKMK_Player()
@@ -83,6 +84,9 @@ AKMK_Player::AKMK_Player()
 	FSM = CreateDefaultSubobject<UKMK_PlayerHandFSM>(TEXT("FSM"));
 	playerRay = CreateDefaultSubobject<	UKMK_PlayerRay>(TEXT("RAY"));
 	
+	// 센서 만들기
+	sensor = CreateDefaultSubobject<UPawnSensingComponent>(TEXT("Sensor"));
+	sensor->bOnlySensePlayers = false;
 }
 
 // Called when the game starts or when spawned
@@ -120,6 +124,8 @@ void AKMK_Player::BeginPlay()
 
 	LHand->FSM = FSM;
 	RHand->FSM = FSM;
+
+	// sensor->OnSeePawn.AddDynamic(this, &AKMK_Player::BroadcastOnSeePawn);
 }
 
 // Called every frame
@@ -131,6 +137,7 @@ void AKMK_Player::Tick(float DeltaTime)
 	// 1. controller rotation을 통해 transform 생성
 	RHand->startPos = SceneComp[0]->GetComponentLocation();
 	LHand->startPos = SceneComp[1]->GetComponentLocation();
+	FSM->bulletTrans = RHand->arrow->GetComponentTransform();
 	FTransform t = FTransform(GetControlRotation());
 	dir = t.TransformVector(dir);
 	// 이동 인풋
@@ -143,6 +150,8 @@ void AKMK_Player::Tick(float DeltaTime)
 	endPos1 = startPos + camera->GetForwardVector() * rayDis1;
 	CableComp[0]->SetAttachEndTo(RHand, NAME_None);
 	CableComp[1]->SetAttachEndTo(LHand, NAME_None);
+
+	// 센서 내부의 on see pawn 사용하기
 }
 
 // Called to bind functionality to input

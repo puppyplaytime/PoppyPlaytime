@@ -54,7 +54,7 @@ void UKMK_PlayerHandFSM::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 #pragma region Normal
 void UKMK_PlayerHandFSM::NormalHand()
 {
-	GEngine->AddOnScreenDebugMessage(4, 1, FColor::Blue, FString::Printf(TEXT("remve")));
+	GEngine->AddOnScreenDebugMessage(4, 1, FColor::Blue, FString::Printf(TEXT("remove")));
 }
 #pragma endregion
 #pragma region Jump

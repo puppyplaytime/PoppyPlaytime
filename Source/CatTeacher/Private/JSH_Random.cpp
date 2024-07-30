@@ -5,8 +5,8 @@
 #include "Engine/World.h"
 #include "TimerManager.h"
 #include "GameFramework/Actor.h"
-#include "KMK_Player.h" // AJSH_Cat 클래스를 포함하는 헤더 파일
-#include "JSH_CatFSM.h" // UJSH_CatFSM 클래스를 포함하는 헤더 파일
+#include "KMK_Player.h" 
+#include "JSH_CatFSM.h" 
 
 // Sets default values
 AJSH_Random::AJSH_Random()

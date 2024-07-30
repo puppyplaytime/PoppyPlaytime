@@ -28,8 +28,6 @@ void UJSH_CatFSM::BeginPlay()
     {
         me->GetCharacterMovement()->MaxWalkSpeed = 250.0f; // Set the desired max speed
     }
-
-  
 }
 
 void UJSH_CatFSM::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -48,6 +46,10 @@ void UJSH_CatFSM::TickComponent(float DeltaTime, ELevelTick TickType, FActorComp
         
     case ECatState::TrueMove:
         TrueMoveState();
+        break;
+                
+    case ECatState::FalseMoveWait:
+        FalseMoveWaitState();
         break;
 
     case ECatState::FalseMove:
@@ -75,10 +77,22 @@ void UJSH_CatFSM::TickComponent(float DeltaTime, ELevelTick TickType, FActorComp
         break;
     }
 
-    FString logMsg = UEnum::GetValueAsString(cState);
-    GEngine->AddOnScreenDebugMessage(0, 1, FColor::Cyan, logMsg);
+    //FString logMsg = UEnum::GetValueAsString(cState);
+    //GEngine->AddOnScreenDebugMessage(0, 1, FColor::Cyan, logMsg);
 
-    //UpdateState();
+    /*FString logMsg = UEnum::GetValueAsString(cState);
+    logMsg += TEXT(" - SelectedTag: ") + SelectedTag.ToString();
+    GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Cyan, logMsg);*/
+
+
+    /*FString logMsg2 = UEnum::GetValueAsString(cState);
+    logMsg += TEXT(" - SelectedTag: ") + SelectedTag.ToString();
+    GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Cyan, logMsg2);*/
+    
+    FString myState = UEnum::GetValueAsString(cState);
+    DrawDebugString(GetWorld() , GetOwner()->GetActorLocation(), myState , nullptr , FColor::Yellow , 0, true, 1);
+
+    UpdateState();
     UpdateStateFalse();
 }
 
@@ -125,7 +139,7 @@ void UJSH_CatFSM::UpdateStateFalse()
     {
         if (me && me->Tags.Contains("FCat1"))
         {
-            cState = ECatState::MoveWait;
+            cState = ECatState::FalseMoveWait;
             me->Tags.Remove("FCat1");
         }
     }
@@ -133,7 +147,7 @@ void UJSH_CatFSM::UpdateStateFalse()
     {
         if (me && me->Tags.Contains("FCat2"))
         {
-            cState = ECatState::MoveWait;
+            cState = ECatState::FalseMoveWait;
             me->Tags.Remove("FCat2");
         }
     }
@@ -141,7 +155,7 @@ void UJSH_CatFSM::UpdateStateFalse()
     {
         if (me && me->Tags.Contains("FCat3"))
         {
-            cState = ECatState::MoveWait;
+            cState = ECatState::FalseMoveWait;
             me->Tags.Remove("FCat3");
         }
     }
@@ -149,7 +163,7 @@ void UJSH_CatFSM::UpdateStateFalse()
     {
         if (me && me->Tags.Contains("FCat4"))
         {
-            cState = ECatState::MoveWait;
+            cState = ECatState::FalseMoveWait;
             me->Tags.Remove("FCat4");
         }
     }
@@ -281,6 +295,7 @@ void UJSH_CatFSM::RoundMoveState()
 
 void UJSH_CatFSM::MoveWaitState()
 {
+    // 위치 가운데 정렬 
     FVector destinationM = targetMiddle->GetActorLocation();
     FVector dirM = destinationM - me->GetActorLocation();
     me->AddMovementInput(dirM.GetSafeNormal());
@@ -304,8 +319,30 @@ void UJSH_CatFSM::TrueMoveState()
     }
 }
 
+void UJSH_CatFSM::FalseMoveWaitState()
+{
+    // 위치 가운데 정렬 
+    FVector destinationM = targetMiddle->GetActorLocation();
+    FVector dirM = destinationM - me->GetActorLocation();
+    me->AddMovementInput(dirM.GetSafeNormal());
+
+    if (dirM.Size() < ReachDistance)
+    {
+        cState = ECatState::FalseMove;
+    }
+}
+
 void UJSH_CatFSM::FalseMoveState()
 {
+    FVector destination = targetPlayer->GetActorLocation();
+    FVector dir = destination - me->GetActorLocation();
+    me->AddMovementInput(dir.GetSafeNormal());
+
+    if (dir.Size() < ReachDistance)
+    {
+        bHasAttacked = true;
+        cState = ECatState::Attack;
+    }
 }
 
 void UJSH_CatFSM::CeilingState()

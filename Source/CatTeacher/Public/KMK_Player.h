@@ -37,6 +37,11 @@ public:
 	TArray<class UCableComponent*> CableComp;
 	UPROPERTY(EditAnywhere, Category = "Hand")
 	TArray<class USceneComponent*> SceneComp;
+
+	// Player에게 pawn sensor 만들기
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UPawnSensingComponent* sensor;
+
 #pragma endregion
 
 protected:

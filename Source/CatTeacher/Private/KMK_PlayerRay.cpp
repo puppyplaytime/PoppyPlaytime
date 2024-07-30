@@ -38,92 +38,93 @@ void UKMK_PlayerRay::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 	params.AddIgnoredActor(GetOwner());
 	params.AddIgnoredActor(playerComp->RHand);
 	params.AddIgnoredActor(playerComp->LHand);
+	// 레이 쏘는 마지막 부분
 	endPos = playerComp->endPos;
 
 	// hit된 물체 정보 들고오기
 	FHitResult hitInfo;
-	// 클릭이 된다면
-	// 레이를 쏘고
-	//DrawDebugLine(GetWorld(), playerComp->startPos, playerComp->endPos1, FColor::Red, false, 1.f);
-	bool bhit = GetWorld()->LineTraceSingleByChannel(hitInfo, playerComp->startPos, playerComp->endPos1, ECC_Visibility, params);
-	if (bhit)
-	{
-		// 선생님이 가지고 있는 fsm state를 movestop으로 변경할거예요
-		if (hitInfo.GetActor()->GetActorLabel().Contains("Enemy"))
-		{
-			auto* a = hitInfo.GetActor();
-			teacher = a->FindComponentByClass<UKHH_EnemyFSM>();
-			teacher->mState = EEnemyState::Stop;
-		}
-	}
-	else
-	{
-		if(teacher != nullptr) teacher->mState = EEnemyState::Move;
-	}
-	//DrawDebugLine(GetWorld(), playerComp->startPos, endPos, FColor::Red, false, 1.f);
-	bool bhit1 = GetWorld()->LineTraceSingleByChannel(hitInfo, startPos, endPos, ECC_Visibility, params);
 
+	// 레이를 쏘고
+	bool bhit = GetWorld()->LineTraceSingleByChannel(hitInfo, startPos, endPos, ECC_Visibility, params);
+	//DrawDebugLine(GetWorld(), playerComp->startPos, endPos, FColor::Red, false, 1.f);
+	// 클릭정보가 들어온다면,
 	if (isRay)
 	{
-		// 물체가 있다면
+		// 레이를 그리고
 		DrawDebugLine(GetWorld(), startPos, endPos, FColor::Blue, false, 1.f);
-		
+		//  오른손 이라면
 		if(playerComp->isRight)
 		{
+			// 1. 물체가 손에 있는 경우
 			if (playerComp->RHand->isGrab)
 			{
 				playerComp->RHand->isGrab = false;
 				playerComp->RHand->endPos = playerComp->endPos;
 			}
-			if(bhit1)
+			// 레이에 물체가 맞은 경우
+			if(bhit)
 			{
-				// jump패드를 감지했을때
+				// 총을 들고 잇따면
 				if (playerComp->RMeshComp->GetStaticMesh() == playerComp->RHand->HandMesh[1])
 				{
-					// FSM->bulletTrans = hitInfo.ImpactPoint;
+					// 총을 쏜다
 					FSM->isFire	= true;
+					// FSM을 gunpack으로 변경하고
 					FSM->PState = PlayerHandFSM::GunPack;
 				}
+				// 총을 들고있지 않다면
 				else
 				{
+					// 오른손에 물체의 component를 넘겨주고
 					playerComp->RHand->hitinfo = hitInfo.GetComponent();
-					// 레이가 맞은곳으로 손뻗기
+					// 손을 뻗게 만든다
+					// 손 초기값
 					playerComp->RHand->handPos = 27;
+					// 손의 도착지점
 					playerComp->RHand->endPos = hitInfo.ImpactPoint;
+					// 손을 뻗게 만듦
 					playerComp->RHand->isGo = true;
 				}
 			}
+			// 물체가 맞지 않은 경우
 			else
 			{
+				// 1. 총을 들고 있지 않다면
 				if (playerComp->RMeshComp->GetStaticMesh() != playerComp->RHand->HandMesh[1])
 				{
+					// 손을 뻗는다
 					playerComp->RHand->handPos = 27;
 					playerComp->RHand->endPos = playerComp->endPos;
 					playerComp->RHand->isGo = true;
 				}
+				// 아니라면
 				else
 				{
 					// 총쏘기
 					FSM->isFire = true;
-					FSM->bulletTrans = playerComp->RHand->arrow->GetComponentTransform();
 				}
 			}
 		}
+		// 왼손이라면
 		if (playerComp->isLeft)
 		{
+			// 집고 있을때
 			if (playerComp->LHand->isGrab)
 			{
 				playerComp->LHand->isGrab = false;
 				playerComp->LHand->endPos = playerComp->endPos;
 			}
+			// 아닐때
 			else
 			{
-				if (bhit1)
+				// 물체가 있다면
+				if (bhit)
 				{
 					playerComp->LHand->endPos = hitInfo.ImpactPoint;
 					playerComp->LHand->hitinfo = hitInfo.GetComponent();
 				}
 				else playerComp->LHand->endPos = playerComp->endPos;
+				// 공통적으로 수행
 				playerComp->LHand->handPos = -27;
 				playerComp->LHand->isGo = true;
 				playerComp->LHand->isRay = true;

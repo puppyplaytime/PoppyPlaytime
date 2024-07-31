@@ -144,7 +144,7 @@ public:
 	
 	bool bHasAttacked = false;
 
-	
+	//bool FalseDie = false;
 };
 
 

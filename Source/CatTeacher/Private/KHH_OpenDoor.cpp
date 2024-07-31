@@ -24,7 +24,7 @@ void UKHH_OpenDoor::BeginPlay()
 {
 	Super::BeginPlay();
 	OriginalLocation = GetOwner()->GetActorLocation();
-	
+
 }
 
 

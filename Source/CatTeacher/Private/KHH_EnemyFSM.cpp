@@ -37,7 +37,7 @@ void UKHH_EnemyFSM::BeginPlay()
 void UKHH_EnemyFSM::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
+	
 	// ...
 
 	FString logMsg = UEnum::GetValueAsString(mState);

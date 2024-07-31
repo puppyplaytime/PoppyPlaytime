@@ -51,6 +51,7 @@ public:
 	// 물건을 잡을 수 있게하는 컴포넌트 
 	class UPhysicsHandleComponent* handle = nullptr;
 	class UPrimitiveComponent* hitinfo;
+	UPROPERTY(EditAnywhere)
 	bool isGrab = false;
 
 	UFUNCTION()
@@ -68,4 +69,8 @@ public:
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<class AKMK_Battery> BatteryFact;
 	FTransform trans;
+
+	FVector pickTrans;
+	bool isPick = false;
+
 };

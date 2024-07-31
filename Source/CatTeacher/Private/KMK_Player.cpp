@@ -302,7 +302,7 @@ void AKMK_Player::InputNum3(const struct FInputActionValue& value)
 #pragma region MouseRight click
 // 오른쪽 클릭시
 void AKMK_Player::InputMR(const struct FInputActionValue& value)
-{
+{	
 	playerRay->SetRayPos(startPos, endPos);
 	isRight = true;
 }

@@ -11,7 +11,7 @@
 #include "GameFramework/MovementComponent.h"
 #include "KMK_Battery.h"
 #include "Engine/HitResult.h"
-
+#include "Components/PrimitiveComponent.h"
 // Sets default values
 AKMK_PlayerHand::AKMK_PlayerHand()
 {
@@ -46,6 +46,7 @@ void AKMK_PlayerHand::BeginPlay()
 	player = Cast<AKMK_Player>(GetWorld()->GetFirstPlayerController()->GetPawn());
 	hand->SetStaticMesh(HandMesh[0]);
 	box->OnComponentBeginOverlap.AddDynamic(this, &AKMK_PlayerHand::BeginOverlap);
+	box->BodyInstance.bUseCCD = true;
 	//box->OnComponentHit.AddDynamic(this, &AKMK_PlayerHand::OnHitEvent);
 	// FSM = player->FSM;
 }
@@ -54,27 +55,6 @@ void AKMK_PlayerHand::BeginPlay()
 void AKMK_PlayerHand::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	if (isGo)
-	{
-		if (t > ShootTime && !isRay && !isGrab)
-		{
-			isGo = false;
-			isReverse = true;
-		}
-		t += DeltaTime;
-		dir = endPos - GetActorLocation();
-		float distance = dir.Length();
-		dir.Normalize();
-		SetActorLocation(GetActorLocation() + dir * speed * DeltaTime);
-		GEngine->AddOnScreenDebugMessage(9, 1, FColor::White, FString::Printf(TEXT("%f"), distance));
-		if(distance > player->rayDis || distance < 5)
-		{
-			isGo = false;
-			isReverse = true;
-		}
-		
-	}
 	if (isReverse)
 	{
 		dir = startPos - GetActorLocation();
@@ -90,22 +70,50 @@ void AKMK_PlayerHand::Tick(float DeltaTime)
 			SetActorRelativeLocation(FVector(40, handPos, -16));
 		}
 	}
-
-	if (isGrab && (player->isRight || player->isLeft))
+	if (isGo)
 	{
+		if (t > ShootTime && !isRay && !isGrab)
+		{
+			isGo = false;
+			isReverse = true;
+		}
+		t += DeltaTime;
+		dir = endPos - GetActorLocation();
+		float distance = dir.Length();
+		dir.Normalize();
+		SetActorLocation(GetActorLocation() + dir * speed * DeltaTime);
+		if(distance > player->rayDis || distance < 5)
+		{
+			isGo = false;
+			isReverse = true;
+		}
+		
+	}
+
+	if (isGrab)
+	{
+		box->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		if (player->isRight) 
 		{
 			trans = player->RBat->GetTransform();
 			player->RBat->meshComp->SetVisibility(false);
+            GetWorld()->SpawnActor<AKMK_Battery>(BatteryFact, trans);
+			// isGrab = false;          
 		}
 		if (player->isLeft)
 		{
 			trans = player->LBat->GetTransform();
 			player->LBat->meshComp->SetVisibility(false);
+			GetWorld()->SpawnActor<AKMK_Battery>(BatteryFact, trans);
+			// isGrab = false;
 		}
-		isGrab = false;
-		GetWorld()->SpawnActor<AKMK_Battery>(BatteryFact, trans);
-	
+		
+		box->SetCollisionProfileName("Hand");
+	}
+
+	if (isPick)
+	{
+		hand->SetWorldLocation(pickTrans);
 	}
 
 }
@@ -115,32 +123,22 @@ void AKMK_PlayerHand::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 {
 	isGo = false;
 	isReverse = true;
-	if (player->RMeshComp->GetStaticMesh() == player->RHand->HandMesh[2] && OtherActor->GetActorLabel().Contains("jump"))
+
+	//GEngine->AddOnScreenDebugMessage(9, 1, FColor::White, FString::Printf(TEXT("%s"), *OtherActor->GetName()));
+	GEngine->AddOnScreenDebugMessage(9, 1, FColor::White, FString::Printf(TEXT("%s"), *OtherActor->GetName()));
+	if (OtherActor->ActorHasTag("Battery"))
 	{
-		FSM->isJump = true;
-		FSM->PState = PlayerHandFSM::JumpPack;
-	}
-	if (player->RMeshComp->GetStaticMesh() == player->RHand->HandMesh[0] && OtherActor->GetActorLabel().Contains("ElectricalPanel"))
-	{
-		FSM->PState = PlayerHandFSM::Energy;
-		FSM->t = 0;
-		FSM->isCharge = true;
-	}
-	
-	if (OtherActor->GetActorLabel().Contains("battery"))
-	{
+
 		grabActor = Cast<AKMK_Battery>(OtherActor);
-		if(grabActor->isThrow) return;
-		
-		if(GetName().Contains("R"))
+
+		if (GetName().Contains("R"))
 		{
-            if (player->RMeshComp->GetStaticMesh() != player->RHand->HandMesh[2])
-            {
-                isGrab = true;
-                grabActor->isThrow = false;
+			if (player->RMeshComp->GetStaticMesh() != player->RHand->HandMesh[2])
+			{
+				isGrab = true;
 				grabActor->Destroy();
 				player->RBat->meshComp->SetVisibility(true);
-            }
+			}
 		}
 		else
 		{
@@ -150,5 +148,23 @@ void AKMK_PlayerHand::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 		}
 
 	}
+	if (player->RMeshComp->GetStaticMesh() == player->RHand->HandMesh[2] && OtherActor->ActorHasTag("Jump"))
+	{
+		FSM->isJump = true;
+		FSM->PState = PlayerHandFSM::JumpPack;
+	}
+	if (player->RMeshComp->GetStaticMesh() == player->RHand->HandMesh[0] && OtherActor->ActorHasTag("ElectricalPanel"))
+	{
+		FSM->PState = PlayerHandFSM::Energy;
+		FSM->t = 0;
+		FSM->isCharge = true;
+	}
+	if (OtherComp->ComponentHasTag("Handle"))
+	{
+		
+		pickTrans = OtherComp->GetChildComponent(0)->GetComponentLocation();
+		isPick = true;
+	}
 }
+
 

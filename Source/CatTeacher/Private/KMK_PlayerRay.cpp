@@ -48,6 +48,7 @@ void UKMK_PlayerRay::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 	bool bhit = GetWorld()->LineTraceSingleByChannel(hitInfo, startPos, endPos, ECC_Visibility, params);
 	//DrawDebugLine(GetWorld(), playerComp->startPos, endPos, FColor::Red, false, 1.f);
 	// 클릭정보가 들어온다면,
+
 	if (isRay)
 	{
 		// 레이를 그리고
@@ -55,12 +56,6 @@ void UKMK_PlayerRay::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 		//  오른손 이라면
 		if(playerComp->isRight)
 		{
-			// 1. 물체가 손에 있는 경우
-			if (playerComp->RHand->isGrab)
-			{
-				playerComp->RHand->isGrab = false;
-				playerComp->RHand->endPos = playerComp->endPos;
-			}
 			// 레이에 물체가 맞은 경우
 			if(bhit)
 			{
@@ -83,7 +78,12 @@ void UKMK_PlayerRay::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 					// 손의 도착지점
 					playerComp->RHand->endPos = hitInfo.ImpactPoint;
 					// 손을 뻗게 만듦
-					playerComp->RHand->isGo = true;
+					if (playerComp->RHand->isGrab || playerComp->RHand->isPick)
+					{
+						playerComp->RHand->isGrab = false;
+						playerComp->RHand->isPick = false;
+					}
+					else playerComp->RHand->isGo = true;
 				}
 			}
 			// 물체가 맞지 않은 경우
@@ -108,27 +108,23 @@ void UKMK_PlayerRay::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 		// 왼손이라면
 		if (playerComp->isLeft)
 		{
-			// 집고 있을때
-			if (playerComp->LHand->isGrab)
+			
+			// 물체가 있다면
+			if (bhit)
+			{
+				playerComp->LHand->endPos = hitInfo.ImpactPoint;
+				playerComp->LHand->hitinfo = hitInfo.GetComponent();
+			}
+			else playerComp->LHand->endPos = playerComp->endPos;
+			// 공통적으로 수행
+			playerComp->LHand->handPos = -27;
+			playerComp->LHand->isRay = true;
+			if (playerComp->LHand->isGrab || playerComp->LHand->isPick)
 			{
 				playerComp->LHand->isGrab = false;
-				playerComp->LHand->endPos = playerComp->endPos;
+				playerComp->LHand->isPick = false;
 			}
-			// 아닐때
-			else
-			{
-				// 물체가 있다면
-				if (bhit)
-				{
-					playerComp->LHand->endPos = hitInfo.ImpactPoint;
-					playerComp->LHand->hitinfo = hitInfo.GetComponent();
-				}
-				else playerComp->LHand->endPos = playerComp->endPos;
-				// 공통적으로 수행
-				playerComp->LHand->handPos = -27;
-				playerComp->LHand->isGo = true;
-				playerComp->LHand->isRay = true;
-			}
+			else playerComp->LHand->isGo = true;
 		}
 	}
 }

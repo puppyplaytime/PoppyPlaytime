@@ -29,22 +29,35 @@ void AJSH_Random::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 }
-
 void AJSH_Random::FindAndSelectRandomTag()
 {
+	// 필터링할 태그들을 배열로 정의
+	TArray<FName> FilteredTags = { FName(TEXT("FCat1")), FName(TEXT("FCat2")), FName(TEXT("FCat3")), FName(TEXT("FCat4")) };
 	TArray<FName> TagsInLevel;
+
+	// 레벨에 있는 태그 중에서 필터링된 태그들만 찾기
 	for (TActorIterator<AJSH_Cat> ActorItr(GetWorld()); ActorItr; ++ActorItr)
 	{
 		AJSH_Cat* CatActor = *ActorItr;
-		TagsInLevel.Append(CatActor->Tags);
+
+		for (const FName& Tag : CatActor->Tags)
+		{
+			if (FilteredTags.Contains(Tag))
+			{
+				if (!TagsInLevel.Contains(Tag))
+				{
+					TagsInLevel.Add(Tag);
+				}
+			}
+		}
 	}
 
 	if (TagsInLevel.Num() > 0)
 	{
 		int32 RandomIndex = FMath::RandRange(0, TagsInLevel.Num() - 1);
 		FName RandomTag = TagsInLevel[RandomIndex];
-        
-		UE_LOG(LogTemp, Log, TEXT("Random Tag: %s"), *RandomTag.ToString());  // 랜덤으로 선택된 태그를 로그로 출력
+
+		UE_LOG(LogTemp, Log, TEXT("True Tag: %s"), *RandomTag.ToString());  // 랜덤으로 선택된 태그를 로그로 출력
 
 		// FSM 컴포넌트에 랜덤 태그 전달
 		for (TActorIterator<AJSH_Cat> ActorItr(GetWorld()); ActorItr; ++ActorItr)
@@ -59,6 +72,6 @@ void AJSH_Random::FindAndSelectRandomTag()
 	}
 	else
 	{
-		UE_LOG(LogTemp, Warning, TEXT("No Tags Found in Level"));
+		UE_LOG(LogTemp, Warning, TEXT("No True Tags Found in Level"));
 	}
 }

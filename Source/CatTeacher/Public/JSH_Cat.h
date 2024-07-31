@@ -30,4 +30,9 @@ public:
 	// 적 AI관리 컴포넌트 클래스
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=FSMcomponent)
 	class UJSH_CatFSM* fsm;
+
+	UPROPERTY(EditAnywhere)
+	class UBoxComponent* FalseBox;
+
+	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
 };

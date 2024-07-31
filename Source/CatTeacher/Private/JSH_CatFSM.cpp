@@ -5,6 +5,8 @@
 #include "KMK_Player.h"
 #include "Kismet/GameplayStatics.h"
 #include "JSH_Target.h"
+#include "MovieSceneSequenceID.h"
+#include "Components/BoxComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
 // Sets default values for this component's properties
@@ -21,6 +23,7 @@ void UJSH_CatFSM::BeginPlay()
     me = Cast<AJSH_Cat>(GetOwner());
 
     cState = ECatState::RoundMove;
+
 
     
     // CatNab 초기 이동 속도 조절
@@ -321,6 +324,9 @@ void UJSH_CatFSM::TrueMoveState()
 
 void UJSH_CatFSM::FalseMoveWaitState()
 {
+    // 가짜 고양이 총으로 삭제 위해서 Collision 변경
+    me->FalseBox->SetCollisionProfileName(TEXT("FalseCat"));
+    
     // 위치 가운데 정렬 
     FVector destinationM = targetMiddle->GetActorLocation();
     FVector dirM = destinationM - me->GetActorLocation();

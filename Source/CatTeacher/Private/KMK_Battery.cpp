@@ -6,6 +6,7 @@
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/BoxComponent.h"
+#include "UObject/UObjectBaseUtility.h"
 
 // Sets default values
 AKMK_Battery::AKMK_Battery()
@@ -36,7 +37,16 @@ void AKMK_Battery::NotifyHit(UPrimitiveComponent* MyComp, AActor* Other, UPrimit
 {
 	if (!Other->GetName().Contains("hand"))
 	{
-		isThrow = false;
+		meshComp->SetWorldScale3D(FVector(1));
 	}
 }
+
+void AKMK_Battery::NotifyActorBeginOverlap(AActor* OtherActor) //otheractor BatteryFrame
+{
+	if (OtherActor->GetActorLabel().Contains("BatteryFrame"))
+	{
+		this->Destroy();
+	} // 배터리 채워신 상태로 에셋 변경  // actor blueprint로 직접 수정 
+}
+
 

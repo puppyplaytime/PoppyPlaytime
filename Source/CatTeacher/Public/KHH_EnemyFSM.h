@@ -58,6 +58,5 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category=FSM)
 	float P_Speed;
 	float Speed;
-
-		
+	
 };

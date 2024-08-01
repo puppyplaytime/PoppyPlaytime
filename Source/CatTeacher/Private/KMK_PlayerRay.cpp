@@ -36,8 +36,8 @@ void UKMK_PlayerRay::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 	// 레이 셋팅
 	FCollisionQueryParams params;
 	params.AddIgnoredActor(GetOwner());
-	params.AddIgnoredActor(playerComp->RHand);
-	params.AddIgnoredActor(playerComp->LHand);
+	params.AddIgnoredActor(playerComp->Hands[0]);
+	params.AddIgnoredActor(playerComp->Hands[1]);
 	// 레이 쏘는 마지막 부분
 	endPos = playerComp->endPos;
 
@@ -60,7 +60,7 @@ void UKMK_PlayerRay::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 			if(bhit)
 			{
 				// 총을 들고 잇따면
-				if (playerComp->RMeshComp->GetStaticMesh() == playerComp->RHand->HandMesh[1])
+				if (playerComp->RMeshComp->GetStaticMesh() == playerComp->Hands[0]->HandMesh[1])
 				{
 					// 총을 쏜다
 					FSM->isFire	= true;
@@ -71,36 +71,36 @@ void UKMK_PlayerRay::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 				else
 				{
 					// 오른손에 물체의 component를 넘겨주고
-					playerComp->RHand->hitinfo = hitInfo.GetComponent();
+					playerComp->Hands[0]->hitinfo = hitInfo.GetComponent();
 					// 손을 뻗게 만든다
 					// 손 초기값
-					playerComp->RHand->handPos = 27;
+					playerComp->Hands[0]->handPos = 27;
 					// 손의 도착지점
-					playerComp->RHand->endPos = hitInfo.ImpactPoint;
+					playerComp->Hands[0]->endPos = hitInfo.ImpactPoint;
 					// 손을 뻗게 만듦
-					if (playerComp->RHand->isGrab || playerComp->RHand->isPick)
+					if (playerComp->Hands[0]->isGrab || playerComp->Hands[0]->isPick)
 					{
-						playerComp->RHand->isGrab = false;
-						playerComp->RHand->isPick = false;
+						playerComp->Hands[0]->isGrab = false;
+						playerComp->Hands[0]->isPick = false;
 					}
-					else playerComp->RHand->isGo = true;
+					else playerComp->Hands[0]->isGo = true;
 				}
 			}
 			// 물체가 맞지 않은 경우
 			else
 			{
-				if (playerComp->RHand->isGrab)
+				if (playerComp->Hands[0]->isGrab)
 				{
-					playerComp->RHand->isGrab = false;
+					playerComp->Hands[0]->isGrab = false;
 					return;
 				}
 				// 1. 총을 들고 있지 않다면
-				if (playerComp->RMeshComp->GetStaticMesh() != playerComp->RHand->HandMesh[1])
+				if (playerComp->RMeshComp->GetStaticMesh() != playerComp->Hands[0]->HandMesh[1])
 				{
 					// 손을 뻗는다
-					playerComp->RHand->handPos = 27;
-					playerComp->RHand->endPos = playerComp->endPos;
-					playerComp->RHand->isGo = true;
+					playerComp->Hands[0]->handPos = 27;
+					playerComp->Hands[0]->endPos = playerComp->endPos;
+					playerComp->Hands[0]->isGo = true;
 				}
 				// 아니라면
 				else
@@ -113,27 +113,27 @@ void UKMK_PlayerRay::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 		// 왼손이라면
 		if (playerComp->isLeft)
 		{
-			if (playerComp->LHand->isGrab)
+			if (playerComp->Hands[1]->isGrab)
 			{
-				playerComp->LHand->isGrab = false;
+				playerComp->Hands[1]->isGrab = false;
 				return;
 			}
 			// 물체가 있다면
 			if (bhit)
 			{
-				playerComp->LHand->endPos = hitInfo.ImpactPoint;
-				playerComp->LHand->hitinfo = hitInfo.GetComponent();
+				playerComp->Hands[1]->endPos = hitInfo.ImpactPoint;
+				playerComp->Hands[1]->hitinfo = hitInfo.GetComponent();
 			}
-			else playerComp->LHand->endPos = playerComp->endPos;
+			else playerComp->Hands[1]->endPos = playerComp->endPos;
 			// 공통적으로 수행
-			playerComp->LHand->handPos = -27;
-			playerComp->LHand->isRay = true;
-			if (playerComp->LHand->isGrab || playerComp->LHand->isPick)
+			playerComp->Hands[1]->handPos = -27;
+			playerComp->Hands[1]->isRay = true;
+			if (playerComp->Hands[1]->isGrab || playerComp->Hands[1]->isPick)
 			{
-				playerComp->LHand->isGrab = false;
-				playerComp->LHand->isPick = false;
+				playerComp->Hands[1]->isGrab = false;
+				playerComp->Hands[1]->isPick = false;
 			}
-			else playerComp->LHand->isGo = true;
+			else playerComp->Hands[1]->isGo = true;
 		}
 	}
 }

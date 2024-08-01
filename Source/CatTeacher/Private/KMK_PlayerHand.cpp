@@ -48,8 +48,6 @@ void AKMK_PlayerHand::BeginPlay()
 	box->OnComponentBeginOverlap.AddDynamic(this, &AKMK_PlayerHand::BeginOverlap);
 	box->BodyInstance.bUseCCD = true;
 	box->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	//box->OnComponentHit.AddDynamic(this, &AKMK_PlayerHand::OnHitEvent);
-	// FSM = player->FSM;
 }
 
 // Called every frame
@@ -99,9 +97,9 @@ void AKMK_PlayerHand::Tick(float DeltaTime)
 		if (player->isRight)
 		{
 			if (isLeft) return;
-			trans = player->RBat->GetTransform();
-			player->RBat->meshComp->SetVisibility(false);
-			if(!player->RBat->isPut)GetWorld()->SpawnActor<AKMK_Battery>(BatteryFact, trans);
+			trans = player->Bats[0]->GetTransform();
+			player->Bats[0]->meshComp->SetVisibility(false);
+			if(!player->Bats[0]->isPut)GetWorld()->SpawnActor<AKMK_Battery>(BatteryFact, trans);
 			else 
 			{
 				isGrab = false; 
@@ -111,9 +109,9 @@ void AKMK_PlayerHand::Tick(float DeltaTime)
 		if (player->isLeft)
 		{
 			if(isRight) return;
-			trans = player->LBat->GetTransform();
-			player->LBat->meshComp->SetVisibility(false);
-			if (!player->LBat->isPut)GetWorld()->SpawnActor<AKMK_Battery>(BatteryFact, trans);
+			trans = player->Bats[1]->GetTransform();
+			player->Bats[1]->meshComp->SetVisibility(false);
+			if (!player->Bats[1]->isPut)GetWorld()->SpawnActor<AKMK_Battery>(BatteryFact, trans);
 			else
 			{
 				isGrab = false;
@@ -144,12 +142,12 @@ void AKMK_PlayerHand::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 		if(isGrab) return;
 		if (GetName().Contains("R"))
 		{
-			if (player->RMeshComp->GetStaticMesh() != player->RHand->HandMesh[2])
+			if (player->RMeshComp->GetStaticMesh() != player->Hands[0]->HandMesh[2])
 			{
 				isGrab = true;
 				grabActor->Destroy();
-				player->RBat->meshComp->SetVisibility(true);
-				player->RBat->meshComp->SetCollisionProfileName("Item");
+				player->Bats[0]->meshComp->SetVisibility(true);
+				player->Bats[0]->meshComp->SetCollisionProfileName("Item");
 				isRight = true;
 			}
 		}
@@ -158,18 +156,18 @@ void AKMK_PlayerHand::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 			isGrab = true;
 			isLeft = true;
 			grabActor->Destroy();
-			player->LBat->meshComp->SetVisibility(true);
-			player->LBat->meshComp->SetCollisionProfileName("Item");
+			player->Bats[1]->meshComp->SetVisibility(true);
+			player->Bats[1]->meshComp->SetCollisionProfileName("Item");
 
 		}
 
 	}
-	if (player->RMeshComp->GetStaticMesh() == player->RHand->HandMesh[2] && OtherActor->ActorHasTag("Jump"))
+	if (player->RMeshComp->GetStaticMesh() == player->Hands[0]->HandMesh[2] && OtherActor->ActorHasTag("Jump"))
 	{
 		FSM->isJump = true;
 		FSM->PState = PlayerHandFSM::JumpPack;
 	}
-	if (player->RMeshComp->GetStaticMesh() == player->RHand->HandMesh[0] && OtherActor->ActorHasTag("ElectricalPanel"))
+	if (player->RMeshComp->GetStaticMesh() == player->Hands[0]->HandMesh[0] && OtherActor->ActorHasTag("ElectricalPanel"))
 	{
 		FSM->PState = PlayerHandFSM::Energy;
 		FSM->t = 0;
@@ -177,7 +175,7 @@ void AKMK_PlayerHand::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 	}
 	if (OtherComp->ComponentHasTag("Handle"))
 	{
-		if(player->RMeshComp->GetStaticMesh() == player->RHand->HandMesh[2]) return;	
+		if(player->RMeshComp->GetStaticMesh() == player->Hands[0]->HandMesh[2]) return;
 		pickTrans = OtherComp->GetChildComponent(0)->GetComponentLocation();
 		isPick = true;
 	}

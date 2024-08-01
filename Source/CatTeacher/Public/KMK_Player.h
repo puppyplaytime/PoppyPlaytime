@@ -19,14 +19,14 @@ public:
 	UPROPERTY(VisibleAnywhere, Category = "Camera")
 	class USpringArmComponent* springArm = nullptr;
 
+	TArray<class USpringArmComponent*> springArms;
+
 	UPROPERTY(EditDefaultsOnly, Category = "Camera")
 	class UCameraComponent* camera = nullptr;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Component")
 	class UKMK_PlayerHandFSM* FSM = nullptr;
 
-	UPROPERTY(VisibleAnywhere, Category = "Modeling")
-	class USpringArmComponent* GrabSpringArm = nullptr;
 	UPROPERTY(VisibleAnywhere, Category = "Modeling")
 	class UStaticMeshComponent* armMesh = nullptr;
 
@@ -64,13 +64,10 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Hand")
 	TSubclassOf<class AKMK_Battery> batteryFact;
 
-	class AKMK_PlayerHand* LHand;
-	class AKMK_PlayerHand* RHand;
+	TArray<class AKMK_PlayerHand*> Hands;
 
-	class AKMK_Battery* LBat;
-	class AKMK_Battery* RBat;
+	TArray<class AKMK_Battery*> Bats;
 
-	class UStaticMeshComponent* LMeshComp;
 	class UStaticMeshComponent* RMeshComp;
 #pragma endregion
 

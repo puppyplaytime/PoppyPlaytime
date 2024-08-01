@@ -51,7 +51,7 @@ public:
 	UPROPERTY(EditAnywhere)
 	class AKHH_Enemy* me;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class AAIController* ai;
 
 	void MoveStop();

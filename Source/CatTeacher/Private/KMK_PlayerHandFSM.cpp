@@ -7,6 +7,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Particles/ParticleSystem.h"
 #include "KMK_Bullet.h"
+#include "KMK_PlayerHand.h"
 
 // Sets default values for this component's properties
 UKMK_PlayerHandFSM::UKMK_PlayerHandFSM()

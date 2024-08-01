@@ -20,6 +20,7 @@
 #include "Perception/PawnSensingComponent.h"
 #include "KMK_Battery.h"
 #include "Components/BoxComponent.h"
+#include "KHH_Enemy.h"
 
 // Sets default values
 AKMK_Player::AKMK_Player()
@@ -29,8 +30,8 @@ AKMK_Player::AKMK_Player()
 	// 1. 1인칭 카메라 만들기
 	// 1-1 spring arm 붙이기
 	springArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArmComp"));
-	springArm->SetupAttachment(GetMesh());
-	springArm->SetRelativeLocation(FVector(0, 0, 50));
+	springArm->SetupAttachment(GetMesh(), "head");
+	springArm->SetRelativeLocation(FVector(-20, 0, 0));
 	springArm->TargetArmLength = -50.f;
 	springArm->bUsePawnControlRotation = true;
 	// 1-2 camera 붙이기
@@ -43,9 +44,16 @@ AKMK_Player::AKMK_Player()
 	// 팔
 	GrabSpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("GrabSpringArm"));
 	GrabSpringArm->SetupAttachment(GetMesh());
-	GrabSpringArm->SetRelativeLocation(FVector(0, 0, 50));
+	GrabSpringArm->SetRelativeLocation(FVector(0, 0, 140));
 	GrabSpringArm->TargetArmLength = -50.f;
 	GrabSpringArm->bUsePawnControlRotation = true;
+	// 팔이 카메라보다 늦게 쫓아오게 만들기 위함
+	GrabSpringArm->bEnableCameraLag = true;
+	GrabSpringArm->bEnableCameraRotationLag = true;
+	GrabSpringArm->CameraLagSpeed = 15.f;
+	GrabSpringArm->CameraRotationLagSpeed = 15.f;
+	GrabSpringArm->CameraLagMaxDistance = 3;
+
 	// 팔 매쉬 붙이기
 	armMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("GrabpackMesh"));
 	ConstructorHelpers::FObjectFinder<UStaticMesh> tempMesh(TEXT("/Script/Engine.StaticMesh'/Game/Project/Modeling/Player/source/pibot_MainMesh.pibot_MainMesh'"));
@@ -89,6 +97,7 @@ AKMK_Player::AKMK_Player()
 	// 센서 만들기
 	sensor = CreateDefaultSubobject<UPawnSensingComponent>(TEXT("Sensor"));
 	sensor->bOnlySensePlayers = false;
+
 }
 
 // Called when the game starts or when spawned
@@ -109,6 +118,7 @@ void AKMK_Player::BeginPlay()
 	RHand->SetActorRotation(FRotator(0, -90, 0));
 	RBat->meshComp->SetVisibility(false);
 	RBat->meshComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	
 
 	FTransform t1 = SceneComp[1]->GetRelativeTransform();
 	LHand = GetWorld()->SpawnActor<AKMK_PlayerHand>(LHandFact, t1);
@@ -124,7 +134,7 @@ void AKMK_Player::BeginPlay()
 	LHand->SetActorRelativeScale3D(FVector(2.f));
 	LBat->meshComp->SetVisibility(false);
 	LBat->meshComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-
+	
 	RMeshComp = RHand->hand;
 #pragma endregion
 
@@ -139,7 +149,7 @@ void AKMK_Player::BeginPlay()
 			subSys->AddMappingContext(IMC_Mapping, 0);
 		}
 	}
-
+	movementComp->GetNavAgentPropertiesRef().bCanCrouch = true;
 	LHand->FSM = FSM;
 	RHand->FSM = FSM;
 
@@ -150,6 +160,8 @@ void AKMK_Player::BeginPlay()
 void AKMK_Player::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	RBat->hand = RHand;
+	LBat->hand = LHand;
 	// 이동하기
 	// 회전방향으로 이동
 	// 1. controller rotation을 통해 transform 생성
@@ -168,8 +180,6 @@ void AKMK_Player::Tick(float DeltaTime)
 	endPos1 = startPos + camera->GetForwardVector() * rayDis1;
 	CableComp[0]->SetAttachEndTo(RHand, NAME_None);
 	CableComp[1]->SetAttachEndTo(LHand, NAME_None);
-
-	// 센서 내부의 on see pawn 사용하기
 }
 
 // Called to bind functionality to input
@@ -245,14 +255,16 @@ void AKMK_Player::InputJump(const struct FInputActionValue& value)
 // 앉기
 void AKMK_Player::InputSit(const struct FInputActionValue& value)
 {
-	springArm->SetRelativeLocation(FVector(0, 0, 0));
-	GrabSpringArm->SetRelativeLocation(FVector(0, 0, 0));
+	Crouch();
+	springArm->SetRelativeLocation(FVector(-70, 10, 0));
+	GrabSpringArm->SetRelativeLocation(FVector(0, 0, 90));
 }
 // 일어나기
 void AKMK_Player::InputStand(const struct FInputActionValue& value)
 {
-	springArm->SetRelativeLocation(FVector(0, 0, 50));
-	GrabSpringArm->SetRelativeLocation(FVector(0, 0, 50));
+	UnCrouch();
+	springArm->SetRelativeLocation(FVector(-20, 0, 0));
+	GrabSpringArm->SetRelativeLocation(FVector(0, 0, 140));
 }
 
 #pragma endregion
@@ -304,6 +316,7 @@ void AKMK_Player::InputNum3(const struct FInputActionValue& value)
 void AKMK_Player::InputMR(const struct FInputActionValue& value)
 {	
 	playerRay->SetRayPos(startPos, endPos);
+	RHand->box->SetCollisionProfileName("Hand");
 	isRight = true;
 }
 void AKMK_Player::InputMRComp(const struct FInputActionValue& value)
@@ -318,6 +331,7 @@ void AKMK_Player::InputMRComp(const struct FInputActionValue& value)
 void AKMK_Player::InputML(const struct FInputActionValue& value)
 {
 	playerRay->SetRayPos(startPos, endPos);
+	LHand->box->SetCollisionProfileName("Hand");
 	isLeft = true;
 }
 void AKMK_Player::InputMLComp(const struct FInputActionValue& value)
@@ -336,5 +350,3 @@ void AKMK_Player::NotifyHit(UPrimitiveComponent* MyComp, AActor* Other, UPrimiti
 	}
 }
 #pragma endregion
-
-

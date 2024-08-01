@@ -53,6 +53,9 @@ public:
 	class UPrimitiveComponent* hitinfo;
 	UPROPERTY(EditAnywhere)
 	bool isGrab = false;
+	
+	bool isRight = false;
+	bool isLeft = false;
 
 	UFUNCTION()
 	// 오버랩 감지를 위한 함수 선언

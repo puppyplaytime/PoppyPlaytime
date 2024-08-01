@@ -89,6 +89,11 @@ void UKMK_PlayerRay::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 			// 물체가 맞지 않은 경우
 			else
 			{
+				if (playerComp->RHand->isGrab)
+				{
+					playerComp->RHand->isGrab = false;
+					return;
+				}
 				// 1. 총을 들고 있지 않다면
 				if (playerComp->RMeshComp->GetStaticMesh() != playerComp->RHand->HandMesh[1])
 				{
@@ -108,7 +113,11 @@ void UKMK_PlayerRay::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 		// 왼손이라면
 		if (playerComp->isLeft)
 		{
-			
+			if (playerComp->LHand->isGrab)
+			{
+				playerComp->LHand->isGrab = false;
+				return;
+			}
 			// 물체가 있다면
 			if (bhit)
 			{
@@ -136,5 +145,4 @@ void UKMK_PlayerRay::SetRayPos(FVector start, FVector end)
 
 	isRay = true;
 }
-
 

@@ -47,6 +47,7 @@ void AKMK_PlayerHand::BeginPlay()
 	hand->SetStaticMesh(HandMesh[0]);
 	box->OnComponentBeginOverlap.AddDynamic(this, &AKMK_PlayerHand::BeginOverlap);
 	box->BodyInstance.bUseCCD = true;
+	box->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	//box->OnComponentHit.AddDynamic(this, &AKMK_PlayerHand::OnHitEvent);
 	// FSM = player->FSM;
 }
@@ -68,10 +69,12 @@ void AKMK_PlayerHand::Tick(float DeltaTime)
 			isReverse = false;
 			isRay = false;
 			SetActorRelativeLocation(FVector(40, handPos, -16));
+			box->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		}
 	}
 	if (isGo)
 	{
+		if(!isGrab)box->SetCollisionProfileName("Hand");
 		if (t > ShootTime && !isRay && !isGrab)
 		{
 			isGo = false;
@@ -93,22 +96,30 @@ void AKMK_PlayerHand::Tick(float DeltaTime)
 	if (isGrab)
 	{
 		box->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-		if (player->isRight) 
+		if (player->isRight)
 		{
+			if (isLeft) return;
 			trans = player->RBat->GetTransform();
 			player->RBat->meshComp->SetVisibility(false);
-            GetWorld()->SpawnActor<AKMK_Battery>(BatteryFact, trans);
-			// isGrab = false;          
+			if(!player->RBat->isPut)GetWorld()->SpawnActor<AKMK_Battery>(BatteryFact, trans);
+			else 
+			{
+				isGrab = false; 
+				isRight = false;
+			}
 		}
 		if (player->isLeft)
 		{
+			if(isRight) return;
 			trans = player->LBat->GetTransform();
 			player->LBat->meshComp->SetVisibility(false);
-			GetWorld()->SpawnActor<AKMK_Battery>(BatteryFact, trans);
-			// isGrab = false;
+			if (!player->LBat->isPut)GetWorld()->SpawnActor<AKMK_Battery>(BatteryFact, trans);
+			else
+			{
+				isGrab = false;
+				isLeft = false;
+			}
 		}
-		
-		box->SetCollisionProfileName("Hand");
 	}
 
 	if (isPick)
@@ -130,7 +141,7 @@ void AKMK_PlayerHand::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 	{
 
 		grabActor = Cast<AKMK_Battery>(OtherActor);
-
+		if(isGrab) return;
 		if (GetName().Contains("R"))
 		{
 			if (player->RMeshComp->GetStaticMesh() != player->RHand->HandMesh[2])
@@ -138,13 +149,18 @@ void AKMK_PlayerHand::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 				isGrab = true;
 				grabActor->Destroy();
 				player->RBat->meshComp->SetVisibility(true);
+				player->RBat->meshComp->SetCollisionProfileName("Item");
+				isRight = true;
 			}
 		}
 		else
 		{
 			isGrab = true;
+			isLeft = true;
 			grabActor->Destroy();
 			player->LBat->meshComp->SetVisibility(true);
+			player->LBat->meshComp->SetCollisionProfileName("Item");
+
 		}
 
 	}
@@ -161,7 +177,7 @@ void AKMK_PlayerHand::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 	}
 	if (OtherComp->ComponentHasTag("Handle"))
 	{
-		
+		if(player->RMeshComp->GetStaticMesh() == player->RHand->HandMesh[2]) return;	
 		pickTrans = OtherComp->GetChildComponent(0)->GetComponentLocation();
 		isPick = true;
 	}

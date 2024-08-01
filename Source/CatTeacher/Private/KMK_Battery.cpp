@@ -7,6 +7,7 @@
 #include "Components/StaticMeshComponent.h"
 #include "Components/BoxComponent.h"
 #include "UObject/UObjectBaseUtility.h"
+#include "KMK_PlayerHand.h"
 
 // Sets default values
 AKMK_Battery::AKMK_Battery()
@@ -23,29 +24,28 @@ AKMK_Battery::AKMK_Battery()
 void AKMK_Battery::BeginPlay()
 {
 	Super::BeginPlay();
-
 }
 
 // Called every frame
 void AKMK_Battery::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 void AKMK_Battery::NotifyHit(UPrimitiveComponent* MyComp, AActor* Other, UPrimitiveComponent* OtherComp, bool bSelfMoved, FVector HitLocation, FVector HitNormal, FVector NormalImpulse, const FHitResult& Hit)
 {
-	if (!Other->GetName().Contains("hand"))
+	if (Other->GetActorLabel().Contains("Cube"))
 	{
 		meshComp->SetWorldScale3D(FVector(1));
 	}
 }
 
+// 수정사항 => collision이 꺼져있는 상태
 void AKMK_Battery::NotifyActorBeginOverlap(AActor* OtherActor) //otheractor BatteryFrame
 {
-	if (OtherActor->GetActorLabel().Contains("BatteryFrame"))
+	if (OtherActor->GetActorLabel().Contains("MK"))
 	{
-		this->Destroy();
+		isPut = true;
 	} // 배터리 채워신 상태로 에셋 변경  // actor blueprint로 직접 수정 
 }
 

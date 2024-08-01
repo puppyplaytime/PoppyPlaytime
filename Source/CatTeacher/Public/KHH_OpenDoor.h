@@ -26,7 +26,8 @@ public:
 
 private:
 	UPROPERTY(EditAnywhere)
-	FVector MoveOffset;
+	FVector MoveOffset = FVector(0, 0, -300);
+
 	FVector OriginalLocation;
 
 	UPROPERTY(EditAnywhere)

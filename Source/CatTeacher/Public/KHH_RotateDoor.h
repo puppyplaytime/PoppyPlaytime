@@ -25,20 +25,23 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	UPROPERTY(EditAnywhere)
-	FRotator OpenAngle;
+	FRotator OpenAngle = FRotator(0, -110, 0);
 	FRotator InitialRotation;
 
 	UPROPERTY(EditAnywhere)
-	float MoveTime = 0.35f;
+	float MoveTime = 1;
 
 	UPROPERTY(EditAnywhere)
-	float DistanceThreshold = 300.0f;
+	float DistanceThreshold = 150.0f;
 
 	UPROPERTY(EditAnywhere)
 	bool ShouldMove = false;
 
 	UPROPERTY(EditAnywhere)
 	class APawn* Player;
+	//class APawn* Enemy;
+
+
 	FRotator CurrentRotation;
 	FRotator TargetRotation;
 	float Speed;

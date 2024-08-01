@@ -24,7 +24,7 @@ void UKHH_RotateDoor::BeginPlay()
 {
 	Super::BeginPlay();
 	InitialRotation = GetOwner()->GetActorRotation();
-	
+	//Enemy = (GetWorld()->GetFirstPlayerController()->GetPawn());
 }
 
 
@@ -34,16 +34,27 @@ void UKHH_RotateDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	if (!Player) return;
+	//if (!Player || !Enemy) return;
 
 	// 플레이어와 문의 거리 계산
-	FVector DistanceVector = Player->GetActorLocation() - GetOwner()->GetActorLocation();
-	float Distance = DistanceVector.Length();
+	FVector P_DistanceVector = Player->GetActorLocation() - GetOwner()->GetActorLocation();
+	//FVector E_DistanceVector = Enemy->GetActorLocation() - GetOwner()->GetActorLocation();
+
+	float Distance = P_DistanceVector.Length();
 
 	// 문을 열어야 할 때
 	if (Distance <= DistanceThreshold && !ShouldMove)
 	{
 		RotateDoor(DeltaTime);
 	}
+
+	//float Dis = E_DistanceVector.Length();
+
+	//// 문을 열어야 할 때
+	//if (Dis <= DistanceThreshold && !ShouldMove)
+	//{
+	//	RotateDoor(DeltaTime);
+	//}
 }
 
 void UKHH_RotateDoor::RotateDoor(float DeltaTime)

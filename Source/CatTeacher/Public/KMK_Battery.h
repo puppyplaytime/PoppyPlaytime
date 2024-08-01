@@ -28,9 +28,10 @@ public:
 
 	bool isThrow = false;
 	UPROPERTY(EditAnywhere)
-	bool isGrab = false;
+	bool isPut = false;
 	FVector throwPos;
-
+	class AKMK_PlayerHand* hand;
+	TArray<AActor*>actors;
 	UFUNCTION()
 	void NotifyHit(UPrimitiveComponent* MyComp, AActor* Other, UPrimitiveComponent* OtherComp, bool bSelfMoved, FVector HitLocation, FVector HitNormal, FVector NormalImpulse, const FHitResult& Hit);
 

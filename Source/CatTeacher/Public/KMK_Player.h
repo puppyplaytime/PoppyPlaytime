@@ -55,6 +55,7 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
 #pragma region HandActorFact
 	UPROPERTY(EditAnywhere, Category = "Hand")
 	TSubclassOf<class AKMK_PlayerHand> LHandFact;
@@ -177,4 +178,6 @@ public:
 		bool bFromSweep,
 		const FHitResult& SweepResult);*/
 #pragma endregion
+	UPROPERTY()
+	class UAnimInstance* anim;
 };

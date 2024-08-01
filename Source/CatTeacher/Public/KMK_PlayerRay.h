@@ -43,6 +43,5 @@ public:
 	class UKHH_EnemyFSM* teacher;
 #pragma endregion
 
-
 		
 };

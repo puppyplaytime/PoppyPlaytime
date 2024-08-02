@@ -76,4 +76,7 @@ public:
 	FVector pickTrans;
 	bool isPick = false;
 
+	bool isCome = false;
+
+	class UKMK_Bat* b;
 };

@@ -4,17 +4,17 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "KMK_ElectircPanel.generated.h"
+#include "KMK_Bat.generated.h"
 
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class CATTEACHER_API UKMK_ElectircPanel : public UActorComponent
+class CATTEACHER_API UKMK_Bat : public UActorComponent
 {
 	GENERATED_BODY()
 
 public:	
 	// Sets default values for this component's properties
-	UKMK_ElectircPanel();
+	UKMK_Bat();
 
 protected:
 	// Called when the game starts
@@ -24,5 +24,11 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
+	// 배터리가 들어왔는지 확인하기 위한 변수
+	UPROPERTY(VisibleAnywhere)
+	bool isCome = false;
+
+	UPROPERTY(EditAnywhere)
+	class UStaticMeshComponent* meshBat;
 		
 };

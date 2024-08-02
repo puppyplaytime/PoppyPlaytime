@@ -14,4 +14,5 @@ void UPlayerAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
     FVector v = player->GetVelocity();
     FVector forward = player->GetActorForwardVector();
     Speed = FVector::DotProduct(v, forward);
+    Spd = FVector::DotProduct(v, player->GetActorRightVector());
 }

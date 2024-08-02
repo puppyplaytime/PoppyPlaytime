@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "KMK_Battery.generated.h"
 
+// 손에 들고있는 배터리
 UCLASS()
 class CATTEACHER_API AKMK_Battery : public AActor
 {
@@ -32,6 +33,9 @@ public:
 	FVector throwPos;
 	class AKMK_PlayerHand* hand;
 	TArray<AActor*>actors;
+
+	class UKMK_Bat* bat;
+
 	UFUNCTION()
 	void NotifyHit(UPrimitiveComponent* MyComp, AActor* Other, UPrimitiveComponent* OtherComp, bool bSelfMoved, FVector HitLocation, FVector HitNormal, FVector NormalImpulse, const FHitResult& Hit);
 

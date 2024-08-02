@@ -8,6 +8,8 @@
 #include "../../../../Plugins/Runtime/CableComponent/Source/CableComponent/Classes/CableComponent.h"
 #include "KHH_EnemyFSM.h"
 #include "Components/ArrowComponent.h"
+#include "KMK_Bat.h"
+#include "KMK_Battery.h"
 
 // Sets default values for this component's properties
 UKMK_PlayerRay::UKMK_PlayerRay()
@@ -49,10 +51,23 @@ void UKMK_PlayerRay::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 	//DrawDebugLine(GetWorld(), playerComp->startPos, endPos, FColor::Red, false, 1.f);
 	// 클릭정보가 들어온다면,
 
+	if (bhit && hitInfo.GetActor()->ActorHasTag("E_Bat"))
+	{
+		playerComp->RBat->bat = hitInfo.GetActor()->FindComponentByClass<UKMK_Bat>();
+		playerComp->LBat->bat = hitInfo.GetActor()->FindComponentByClass<UKMK_Bat>();
+		b = hitInfo.GetActor()->FindComponentByClass<UKMK_Bat>();
+		if (!b->isCome && (!playerComp->RHand->isGrab && !playerComp->LHand->isGrab))
+		{
+			if(!playerComp->RBat->isPut)playerComp->RBat->isPut = true;
+			if(!playerComp->LBat->isPut)playerComp->LBat->isPut = true;
+		}
+
+	}
 	if (isRay)
 	{
 		// 레이를 그리고
 		DrawDebugLine(GetWorld(), startPos, endPos, FColor::Blue, false, 1.f);
+		cnt++;
 		//  오른손 이라면
 		if(playerComp->isRight)
 		{
@@ -78,7 +93,14 @@ void UKMK_PlayerRay::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 					// 손의 도착지점
 					playerComp->Hands[0]->endPos = hitInfo.ImpactPoint;
 					// 손을 뻗게 만듦
-					if (playerComp->Hands[0]->isGrab || playerComp->Hands[0]->isPick)
+					if (playerComp->RHand->isCome)
+					{
+						playerComp->RHand->isCome = false;
+						playerComp->RBat->isPut = false;
+						playerComp->RHand->isGrab = true;
+						return;
+					}
+					if (playerComp->RHand->isGrab || playerComp->RHand->isPick)
 					{
 						playerComp->Hands[0]->isGrab = false;
 						playerComp->Hands[0]->isPick = false;
@@ -109,6 +131,7 @@ void UKMK_PlayerRay::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 					FSM->isFire = true;
 				}
 			}
+
 		}
 		// 왼손이라면
 		if (playerComp->isLeft)
@@ -145,4 +168,3 @@ void UKMK_PlayerRay::SetRayPos(FVector start, FVector end)
 
 	isRay = true;
 }
-

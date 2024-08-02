@@ -16,5 +16,7 @@ class CATTEACHER_API UPlayerAnimInstance : public UAnimInstance
 public :
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	float Speed;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	float Spd;
 	virtual void NativeUpdateAnimation(float DeltaSeconds);
 };

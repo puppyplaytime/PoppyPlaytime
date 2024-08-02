@@ -181,6 +181,7 @@ void AKMK_PlayerHand::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 		pickTrans = OtherComp->GetChildComponent(0)->GetComponentLocation();
 		isPick = true;
 	}
+
 }
 
 

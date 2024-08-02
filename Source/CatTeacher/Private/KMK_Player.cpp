@@ -273,11 +273,13 @@ void AKMK_Player::InputStand(const struct FInputActionValue& value)
 void AKMK_Player::InputRun(const struct FInputActionValue& value)
 {
 	movementComp->MaxWalkSpeed = speed * 2;
+	springArm->SetRelativeLocation(FVector(-10, -5, 0));
 }
 // 걷기
 void AKMK_Player::InputWalk(const struct FInputActionValue& value)
 {
 	movementComp->MaxWalkSpeed = speed;
+	springArm->SetRelativeLocation(FVector(-20, 0, 0));
 }
 
 #pragma endregion

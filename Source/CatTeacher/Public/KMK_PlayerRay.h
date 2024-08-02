@@ -44,7 +44,7 @@ public:
 	class UKMK_Bat* b;
 	int cnt = 0;
 
-	TArray<class *UKMK_PlayerHand> Hands;
+	TArray<class AKMK_PlayerHand*> Hands;
 #pragma endregion
 		
 };

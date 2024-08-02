@@ -13,6 +13,7 @@
 #include "Engine/HitResult.h"
 #include "Components/PrimitiveComponent.h"
 #include "KMK_Bat.h"
+#include "KHH_BossOpendoor.h"
 // Sets default values
 AKMK_PlayerHand::AKMK_PlayerHand()
 {
@@ -57,6 +58,10 @@ void AKMK_PlayerHand::BeginPlay()
 void AKMK_PlayerHand::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	if (isPick)
+	{
+		hand->SetWorldLocation(pickTrans);
+	}
 #pragma region HandMove
 	// 손이 돌아오는 코드
 	if (isReverse)
@@ -180,10 +185,7 @@ void AKMK_PlayerHand::Tick(float DeltaTime)
 
 #pragma endregion
 
-	if (isPick)
-	{
-		hand->SetWorldLocation(pickTrans);
-	}
+
 
 }
 
@@ -246,6 +248,7 @@ void AKMK_PlayerHand::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 		// 위치값을 받아와 위치에 넣어줌
 		pickTrans = OtherComp->GetChildComponent(0)->GetComponentLocation();
 		isPick = true;
+		OtherActor->FindComponentByClass<UKHH_BossOpendoor>()->ShouldMove = true;
 	}
 	// 왼손인 상태면 밑에 상황이 필요 없음 => 반환
 	if(!GetName().Contains("R")) return;	

@@ -38,8 +38,8 @@ void UKMK_PlayerRay::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 	// 레이 셋팅
 	FCollisionQueryParams params;
 	params.AddIgnoredActor(GetOwner());
-	params.AddIgnoredActor(playerComp->Hands[0]);
-	params.AddIgnoredActor(playerComp->Hands[1]);
+	params.AddIgnoredActor(Hands[0]);
+	params.AddIgnoredActor(Hands[1]);
 	// 레이 쏘는 마지막 부분
 	endPos = playerComp->endPos;
 
@@ -53,13 +53,13 @@ void UKMK_PlayerRay::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 
 	if (bhit && hitInfo.GetActor()->ActorHasTag("E_Bat"))
 	{
-		playerComp->RBat->bat = hitInfo.GetActor()->FindComponentByClass<UKMK_Bat>();
-		playerComp->LBat->bat = hitInfo.GetActor()->FindComponentByClass<UKMK_Bat>();
+		playerComp->Bats[0]->bat = hitInfo.GetActor()->FindComponentByClass<UKMK_Bat>();
+		playerComp->Bats[1]->bat = hitInfo.GetActor()->FindComponentByClass<UKMK_Bat>();
 		b = hitInfo.GetActor()->FindComponentByClass<UKMK_Bat>();
-		if (!b->isCome && (!playerComp->RHand->isGrab && !playerComp->LHand->isGrab))
+		if (!b->isCome && (!playerComp->Hands[0]->isGrab && !playerComp->Hands[1]->isGrab))
 		{
-			if(!playerComp->RBat->isPut)playerComp->RBat->isPut = true;
-			if(!playerComp->LBat->isPut)playerComp->LBat->isPut = true;
+			if(!playerComp->Bats[0]->isPut)playerComp->Bats[0]->isPut = true;
+			if(!playerComp->Bats[1]->isPut)playerComp->Bats[1]->isPut = true;
 		}
 
 	}
@@ -93,14 +93,14 @@ void UKMK_PlayerRay::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 					// 손의 도착지점
 					playerComp->Hands[0]->endPos = hitInfo.ImpactPoint;
 					// 손을 뻗게 만듦
-					if (playerComp->RHand->isCome)
+					if (playerComp->Hands[0]->isCome)
 					{
-						playerComp->RHand->isCome = false;
-						playerComp->RBat->isPut = false;
-						playerComp->RHand->isGrab = true;
+						playerComp->Hands[0]->isCome = false;
+						playerComp->Bats[0]->isPut = false;
+						playerComp->Hands[0]->isGrab = true;
 						return;
 					}
-					if (playerComp->RHand->isGrab || playerComp->RHand->isPick)
+					if (playerComp->Hands[0]->isGrab || playerComp->Hands[0]->isPick)
 					{
 						playerComp->Hands[0]->isGrab = false;
 						playerComp->Hands[0]->isPick = false;

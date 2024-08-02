@@ -133,6 +133,7 @@ void AKMK_Player::BeginPlay()
 		Hands[i]->SetActorRotation(FRotator(0, -90, 0));
 		Hands[i]->SetActorRelativeScale3D(FVector(2.f));
 		Hands[i]->FSM = FSM;
+		playerRay->Hands.Add(Hands[i]);
 
 		Bats.Add(GetWorld()->SpawnActor<AKMK_Battery>(batteryFact, t));
 		Bats[i]->meshComp->SetSimulatePhysics(false);

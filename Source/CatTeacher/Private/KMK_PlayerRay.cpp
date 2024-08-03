@@ -102,7 +102,7 @@ void UKMK_PlayerRay::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 					bat->isCome = false;
 					Bats[0]->SetVis(true);
 					Hands[0]->isGrab = true;
-					Hands[0]->isCome = true;
+					Hands[0]->isCome = false;
 				}
 			}
 			if(playerComp->isDir[1])
@@ -118,6 +118,17 @@ void UKMK_PlayerRay::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 		}
 
 	}
+	//else
+	//{
+	//	for (int i = 0; i < 2; i++)
+	//	{
+	//		if (Hands[i]->isGrab)
+	//		{
+	//			Hands[0]->isCome = false;
+	//			Hands[1]->isCome = false;
+	//		}
+	//	}
+	//}
 	// 입력값이 들어오는 경우
 	if (isRay)
 	{

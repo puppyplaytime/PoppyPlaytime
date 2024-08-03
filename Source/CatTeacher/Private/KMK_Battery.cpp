@@ -10,6 +10,7 @@
 #include "KMK_PlayerHand.h"
 #include "KMK_Bat.h"
 
+// 손에 들고 있는 배터리
 // Sets default values
 AKMK_Battery::AKMK_Battery()
 {
@@ -31,6 +32,16 @@ void AKMK_Battery::BeginPlay()
 void AKMK_Battery::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	
+}
+
+// 배터리의 visible관리 함수
+void AKMK_Battery::SetVis(bool isPut)
+{
+	// 배터리가 들어갔다면
+	isPush = isPut;
+	// 보이지 않게 만들기
+	meshComp->SetRenderInMainPass(isPush);
 }
 
 void AKMK_Battery::NotifyHit(UPrimitiveComponent* MyComp, AActor* Other, UPrimitiveComponent* OtherComp, bool bSelfMoved, FVector HitLocation, FVector HitNormal, FVector NormalImpulse, const FHitResult& Hit)
@@ -39,15 +50,6 @@ void AKMK_Battery::NotifyHit(UPrimitiveComponent* MyComp, AActor* Other, UPrimit
 	{
 		meshComp->SetWorldScale3D(FVector(1));
 	}
-}
-
-// 수정사항 => collision이 꺼져있는 상태
-void AKMK_Battery::NotifyActorBeginOverlap(AActor* OtherActor) //otheractor BatteryFrame
-{
-	if (OtherActor->ActorHasTag("E_Bat"))
-	{
-		bat = OtherActor->FindComponentByClass<UKMK_Bat>();
-	} 
 }
 
 

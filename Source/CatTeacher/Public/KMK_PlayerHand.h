@@ -5,6 +5,17 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "KMK_PlayerHand.generated.h"
+
+// 플레이어 장갑을 위한 FSM
+UENUM()
+enum class HandState
+{
+	Grab,
+	Go,
+	Reverse,
+	None
+};
+
 UCLASS()
 class CATTEACHER_API AKMK_PlayerHand : public AActor
 {
@@ -30,6 +41,12 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	UPROPERTY(EditAnywhere)
+	HandState PState = HandState::None;
+	int n = 0;
+	FString SwitchName;
+
 	UPROPERTY()
 	bool isGo = false;
 	bool isReverse = false;
@@ -53,6 +70,8 @@ public:
 	class UPrimitiveComponent* hitinfo;
 	UPROPERTY(EditAnywhere)
 	bool isGrab = false;
+
+	float time = 0;
 	
 	bool isRight = false;
 	bool isLeft = false;
@@ -67,7 +86,6 @@ public:
 	const FHitResult& SweepResult);
 
 	class AKMK_Battery* grabActor;
-	float mass;
 
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<class AKMK_Battery> BatteryFact;
@@ -77,6 +95,9 @@ public:
 	bool isPick = false;
 
 	bool isCome = false;
+
+	UPROPERTY()
+	bool isBatCom = false;
 
 	class UKMK_Bat* b;
 

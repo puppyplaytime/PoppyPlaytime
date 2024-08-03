@@ -29,30 +29,61 @@ AKMK_Player::AKMK_Player()
 	PrimaryActorTick.bCanEverTick = true;
 	// 1. 1인칭 카메라 만들기
 	// 1-1 spring arm 붙이기
-	springArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArmComp"));
-	springArm->SetupAttachment(GetMesh(), "head");
-	springArm->SetRelativeLocation(FVector(-20, 0, 0));
-	springArm->TargetArmLength = -50.f;
-	springArm->bUsePawnControlRotation = true;
+	FString s;
+	float y;
+	for (int i = 0; i < 2; i++)
+	{
+		if (i == 0)
+		{
+			s = "R";
+			y = 27;
+		}
+		else
+		{
+			s = "L";
+			y = -27;
+		}
+		FString armName = FString::Printf(TEXT("SprintArm %i"), i);
+		springArm = CreateDefaultSubobject<USpringArmComponent>(*armName);
+
+		springArms.Add(springArm);
+		springArms[i]->TargetArmLength = -50.f;
+		springArms[i]->bUsePawnControlRotation = true;
+
+		FString CableName = FString::Printf(TEXT("%s Cable"), *s);
+		CableComp.Add(CreateDefaultSubobject<UCableComponent>(*CableName));
+		CableComp[i]->SetupAttachment(springArms[0]);
+		CableComp[i]->SetCollisionProfileName("Hand");
+		CableComp[i]->CableWidth = 3;
+		CableComp[i]->EndLocation = FVector(0);
+		CableComp[i]->SetRelativeLocation(FVector(40, y, -16));
+
+		FString SceneName = FString::Printf(TEXT("%s Scene"), *s);
+		SceneComp.Add(CreateDefaultSubobject<USceneComponent>(*SceneName));
+		SceneComp[i]->SetupAttachment(springArms[0]);
+		SceneComp[i]->SetRelativeLocation(FVector(40, y, -16));
+	}
+	springArms[1]->SetupAttachment(GetMesh(), "head");
+	springArms[1]->SetRelativeLocation(FVector(-20, 0, 0));
+
 	// 1-2 camera 붙이기
 	camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
-	camera->SetupAttachment(springArm);
+	camera->SetupAttachment(springArms[1]);
 	camera->bUsePawnControlRotation = false;
 	bUseControllerRotationYaw = true;
 	// 1-3 모델링 설정
 #pragma region Modeling
 	// 팔
-	GrabSpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("GrabSpringArm"));
-	GrabSpringArm->SetupAttachment(GetMesh());
-	GrabSpringArm->SetRelativeLocation(FVector(0, 0, 140));
-	GrabSpringArm->TargetArmLength = -50.f;
-	GrabSpringArm->bUsePawnControlRotation = true;
+	// GrabSpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("GrabSpringArm"));
+	springArms[0]->SetupAttachment(GetMesh());
+	springArms[0]->SetRelativeLocation(FVector(0, 0, 140));
+
 	// 팔이 카메라보다 늦게 쫓아오게 만들기 위함
-	GrabSpringArm->bEnableCameraLag = true;
-	GrabSpringArm->bEnableCameraRotationLag = true;
-	GrabSpringArm->CameraLagSpeed = 15.f;
-	GrabSpringArm->CameraRotationLagSpeed = 15.f;
-	GrabSpringArm->CameraLagMaxDistance = 3;
+	springArms[0]->bEnableCameraLag = true;
+	springArms[0]->bEnableCameraRotationLag = true;
+	springArms[0]->CameraLagSpeed = 15.f;
+	springArms[0]->CameraRotationLagSpeed = 15.f;
+	springArms[0]->CameraLagMaxDistance = 3;
 
 	// 팔 매쉬 붙이기
 	armMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("GrabpackMesh"));
@@ -61,43 +92,19 @@ AKMK_Player::AKMK_Player()
 	{
 		armMesh->SetStaticMesh(tempMesh.Object);
 	}
-	armMesh->SetupAttachment(GrabSpringArm);
+	armMesh->SetupAttachment(springArms[0]);
 	armMesh->SetRelativeRotation(FRotator(0, -90, 0));
 	armMesh->SetRelativeScale3D(FVector(2.f));
 
-	CableComp.Add(CreateDefaultSubobject<UCableComponent>(TEXT("RCable")));
-	SceneComp.Add(CreateDefaultSubobject<USceneComponent>(TEXT("RScene")));
-	CableComp[0]->SetupAttachment(GrabSpringArm);
-	SceneComp[0]->SetupAttachment(GrabSpringArm);
-	CableComp[0]->SetRelativeLocationAndRotation(FVector(40, 27, -16), FRotator(0, 0, 0));
-	SceneComp[0]->SetRelativeLocationAndRotation(FVector(40, 27, -16), FRotator(0, 0, 0));
-	CableComp[0]->SetCollisionProfileName("Hand");
-	CableComp[0]->CableWidth = 3;
-	CableComp[0]->EndLocation = FVector(0);
-	
-	// SceneComp.Add(CreateDefaultSubobject<USceneComponent>(TEXT("LScene")));
-	CableComp.Add(CreateDefaultSubobject<UCableComponent>(TEXT("LCable")));
-	SceneComp.Add(CreateDefaultSubobject<USceneComponent>(TEXT("LScene")));
-	CableComp[1]->SetupAttachment(GrabSpringArm);
-	SceneComp[1]->SetupAttachment(GrabSpringArm);
-	CableComp[1]->SetRelativeLocationAndRotation(FVector(40, -27, -16), FRotator(0, 0, 0));
-	SceneComp[1]->SetRelativeLocationAndRotation(FVector(40, -27, -16), FRotator(0, 0, 0));
-	CableComp[1]->SetCollisionProfileName("Hand");
-	CableComp[1]->CableWidth = 3;
-	CableComp[1]->EndLocation = FVector(0);
-
 #pragma endregion
-
 	// 점프 횟수 제한
 	JumpMaxCount = 1;
 	// FSM 붙이기
 	FSM = CreateDefaultSubobject<UKMK_PlayerHandFSM>(TEXT("FSM"));
 	playerRay = CreateDefaultSubobject<	UKMK_PlayerRay>(TEXT("RAY"));
-	
 	// 센서 만들기
 	sensor = CreateDefaultSubobject<UPawnSensingComponent>(TEXT("Sensor"));
 	sensor->bOnlySensePlayers = false;
-
 }
 
 // Called when the game starts or when spawned
@@ -105,37 +112,42 @@ void AKMK_Player::BeginPlay()
 {
 	Super::BeginPlay();
 #pragma region Create Hand
-	FTransform t = SceneComp[0]->GetRelativeTransform();
-	RHand = GetWorld()->SpawnActor<AKMK_PlayerHand>(RHandFact, t);
-	RBat = GetWorld()->SpawnActor<AKMK_Battery>(batteryFact, t);
-	RBat->meshComp->SetSimulatePhysics(false);
-	RBat->meshComp->SetEnableGravity(false);
-	RHand->AttachToComponent(GrabSpringArm, FAttachmentTransformRules::KeepRelativeTransform);
-	RBat->AttachToComponent(GrabSpringArm, FAttachmentTransformRules::KeepRelativeTransform);
-	RHand->SetActorRelativeLocation(FVector(40, 27, -16));
-	RBat->SetActorRelativeLocation(FVector(55, 26, 8));
-	RBat->SetActorScale3D(FVector(0.55f));
-	RHand->SetActorRotation(FRotator(0, -90, 0));
-	RBat->meshComp->SetVisibility(false);
-	RBat->meshComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	
+	float y;
+	TSubclassOf<AKMK_PlayerHand> hand;
+	for (int i = 0; i < 2; i++)
+	{
+		if (i == 0)
+		{
+			y = 27;
+			hand = RHandFact;
+		}
+		else
+		{
+			y = -27;
+			hand = LHandFact;
+		}
+		FTransform t = SceneComp[i]->GetRelativeTransform();
+		Hands.Add(GetWorld()->SpawnActor<AKMK_PlayerHand>(hand, t));
+		Hands[i]->AttachToComponent(springArms[0], FAttachmentTransformRules::KeepRelativeTransform);
+		Hands[i]->SetActorRelativeLocation(FVector(40, y, -16));
+		Hands[i]->SetActorRotation(FRotator(0, -90, 0));
+		Hands[i]->SetActorRelativeScale3D(FVector(2.f));
+		Hands[i]->FSM = FSM;
+		playerRay->Hands.Add(Hands[i]);
 
-	FTransform t1 = SceneComp[1]->GetRelativeTransform();
-	LHand = GetWorld()->SpawnActor<AKMK_PlayerHand>(LHandFact, t1);
-	LBat = GetWorld()->SpawnActor<AKMK_Battery>(batteryFact, t1);
-	LBat->meshComp->SetSimulatePhysics(false);
-	LBat->meshComp->SetEnableGravity(false);
-	LHand->AttachToComponent(GrabSpringArm, FAttachmentTransformRules::KeepRelativeTransform);
-	LBat->AttachToComponent(GrabSpringArm, FAttachmentTransformRules::KeepRelativeTransform);
-	LHand->SetActorRelativeLocation(FVector(40, -27, -16));
-	LHand->SetActorRotation(FRotator(0, -90, 0));
-	LBat->SetActorRelativeLocation(FVector(55, -26, 8));
-	LBat->SetActorScale3D(FVector(0.55f));
-	LHand->SetActorRelativeScale3D(FVector(2.f));
-	LBat->meshComp->SetVisibility(false);
-	LBat->meshComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		Bats.Add(GetWorld()->SpawnActor<AKMK_Battery>(batteryFact, t));
+		Bats[i]->meshComp->SetSimulatePhysics(false);
+		Bats[i]->meshComp->SetEnableGravity(false);
+		Bats[i]->AttachToComponent(springArms[0], FAttachmentTransformRules::KeepRelativeTransform);
+		Bats[i]->SetActorRelativeLocation(FVector(55, y, 8));
+		Bats[i]->SetActorScale3D(FVector(0.55f));
+		Bats[i]->meshComp->SetRenderInMainPass(false);
+		Bats[i]->meshComp->SetRenderInDepthPass(false);
+		Bats[i]->meshComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		playerRay->Bats.Add(Bats[i]);
+	}
 	
-	RMeshComp = RHand->hand;
+	RMeshComp = Hands[0]->hand;
 #pragma endregion
 
 	movementComp = GetCharacterMovement();
@@ -150,8 +162,7 @@ void AKMK_Player::BeginPlay()
 		}
 	}
 	movementComp->GetNavAgentPropertiesRef().bCanCrouch = true;
-	LHand->FSM = FSM;
-	RHand->FSM = FSM;
+	
 
 	// sensor->OnSeePawn.AddDynamic(this, &AKMK_Player::BroadcastOnSeePawn);
 }
@@ -160,14 +171,21 @@ void AKMK_Player::BeginPlay()
 void AKMK_Player::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	RBat->hand = RHand;
-	LBat->hand = LHand;
+	for (int i = 0; i < 2; i++)
+	{
+		Bats[i]->hand = Hands[i];
+		Hands[i]->startPos = SceneComp[i]->GetComponentLocation();
+		CableComp[i]->SetAttachEndTo(Hands[i], NAME_None);
+		CableComp[i]->CableLength = 1;
+		CableComp[i]->NumSegments = 1;
+
+	}
+
 	// 이동하기
 	// 회전방향으로 이동
 	// 1. controller rotation을 통해 transform 생성
-	RHand->startPos = SceneComp[0]->GetComponentLocation();
-	LHand->startPos = SceneComp[1]->GetComponentLocation();
-	FSM->bulletTrans = RHand->arrow->GetComponentTransform();
+
+	FSM->bulletTrans = Hands[0]->arrow->GetComponentTransform();
 	FTransform t = FTransform(GetControlRotation());
 	dir = t.TransformVector(dir);
 	// 이동 인풋
@@ -178,8 +196,6 @@ void AKMK_Player::Tick(float DeltaTime)
 	startPos = camera->GetComponentLocation();
 	endPos = startPos + camera->GetForwardVector() * rayDis;
 	endPos1 = startPos + camera->GetForwardVector() * rayDis1;
-	CableComp[0]->SetAttachEndTo(RHand, NAME_None);
-	CableComp[1]->SetAttachEndTo(LHand, NAME_None);
 }
 
 // Called to bind functionality to input
@@ -256,15 +272,15 @@ void AKMK_Player::InputJump(const struct FInputActionValue& value)
 void AKMK_Player::InputSit(const struct FInputActionValue& value)
 {
 	Crouch();
-	springArm->SetRelativeLocation(FVector(-70, 10, 0));
-	GrabSpringArm->SetRelativeLocation(FVector(0, 0, 90));
+	springArms[1]->SetRelativeLocation(FVector(-70, 10, 0));
+	springArms[0]->SetRelativeLocation(FVector(0, 0, 90));
 }
 // 일어나기
 void AKMK_Player::InputStand(const struct FInputActionValue& value)
 {
 	UnCrouch();
-	springArm->SetRelativeLocation(FVector(-20, 0, 0));
-	GrabSpringArm->SetRelativeLocation(FVector(0, 0, 140));
+	springArms[1]->SetRelativeLocation(FVector(-20, 0, 0));
+	springArms[0]->SetRelativeLocation(FVector(0, 0, 140));
 }
 
 #pragma endregion
@@ -294,21 +310,21 @@ void AKMK_Player::InputE(const struct FInputActionValue& value)
 // 기본 손
 void AKMK_Player::InputNum1(const struct FInputActionValue& value)
 {
-	RMeshComp->SetStaticMesh(RHand->HandMesh[0]);
+	RMeshComp->SetStaticMesh(Hands[0]->HandMesh[0]);
 	FSM->PState = PlayerHandFSM::Normal;
 }
 
 // 에너지 충전 손
 void AKMK_Player::InputNum2(const struct FInputActionValue& value)
 {
-	RMeshComp->SetStaticMesh(RHand->HandMesh[1]);
+	RMeshComp->SetStaticMesh(Hands[0]->HandMesh[1]);
 	FSM->PState = PlayerHandFSM::GunPack;
 
 }
 // 점프 손
 void AKMK_Player::InputNum3(const struct FInputActionValue& value)
 {
-	RMeshComp->SetStaticMesh(RHand->HandMesh[2]);
+	RMeshComp->SetStaticMesh(Hands[0]->HandMesh[2]);
 	FSM->PState = PlayerHandFSM::JumpPack;
 }
 
@@ -318,13 +334,13 @@ void AKMK_Player::InputNum3(const struct FInputActionValue& value)
 void AKMK_Player::InputMR(const struct FInputActionValue& value)
 {	
 	playerRay->SetRayPos(startPos, endPos);
-	RHand->box->SetCollisionProfileName("Hand");
-	isRight = true;
+	Hands[0]->box->SetCollisionProfileName("Hand");
+	isDir[0] = true;
 }
 void AKMK_Player::InputMRComp(const struct FInputActionValue& value)
 {
 	playerRay->isRay = false;
-	isRight = false;
+	isDir[0] = false;
 }
 
 #pragma endregion
@@ -333,13 +349,13 @@ void AKMK_Player::InputMRComp(const struct FInputActionValue& value)
 void AKMK_Player::InputML(const struct FInputActionValue& value)
 {
 	playerRay->SetRayPos(startPos, endPos);
-	LHand->box->SetCollisionProfileName("Hand");
-	isLeft = true;
+	Hands[1]->box->SetCollisionProfileName("Hand");
+	isDir[1] = true;
 }
 void AKMK_Player::InputMLComp(const struct FInputActionValue& value)
 {
 	playerRay->isRay = false;
-	isLeft = false;
+	isDir[1] = false;
 }
 #pragma endregion
 

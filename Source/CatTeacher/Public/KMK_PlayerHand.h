@@ -79,4 +79,6 @@ public:
 	bool isCome = false;
 
 	class UKMK_Bat* b;
+
+	FString SwitchName;
 };

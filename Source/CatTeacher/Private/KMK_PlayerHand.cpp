@@ -196,6 +196,8 @@ void AKMK_PlayerHand::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 	isGo = false;
 	isReverse = true;
 
+	SwitchName = *OtherActor->GetName();
+	
 	GEngine->AddOnScreenDebugMessage(9, 1, FColor::White, FString::Printf(TEXT("%s"), *OtherActor->GetName()));
 	if (OtherActor->GetActorLabel().Contains("MK"))
 	{
@@ -267,8 +269,15 @@ void AKMK_PlayerHand::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 		FSM->t = 0;
 		FSM->isCharge = true;
 	}
-
-
+	if (player->RMeshComp->GetStaticMesh() == player->RHand->HandMesh[0] && OtherActor->ActorHasTag("ElectricalPanelOn"))
+	{
+		FSM->PState = PlayerHandFSM::Normal;
+		if (FSM->isCharge)
+		{
+			FSM->t = 0;
+			GEngine->AddOnScreenDebugMessage(30, 1, FColor::Yellow, FString::Printf(TEXT("Empty Charge")));
+		}
+	}
 }
 
 

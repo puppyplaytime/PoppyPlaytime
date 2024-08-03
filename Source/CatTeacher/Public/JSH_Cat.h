@@ -35,6 +35,4 @@ public:
 	class UBoxComponent* FalseBox;
 
 	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
-
-	class UJSH_CatFSM* CatFSM;
 };

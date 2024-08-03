@@ -52,7 +52,9 @@ void AJSH_Cat::NotifyActorBeginOverlap(AActor* otherActor)
 	AKMK_Bullet* Bullet = Cast<AKMK_Bullet>(otherActor);
 	if (Bullet)
 	{
-		//CatFSM->FalseDie = true;
-		Destroy();
+		//fsm->FalseDie = true;
+		fsm->IdleTeleport = true;
+		fsm->cState = ECatState::Idle;
+		//Destroy(Bullet);
 	}
 }

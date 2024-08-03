@@ -11,6 +11,7 @@
 UENUM(BlueprintType)
 enum class ECatState : uint8
 {
+	Idle,
 	RoundMove,
 	MoveWait,
 	TrueMove,
@@ -52,6 +53,9 @@ public:
 
 	//-----------------------------------------------------------------
 
+	// 인터렉션 후 이동 대기 상태
+	void IdleState(float DeltaTime);
+	
 	// 대기 왕복 움직임 상태
 	void RoundMoveState();
 	
@@ -145,6 +149,12 @@ public:
 	bool bHasAttacked = false;
 
 	//bool FalseDie = false;
+
+	
+	// idle 상태 관련 
+	bool IdleTeleport = false;
+	float idletime = 5;
+	float idlecurrtime = 0;
 };
 
 

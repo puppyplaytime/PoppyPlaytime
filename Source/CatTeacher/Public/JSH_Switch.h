@@ -31,4 +31,6 @@ public:
 	bool interaction = false;
 
 	class UKMK_PlayerHandFSM* FSM;
+
+	FString SwitchName;
 };

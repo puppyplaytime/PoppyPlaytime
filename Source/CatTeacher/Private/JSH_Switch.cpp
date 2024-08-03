@@ -36,13 +36,24 @@
 		
 		AKMK_PlayerHand* Hand = Cast<AKMK_PlayerHand>(OtherActor);
 		
-		if (Hand)
+		if (Hand && OtherActor->ActorHasTag("Green"))
 		{
 			FSM = Hand->FSM;
 			if (FSM && FSM->isCharge == true)
 			{
-				GEngine->AddOnScreenDebugMessage(8, 1, FColor::Yellow, FString::Printf(TEXT("On Switch")));
+				GEngine->AddOnScreenDebugMessage(8, 3, FColor::Yellow, FString::Printf(TEXT("On Switch")));
 				FSM->isCharge = false;
+
+				if (Hand->SwitchName == "BP_Switch_C_1")
+				{
+					// 1번 통로 연기 -> cat01 destroy
+					GEngine->AddOnScreenDebugMessage(31, 3, FColor::Red, FString::Printf(TEXT("C1")));
+				}
+				else if (Hand->SwitchName == "BP_Switch_C_0")
+				{
+					// 2번 통로 연기 -> cat01 destroy
+					GEngine->AddOnScreenDebugMessage(31, 3, FColor::Yellow, FString::Printf(TEXT("C2")));
+				}
 			}
 		}
 	}

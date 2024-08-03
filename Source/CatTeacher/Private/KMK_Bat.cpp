@@ -26,5 +26,6 @@ void UKMK_Bat::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	meshBat->SetVisibility(isCome);
+
 }
 

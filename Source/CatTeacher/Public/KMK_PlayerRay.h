@@ -42,9 +42,12 @@ public:
 	float RayDistance =0;
 	class UKHH_EnemyFSM* teacher;
 	class UKMK_Bat* b;
-	int cnt = 0;
 
 	TArray<class AKMK_PlayerHand*> Hands;
+	TArray<class AKMK_Battery*> Bats;
+	UPROPERTY(EditAnywhere)
+	float PDis = 300;
+
 #pragma endregion
 		
 };

@@ -26,11 +26,9 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
-	bool isThrow = false;
 	UPROPERTY(EditAnywhere)
-	bool isPut = false;
-	FVector throwPos;
+	bool isPush = false;
+
 	class AKMK_PlayerHand* hand;
 	TArray<AActor*>actors;
 
@@ -39,6 +37,7 @@ public:
 	UFUNCTION()
 	void NotifyHit(UPrimitiveComponent* MyComp, AActor* Other, UPrimitiveComponent* OtherComp, bool bSelfMoved, FVector HitLocation, FVector HitNormal, FVector NormalImpulse, const FHitResult& Hit);
 
-	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
+	UFUNCTION()
+	void SetVis(bool isVis);
 
 };

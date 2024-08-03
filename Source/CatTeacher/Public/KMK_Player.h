@@ -115,10 +115,9 @@ public:
 	float speed = 600.f;
 	UPROPERTY()
 	float jumpPower = 0;
+
 	UPROPERTY()
-	bool isRight = false;
-	UPROPERTY()
-	bool isLeft = false;
+	TArray<bool> isDir = {false, false};
 
 	UPROPERTY()
 	bool isIntarctive = false;

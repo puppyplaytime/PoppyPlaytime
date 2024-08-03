@@ -143,6 +143,7 @@ void AKMK_Player::BeginPlay()
 		Bats[i]->SetActorScale3D(FVector(0.55f));
 		Bats[i]->meshComp->SetVisibility(false);
 		Bats[i]->meshComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		playerRay->Bats.Add(Bats[i]);
 	}
 	
 	RMeshComp = Hands[0]->hand;
@@ -333,12 +334,12 @@ void AKMK_Player::InputMR(const struct FInputActionValue& value)
 {	
 	playerRay->SetRayPos(startPos, endPos);
 	Hands[0]->box->SetCollisionProfileName("Hand");
-	isRight = true;
+	isDir[0] = true;
 }
 void AKMK_Player::InputMRComp(const struct FInputActionValue& value)
 {
 	playerRay->isRay = false;
-	isRight = false;
+	isDir[0] = false;
 }
 
 #pragma endregion
@@ -348,12 +349,12 @@ void AKMK_Player::InputML(const struct FInputActionValue& value)
 {
 	playerRay->SetRayPos(startPos, endPos);
 	Hands[1]->box->SetCollisionProfileName("Hand");
-	isLeft = true;
+	isDir[1] = true;
 }
 void AKMK_Player::InputMLComp(const struct FInputActionValue& value)
 {
 	playerRay->isRay = false;
-	isLeft = false;
+	isDir[1] = false;
 }
 #pragma endregion
 

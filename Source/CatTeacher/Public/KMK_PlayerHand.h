@@ -67,7 +67,6 @@ public:
 	const FHitResult& SweepResult);
 
 	class AKMK_Battery* grabActor;
-	float mass;
 
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<class AKMK_Battery> BatteryFact;

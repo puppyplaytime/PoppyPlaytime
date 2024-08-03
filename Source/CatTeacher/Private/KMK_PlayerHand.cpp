@@ -120,10 +120,9 @@ void AKMK_PlayerHand::Tick(float DeltaTime)
 	}
 #pragma endregion
 
-
 #pragma region Battery Grab
 	// 배터리를 잡는 상태인 경우
-	if (isGrab)
+	if (isGrab )
 	{
 		// 손의 콜라이더를 꺼주고
 		box->SetCollisionEnabled(ECollisionEnabled::NoCollision);
@@ -137,7 +136,10 @@ void AKMK_PlayerHand::Tick(float DeltaTime)
 			// 오른손 배터리가 안 보이게 만들어줌
 			player->Bats[0]->SetVis(false);
 			// 배터리가 슬롯에 들어가지 않았다면, 월드에 배터리를 생성해줌
-			if (!isCome)GetWorld()->SpawnActor<AKMK_Battery>(BatteryFact, trans);
+			if (!isCome)
+			{
+				GetWorld()->SpawnActor<AKMK_Battery>(BatteryFact, trans);
+			}
 
 		}
 		// 왼손인 경우
@@ -149,7 +151,10 @@ void AKMK_PlayerHand::Tick(float DeltaTime)
 			trans = player->Bats[1]->GetTransform();
 			player->Bats[1]->SetVis(false);
 
-			if (!isCome)GetWorld()->SpawnActor<AKMK_Battery>(BatteryFact, trans);
+			if (!isCome)
+			{
+				GetWorld()->SpawnActor<AKMK_Battery>(BatteryFact, trans);
+			}
 		}
 	}
 	else
@@ -160,7 +165,7 @@ void AKMK_PlayerHand::Tick(float DeltaTime)
 			if (player->isDir[i])
 			{
 				player->Bats[i]->SetVis(true);
-				isGrab = true;
+				if(isBatCom)isGrab = true;
 			}
 		}
 	}

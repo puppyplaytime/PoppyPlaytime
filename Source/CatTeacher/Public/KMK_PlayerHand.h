@@ -77,5 +77,8 @@ public:
 
 	bool isCome = false;
 
+	UPROPERTY()
+	bool isBatCom = false;
+
 	class UKMK_Bat* b;
 };

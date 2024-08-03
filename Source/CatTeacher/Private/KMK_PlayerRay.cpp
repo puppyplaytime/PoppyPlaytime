@@ -55,11 +55,6 @@ void UKMK_PlayerRay::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 		auto* bat = hitInfo.GetActor()->FindComponentByClass<UKMK_Bat>();
 		FVector dir = hitInfo.GetActor()->GetTargetLocation() - playerComp->startPos;
 		// 일정거리 내부라면, 배터리를 넣을 수 있는 상태가 됨
-		//if (dir.Length() >= PDis)
-		//{
-		//	Hands[0]->isCome = false;
-		//	Hands[1]->isCome = false;
-		//}
 		// GEngine->AddOnScreenDebugMessage(-1, 1, FColor::Orange, FString::Printf(TEXT("%f, %s"), dir.Length(), *hitInfo.GetActor()->GetActorLabel()));
 		if (!bat->isCome)
 		{
@@ -72,11 +67,13 @@ void UKMK_PlayerRay::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 			// 클릭이 되고
 			if (isRay)
 			{	
+				
 				// 배터리를 들고 있는 손을 파악해 배터리를 넣어줌
 				for (int i = 0; i < 2; i++)
 				{
 					if (playerComp->isDir[i] && Hands[i]->isGrab)
 					{
+						playerComp->Hands[i]->isBatCom = true;
 						bat->isCome = true;
 						Hands[i]->isGrab = false;
 						Hands[i]->isCome = false;
@@ -89,46 +86,23 @@ void UKMK_PlayerRay::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 		// 배터리가 단자에 들어있는 경우
 		else
 		{
+			
 			// 거리를 확인한후, 인터렉션이 가능하게 만듦
-			if (dir.Length() < PDis)
-			{
-				Hands[0]->isCome = true;
-				Hands[1]->isCome = true;
-			}
 			if (playerComp->isDir[0])
 			{
-				if (Hands[0]->isGrab)
-				{
-					bat->isCome = false;
-					Bats[0]->SetVis(true);
-					Hands[0]->isGrab = true;
-					Hands[0]->isCome = false;
-				}
+				bat->isCome = false;
+				Bats[0]->SetVis(true);
+				Hands[0]->isCome = false;
 			}
 			if(playerComp->isDir[1])
 			{
-				if (Hands[1]->isGrab)
-				{
-					bat->isCome = false;
-					Bats[1]->SetVis(true);
-					Hands[1]->isGrab = true;
-					Hands[1]->isCome = false;
-				}
+				bat->isCome = false;
+				Bats[1]->SetVis(true);
+				Hands[1]->isCome = false;
 			}
 		}
 
 	}
-	//else
-	//{
-	//	for (int i = 0; i < 2; i++)
-	//	{
-	//		if (Hands[i]->isGrab)
-	//		{
-	//			Hands[0]->isCome = false;
-	//			Hands[1]->isCome = false;
-	//		}
-	//	}
-	//}
 	// 입력값이 들어오는 경우
 	if (isRay)
 	{
@@ -137,6 +111,7 @@ void UKMK_PlayerRay::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 		//  오른손 이라면
 		if(playerComp->isDir[0])
 		{
+			
 			// 레이에 물체가 맞은 경우
 			if(bhit)
 			{
@@ -151,11 +126,6 @@ void UKMK_PlayerRay::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 				// 총을 들고있지 않다면
 				else
 				{
-					if (Hands[0]->isCome)
-					{
-						Hands[0]->isCome = false;
-						return;
-					}
 					// 오른손에 물체의 component를 넘겨주고
 					Hands[0]->hitinfo = hitInfo.GetComponent();
 					// 손을 뻗게 만든다

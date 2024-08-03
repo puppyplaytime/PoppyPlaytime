@@ -109,6 +109,7 @@ void UKMK_PlayerRay::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 	// 입력값이 들어오는 경우
 	if (isRay)
 	{
+		if(hitInfo.GetActor() != nullptr)GEngine->AddOnScreenDebugMessage(-1, 1, FColor::Orange, FString::Printf(TEXT("%s"), *hitInfo.GetActor()->GetActorLabel()));
 		// 레이를 그리고
 		DrawDebugLine(GetWorld(), startPos, endPos, FColor::Blue, false, 1.f);
 		//  오른손 이라면

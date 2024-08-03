@@ -52,6 +52,7 @@ void AKMK_PlayerHand::BeginPlay()
 	box->OnComponentBeginOverlap.AddDynamic(this, &AKMK_PlayerHand::BeginOverlap);
 	box->BodyInstance.bUseCCD = true;
 	box->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	
 }
 
 // Called every frame
@@ -200,7 +201,7 @@ void AKMK_PlayerHand::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 	// 물체가 닿은 경우에 손이 돌아오게 만들기 위함
 	isGo = false;
 	isReverse = true;
-
+	SwitchName = *OtherActor->GetName();
 	GEngine->AddOnScreenDebugMessage(9, 1, FColor::White, FString::Printf(TEXT("%s"), *OtherActor->GetName()));
 	// 배터리가 손에 닿은 경우
 	if (OtherActor->ActorHasTag("Battery"))

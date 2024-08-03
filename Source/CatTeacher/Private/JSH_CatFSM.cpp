@@ -39,6 +39,10 @@ void UJSH_CatFSM::TickComponent(float DeltaTime, ELevelTick TickType, FActorComp
 
     switch (cState)
     {
+    case ECatState::Idle:
+        IdleState(DeltaTime);
+        break;
+        
     case ECatState::RoundMove:
         RoundMoveState();
         break;
@@ -97,6 +101,8 @@ void UJSH_CatFSM::TickComponent(float DeltaTime, ELevelTick TickType, FActorComp
 
     UpdateState();
     UpdateStateFalse();
+
+    
 }
 
 void UJSH_CatFSM::UpdateState()
@@ -172,6 +178,41 @@ void UJSH_CatFSM::UpdateStateFalse()
     }
 }
 
+
+void UJSH_CatFSM::IdleState(float DeltaTime)
+{
+    currentTime += DeltaTime;
+    if (IdleTeleport)
+    {
+        me->FalseBox->SetCollisionProfileName(TEXT("NoCollision"));
+        FVector TargetLocation = target01->GetActorLocation();
+        me->SetActorLocation(TargetLocation);
+        IdleTeleport = false;
+    }
+
+    if (currentTime >= idletime)
+    {
+        if (me && me->Tags.Contains("S1"))
+        {
+            me->Tags.Add("FCat1");
+        }
+        else if (me && me->Tags.Contains("S2"))
+        {
+            me->Tags.Add("FCat2");
+        }
+        else if (me && me->Tags.Contains("S3"))
+        {
+            me->Tags.Add("FCat3");
+        }        else if (me && me->Tags.Contains("S4"))
+        {
+            me->Tags.Add("FCat4");
+        }
+        
+        GEngine->AddOnScreenDebugMessage(8, 1, FColor::Blue, FString::Printf(TEXT("change")));
+        cState = ECatState::RoundMove;
+        currentTime = 0;
+    }
+}
 
 void UJSH_CatFSM::RoundMoveState()
 {

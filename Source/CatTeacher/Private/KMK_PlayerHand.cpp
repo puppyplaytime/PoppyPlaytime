@@ -17,8 +17,9 @@
 // Sets default values
 AKMK_PlayerHand::AKMK_PlayerHand()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+#pragma region Creaate
 	//// 왼손
 	hand = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("HandComp"));
 	SetRootComponent(hand);
@@ -38,6 +39,7 @@ AKMK_PlayerHand::AKMK_PlayerHand()
 	box->SetBoxExtent(FVector(0.5f, 0.375, 0.5f));
 	// 물건을 잡기 위한 handle
 	handle = CreateDefaultSubobject<UPhysicsHandleComponent>(TEXT("Handle"));
+#pragma endregion
 
 }
 
@@ -50,14 +52,13 @@ void AKMK_PlayerHand::BeginPlay()
 	box->OnComponentBeginOverlap.AddDynamic(this, &AKMK_PlayerHand::BeginOverlap);
 	box->BodyInstance.bUseCCD = true;
 	box->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	//box->OnComponentHit.AddDynamic(this, &AKMK_PlayerHand::OnHitEvent);
-	// FSM = player->FSM;
 }
 
 // Called every frame
 void AKMK_PlayerHand::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	// 문고리 잡는 경우에 위치 고정
 	if (isPick)
 	{
 		hand->SetWorldLocation(pickTrans);
@@ -119,70 +120,74 @@ void AKMK_PlayerHand::Tick(float DeltaTime)
 	}
 #pragma endregion
 
-
 #pragma region Battery Grab
+	if (n > 1)
+	{
+		isGrab = true;
+	}
 	// 배터리를 잡는 상태인 경우
-	if (isGrab)
+	if (isGrab )
 	{
 		// 손의 콜라이더를 꺼주고
 		box->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		if (n > 1)
+		{
+			isCome = false;
+			n = 0;
+		}
 		// 오른손의 입력값이 들어온다면(재클릭)
-		if (player->isRight)
+		if (player->isDir[0])
 		{
 			// 오른손에 배터리를 들고있을 경우에만 배터리 생성하기 위함
-			if (isLeft) return;
+			if (player->isDir[1]) return;
 			// 오른손 배터리의 위치를 저장하고
-			trans = player->RBat->GetTransform();
+			trans = player->Bats[0]->GetTransform();
 			// 오른손 배터리가 안 보이게 만들어줌
-			player->RBat->meshComp->SetVisibility(false);
+			player->Bats[0]->SetVis(false);
+
 			// 배터리가 슬롯에 들어가지 않았다면, 월드에 배터리를 생성해줌
-			if (!player->RBat->isPut)GetWorld()->SpawnActor<AKMK_Battery>(BatteryFact, trans);
-			else
+			if (!isCome && !isPick)
 			{
-				player->RBat->bat->isCome = true;
-				// 배터리가 슬롯에 들어간 상태임
-				isGrab = false;
-				isRight = false;
+				GetWorld()->SpawnActor<AKMK_Battery>(BatteryFact, trans);
 			}
+
 		}
 		// 왼손인 경우
-		if (player->isLeft)
+		if (player->isDir[1])
 		{
 			// 왼손에 배터리를 들고있을 경우에만 배터리 생성하기 위함
-			if (isRight) return;
+			if (player->isDir[0]) return;
 			// 위와 같은 로직
-			trans = player->LBat->GetTransform();
-			player->LBat->meshComp->SetVisibility(false);
-			
-			if (!player->LBat->isPut)GetWorld()->SpawnActor<AKMK_Battery>(BatteryFact, trans);
-			else
+			trans = player->Bats[1]->GetTransform();
+			player->Bats[1]->SetVis(false);
+
+			if (!isCome && !isPick)
 			{
-				player->LBat->bat->isCome = true;
-				isGrab = false;
-				isLeft = false;
-				
+				GetWorld()->SpawnActor<AKMK_Battery>(BatteryFact, trans);
 			}
 		}
 	}
 	else
-	{	
-		if(!isCome) return;
-		if (player->isRight)
+	{
+		if (!isCome || isPick) return;
+		for (int i = 0; i < 2; i++)
 		{
-			player->RBat->meshComp->SetVisibility(true);
-			isGrab = true;
-			b->isCome = false;
-			player->RBat->isPut = false;
-		}
-		if (player->isLeft)
-		{
-			player->LBat->meshComp->SetVisibility(true);
-			isGrab = true;
-			b->isCome = false;
-			player->LBat->isPut = false;
+			if (player->isDir[i])
+			{
+				player->Bats[i]->SetVis(true);
+				if (isBatCom)
+				{
+					isGrab = true;
+				}
+				else
+				{
+					n++;
+				}
+			}
 		}
 	}
 
+	
 #pragma endregion
 
 
@@ -197,35 +202,30 @@ void AKMK_PlayerHand::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 	isReverse = true;
 
 	GEngine->AddOnScreenDebugMessage(9, 1, FColor::White, FString::Printf(TEXT("%s"), *OtherActor->GetName()));
-	if (OtherActor->GetActorLabel().Contains("MK"))
-	{
-		b = OtherActor->FindComponentByClass<UKMK_Bat>();
-		if (b->isCome)
-		{
-			isCome = true;
-		}
-	}
 	// 배터리가 손에 닿은 경우
 	if (OtherActor->ActorHasTag("Battery"))
 	{
 		// grabActor에 할당
 		grabActor = Cast<AKMK_Battery>(OtherActor);
 		// 이미 배터리를 잡고 있는 경우에는 반환
-		if(isGrab) return;
-
+		if (isGrab) return;
+		// 잡은 상태로 변경
+		isGrab = true;
+		// 닿은 배터리는 제거
+		if (isCome)
+		{
+			return;
+		}
+		grabActor->Destroy();
 		// 오른손인 경우에
 		if (GetName().Contains("R"))
 		{
 			// 총이 아닌 상태
-			if (player->RMeshComp->GetStaticMesh() != player->RHand->HandMesh[2])
+			if (player->RMeshComp->GetStaticMesh() != player->Hands[0]->HandMesh[2])
 			{
-				// 잡은 상태로 변경
-				isGrab = true;
-				// 닿은 배터리는 제거
-				grabActor->Destroy();
 				// 보이지 않은 상태에 들고있는 배터리를 보여주고 콜리전을 켜줌
-				player->RBat->meshComp->SetVisibility(true);
-				player->RBat->meshComp->SetCollisionProfileName("Item");
+				player->Bats[0]->meshComp->SetRenderInMainPass(true);
+				player->Bats[0]->meshComp->SetCollisionProfileName("Bat");
 				isRight = true;
 			}
 		}
@@ -233,34 +233,32 @@ void AKMK_PlayerHand::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 		else
 		{
 			// 위와 같은 상태, 단 왼손의 경우, 변경사항이 없기에 한번에 처리함
-			isGrab = true;
 			isLeft = true;
-			grabActor->Destroy();
-			player->LBat->meshComp->SetVisibility(true);
-			player->LBat->meshComp->SetCollisionProfileName("Item");
+			player->Bats[1]->meshComp->SetRenderInMainPass(true);
+			player->Bats[1]->meshComp->SetCollisionProfileName("Bat");
 		}
 	}
 	// 잡을 수 있는 오브젝트에 닿은 경우
 	if (OtherComp->ComponentHasTag("Handle"))
 	{
 		// 평범한 손이 아니면 반환
-		if (player->RMeshComp->GetStaticMesh() != player->RHand->HandMesh[0]) return;
+		if (player->RMeshComp->GetStaticMesh() != player->Hands[0]->HandMesh[0]) return;
 		// 위치값을 받아와 위치에 넣어줌
 		pickTrans = OtherComp->GetChildComponent(0)->GetComponentLocation();
 		isPick = true;
 		OtherActor->FindComponentByClass<UKHH_BossOpendoor>()->ShouldMove = true;
 	}
 	// 왼손인 상태면 밑에 상황이 필요 없음 => 반환
-	if(!GetName().Contains("R")) return;	
+	if (!GetName().Contains("R")) return;
 	// 점프손인 경우에, 점프 패드가 닿는다면
-	if (player->RMeshComp->GetStaticMesh() == player->RHand->HandMesh[2] && OtherActor->ActorHasTag("Jump"))
+	if (player->RMeshComp->GetStaticMesh() == player->Hands[0]->HandMesh[2] && OtherActor->ActorHasTag("Jump"))
 	{
 		// 플레이어의 상태를 변경
 		FSM->isJump = true;
 		FSM->PState = PlayerHandFSM::JumpPack;
 	}
 	// 평범한 손이고, panel에 닿는다면
-	if (player->RMeshComp->GetStaticMesh() == player->RHand->HandMesh[0] && OtherActor->ActorHasTag("ElectricalPanel"))
+	if (player->RMeshComp->GetStaticMesh() == player->Hands[0]->HandMesh[0] && OtherActor->ActorHasTag("ElectricalPanel"))
 	{
 		// 충전 상태로 변경
 		FSM->PState = PlayerHandFSM::Energy;

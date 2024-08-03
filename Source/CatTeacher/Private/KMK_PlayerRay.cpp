@@ -72,6 +72,7 @@ void UKMK_PlayerRay::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 				{
 					if (playerComp->isDir[i] && Hands[i]->isGrab)
 					{
+						//playerComp->Hands[i]->n = 0;
 						playerComp->Hands[i]->isBatCom = true;
 						bat->isCome = true;
 						Hands[i]->isGrab = false;
@@ -176,10 +177,10 @@ void UKMK_PlayerRay::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 		// 왼손이라면
 		if (playerComp->isDir[1])
 		{
-			if (Hands[0]->isCome) Hands[0]->isCome = false;
+			if (Hands[1]->isCome) Hands[1]->isCome = false;
 			if (Hands[1]->isGrab)
 			{
-				Hands[1]->PState = HandState::Grab;
+				Hands[1]->isGrab = false;
 				return;
 			}
 			// 물체가 있다면

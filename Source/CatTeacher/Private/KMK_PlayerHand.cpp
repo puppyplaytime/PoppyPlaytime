@@ -134,13 +134,17 @@ void AKMK_PlayerHand::Tick(float DeltaTime)
 		if (n > 1)
 		{
 			isCome = false;
-			n = 0;
+			if(player->Hands[0]->isGrab) player->Hands[0]->isGrab = false;
+			if(player->Hands[1]->isGrab) player->Hands[1]->isGrab = false;
 		}
 		// 오른손의 입력값이 들어온다면(재클릭)
 		if (player->isDir[0])
 		{
 			// 오른손에 배터리를 들고있을 경우에만 배터리 생성하기 위함
-			if (player->isDir[1]) return;
+			if (player->isDir[1] || player->Hands[1]->isGrab)
+			{
+				return;
+			}
 			// 오른손 배터리의 위치를 저장하고
 			trans = player->Bats[0]->GetTransform();
 			// 오른손 배터리가 안 보이게 만들어줌
@@ -150,6 +154,11 @@ void AKMK_PlayerHand::Tick(float DeltaTime)
 			if (!isCome && !isPick)
 			{
 				GetWorld()->SpawnActor<AKMK_Battery>(BatteryFact, trans);
+				if (n > 1)
+				{
+					n = 0;
+					isGrab = false;
+				}
 			}
 
 		}
@@ -157,7 +166,7 @@ void AKMK_PlayerHand::Tick(float DeltaTime)
 		if (player->isDir[1])
 		{
 			// 왼손에 배터리를 들고있을 경우에만 배터리 생성하기 위함
-			if (player->isDir[0]) return;
+			if (player->isDir[0] || player->Hands[0]->isGrab) return;
 			// 위와 같은 로직
 			trans = player->Bats[1]->GetTransform();
 			player->Bats[1]->SetVis(false);
@@ -165,12 +174,17 @@ void AKMK_PlayerHand::Tick(float DeltaTime)
 			if (!isCome && !isPick)
 			{
 				GetWorld()->SpawnActor<AKMK_Battery>(BatteryFact, trans);
+				if (n > 1)
+				{
+					n = 0;
+					isGrab = false;
+				}
 			}
 		}
 	}
 	else
 	{
-		if (!isCome || isPick) return;
+		if (!isCome || isPick ) return;
 		for (int i = 0; i < 2; i++)
 		{
 			if (player->isDir[i])

@@ -67,7 +67,6 @@ void UKMK_PlayerRay::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 			// 클릭이 되고
 			if (isRay)
 			{	
-				
 				// 배터리를 들고 있는 손을 파악해 배터리를 넣어줌
 				for (int i = 0; i < 2; i++)
 				{
@@ -86,7 +85,11 @@ void UKMK_PlayerRay::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 		// 배터리가 단자에 들어있는 경우
 		else
 		{
-			
+			if (dir.Length() < PDis)
+			{
+				Hands[0]->isCome = true;
+				Hands[1]->isCome = true;
+			}
 			// 거리를 확인한후, 인터렉션이 가능하게 만듦
 			if (playerComp->isDir[0])
 			{
@@ -110,7 +113,8 @@ void UKMK_PlayerRay::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 		DrawDebugLine(GetWorld(), startPos, endPos, FColor::Blue, false, 1.f);
 		//  오른손 이라면
 		if(playerComp->isDir[0])
-		{
+		{	
+			if(Hands[0]->isCome) Hands[0]->isCome = false;
 			
 			// 레이에 물체가 맞은 경우
 			if(bhit)
@@ -171,10 +175,10 @@ void UKMK_PlayerRay::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 		// 왼손이라면
 		if (playerComp->isDir[1])
 		{
-
+			if (Hands[0]->isCome) Hands[0]->isCome = false;
 			if (Hands[1]->isGrab)
 			{
-				Hands[1]->isGrab = false;
+				Hands[1]->PState = HandState::Grab;
 				return;
 			}
 			// 물체가 있다면

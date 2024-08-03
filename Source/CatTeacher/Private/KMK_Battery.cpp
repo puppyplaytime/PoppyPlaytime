@@ -32,6 +32,7 @@ void AKMK_Battery::BeginPlay()
 void AKMK_Battery::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	
 }
 
 // 배터리의 visible관리 함수
@@ -40,7 +41,7 @@ void AKMK_Battery::SetVis(bool isPut)
 	// 배터리가 들어갔다면
 	isPush = isPut;
 	// 보이지 않게 만들기
-	meshComp->SetVisibility(isPush);
+	meshComp->SetRenderInMainPass(isPush);
 }
 
 void AKMK_Battery::NotifyHit(UPrimitiveComponent* MyComp, AActor* Other, UPrimitiveComponent* OtherComp, bool bSelfMoved, FVector HitLocation, FVector HitNormal, FVector NormalImpulse, const FHitResult& Hit)

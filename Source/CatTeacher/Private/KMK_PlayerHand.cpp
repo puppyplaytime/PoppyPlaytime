@@ -121,11 +121,20 @@ void AKMK_PlayerHand::Tick(float DeltaTime)
 #pragma endregion
 
 #pragma region Battery Grab
+	if (n > 1)
+	{
+		isGrab = true;
+	}
 	// 배터리를 잡는 상태인 경우
 	if (isGrab )
 	{
 		// 손의 콜라이더를 꺼주고
 		box->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		if (n > 1)
+		{
+			isCome = false;
+			n = 0;
+		}
 		// 오른손의 입력값이 들어온다면(재클릭)
 		if (player->isDir[0])
 		{
@@ -135,8 +144,9 @@ void AKMK_PlayerHand::Tick(float DeltaTime)
 			trans = player->Bats[0]->GetTransform();
 			// 오른손 배터리가 안 보이게 만들어줌
 			player->Bats[0]->SetVis(false);
+
 			// 배터리가 슬롯에 들어가지 않았다면, 월드에 배터리를 생성해줌
-			if (!isCome)
+			if (!isCome && !isPick)
 			{
 				GetWorld()->SpawnActor<AKMK_Battery>(BatteryFact, trans);
 			}
@@ -151,7 +161,7 @@ void AKMK_PlayerHand::Tick(float DeltaTime)
 			trans = player->Bats[1]->GetTransform();
 			player->Bats[1]->SetVis(false);
 
-			if (!isCome)
+			if (!isCome && !isPick)
 			{
 				GetWorld()->SpawnActor<AKMK_Battery>(BatteryFact, trans);
 			}
@@ -159,17 +169,25 @@ void AKMK_PlayerHand::Tick(float DeltaTime)
 	}
 	else
 	{
-		if (!isCome) return;
+		if (!isCome || isPick) return;
 		for (int i = 0; i < 2; i++)
 		{
 			if (player->isDir[i])
 			{
 				player->Bats[i]->SetVis(true);
-				if(isBatCom)isGrab = true;
+				if (isBatCom)
+				{
+					isGrab = true;
+				}
+				else
+				{
+					n++;
+				}
 			}
 		}
 	}
 
+	
 #pragma endregion
 
 
@@ -187,7 +205,6 @@ void AKMK_PlayerHand::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 	// 배터리가 손에 닿은 경우
 	if (OtherActor->ActorHasTag("Battery"))
 	{
-		
 		// grabActor에 할당
 		grabActor = Cast<AKMK_Battery>(OtherActor);
 		// 이미 배터리를 잡고 있는 경우에는 반환
@@ -195,32 +212,30 @@ void AKMK_PlayerHand::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 		// 잡은 상태로 변경
 		isGrab = true;
 		// 닿은 배터리는 제거
+		if (isCome)
+		{
+			return;
+		}
 		grabActor->Destroy();
 		// 오른손인 경우에
 		if (GetName().Contains("R"))
 		{
-			if (isCome)
-			{
-				isCome = false;
-				return;
-			}
 			// 총이 아닌 상태
 			if (player->RMeshComp->GetStaticMesh() != player->Hands[0]->HandMesh[2])
 			{
 				// 보이지 않은 상태에 들고있는 배터리를 보여주고 콜리전을 켜줌
-				player->Bats[0]->meshComp->SetVisibility(true);
-				player->Bats[0]->meshComp->SetCollisionProfileName("Item");
+				player->Bats[0]->meshComp->SetRenderInMainPass(true);
+				player->Bats[0]->meshComp->SetCollisionProfileName("Bat");
 				isRight = true;
 			}
 		}
 		// 왼손인 경우
 		else
 		{
-			if (isCome) return;
 			// 위와 같은 상태, 단 왼손의 경우, 변경사항이 없기에 한번에 처리함
 			isLeft = true;
-			player->Bats[1]->meshComp->SetVisibility(true);
-			player->Bats[1]->meshComp->SetCollisionProfileName("Item");
+			player->Bats[1]->meshComp->SetRenderInMainPass(true);
+			player->Bats[1]->meshComp->SetCollisionProfileName("Bat");
 		}
 	}
 	// 잡을 수 있는 오브젝트에 닿은 경우

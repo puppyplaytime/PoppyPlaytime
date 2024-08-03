@@ -141,7 +141,8 @@ void AKMK_Player::BeginPlay()
 		Bats[i]->AttachToComponent(springArms[0], FAttachmentTransformRules::KeepRelativeTransform);
 		Bats[i]->SetActorRelativeLocation(FVector(55, y, 8));
 		Bats[i]->SetActorScale3D(FVector(0.55f));
-		Bats[i]->meshComp->SetVisibility(false);
+		Bats[i]->meshComp->SetRenderInMainPass(false);
+		Bats[i]->meshComp->SetRenderInDepthPass(false);
 		Bats[i]->meshComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		playerRay->Bats.Add(Bats[i]);
 	}

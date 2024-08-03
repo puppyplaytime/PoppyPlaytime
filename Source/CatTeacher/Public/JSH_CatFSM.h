@@ -153,7 +153,7 @@ public:
 	
 	// idle 상태 관련 
 	bool IdleTeleport = false;
-	float idletime = 5;
+	float idletime = 10;
 	float idlecurrtime = 0;
 };
 

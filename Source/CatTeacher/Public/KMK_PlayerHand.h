@@ -64,6 +64,7 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Shoot")
 	float ShootTime = 3;
 	
+	UPROPERTY(EditAnywhere)
 	class UKMK_PlayerHandFSM* FSM;
 	// 물건을 잡을 수 있게하는 컴포넌트 
 	class UPhysicsHandleComponent* handle = nullptr;

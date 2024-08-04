@@ -153,8 +153,15 @@ public:
 	
 	// idle 상태 관련 
 	bool IdleTeleport = false;
-	float idletime = 10;
+	float idletime = 15;
 	float idlecurrtime = 0;
+
+
+	// Switch 연기 -> idle 상태 관련
+	bool SwSt1 = false;
+	bool SwSt2 = false;
+	bool SwSt3 = false;
+	bool SwSt4 = false;
 };
 
 

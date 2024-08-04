@@ -100,6 +100,4 @@ public:
 	bool isBatCom = false;
 
 	class UKMK_Bat* b;
-
-	FString SwitchName;
 };

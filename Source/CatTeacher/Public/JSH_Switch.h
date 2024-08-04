@@ -33,4 +33,6 @@ public:
 	class UKMK_PlayerHandFSM* FSM;
 
 	FString SwitchName;
+
+	class UJSH_CatFSM* CatFsm;
 };

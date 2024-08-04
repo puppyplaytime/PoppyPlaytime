@@ -29,7 +29,7 @@ void UJSH_CatFSM::BeginPlay()
     // CatNab 초기 이동 속도 조절
     if (me && me->GetCharacterMovement())
     {
-        me->GetCharacterMovement()->MaxWalkSpeed = 250.0f; // Set the desired max speed
+        me->GetCharacterMovement()->MaxWalkSpeed = 200.0f; // Set the desired max speed
     }
 }
 
@@ -102,7 +102,42 @@ void UJSH_CatFSM::TickComponent(float DeltaTime, ELevelTick TickType, FActorComp
     UpdateState();
     UpdateStateFalse();
 
-    
+    if (SwSt1)
+    {
+        if (me && me->Tags.Contains("S1"))
+        {
+            SwSt1 = false;
+            IdleTeleport = true;
+            cState = ECatState::Idle;
+        }
+    }
+    else if (SwSt2)
+    {
+        if (me && me->Tags.Contains("S2"))
+        {
+            SwSt2 = false;
+            IdleTeleport = true;
+            cState = ECatState::Idle;
+        } 
+    }
+    else if (SwSt3)
+    {
+        if (me && me->Tags.Contains("S3"))
+        {
+            SwSt3 = false;
+            IdleTeleport = true;
+            cState = ECatState::Idle;
+        } 
+    }
+    else if (SwSt4)
+    {
+        if (me && me->Tags.Contains("S4"))
+        {
+            SwSt4 = false;
+            IdleTeleport = true;
+            cState = ECatState::Idle;
+        } 
+    }
 }
 
 void UJSH_CatFSM::UpdateState()

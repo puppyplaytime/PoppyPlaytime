@@ -47,7 +47,8 @@ public:
 	TArray<class AKMK_Battery*> Bats;
 	UPROPERTY(EditAnywhere)
 	float PDis = 300;
-
+	
+	bool isCome = false;
 #pragma endregion
 		
 };

@@ -191,7 +191,6 @@ void AKMK_Player::Tick(float DeltaTime)
 	// 이동 인풋
 	AddMovementInput(dir, speed * DeltaTime);
 	dir = FVector::ZeroVector;
-
 	// 계속 레이 쏘기
 	startPos = camera->GetComponentLocation();
 	endPos = startPos + camera->GetForwardVector() * rayDis;

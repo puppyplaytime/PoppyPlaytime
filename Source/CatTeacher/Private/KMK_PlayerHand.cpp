@@ -62,12 +62,25 @@ void AKMK_PlayerHand::Tick(float DeltaTime)
 	// 문고리 잡는 경우에 위치 고정
 	if (isPick)
 	{
+		box->SetCollisionProfileName("Hand");
 		hand->SetWorldLocation(pickTrans);
 	}
+	if (isHold)
+	{
+		holdTime += DeltaTime;
+		if (holdTime > 0.5f)
+		{
+			holdTime = 0;
+			isHold = false;
+		}
+	}
+
+
 #pragma region HandMove
 	// 손이 돌아오는 코드
 	if (isReverse)
 	{
+		if(isHold) return;
 		// 방향 = 목적지(손의 원위치) - 손의 위치
 		dir = startPos - GetActorLocation();
 		// 거리측정
@@ -120,23 +133,14 @@ void AKMK_PlayerHand::Tick(float DeltaTime)
 
 	}
 #pragma endregion
-
+	GEngine->AddOnScreenDebugMessage(3, 1, FColor::Orange, FString::Printf(TEXT("%d"), isCome));
 #pragma region Battery Grab
-	if (n > 1)
-	{
-		isGrab = true;
-	}
+	// 
 	// 배터리를 잡는 상태인 경우
 	if (isGrab )
 	{
 		// 손의 콜라이더를 꺼주고
 		box->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-		if (n > 1)
-		{
-			isCome = false;
-			if(player->Hands[0]->isGrab) player->Hands[0]->isGrab = false;
-			if(player->Hands[1]->isGrab) player->Hands[1]->isGrab = false;
-		}
 		// 오른손의 입력값이 들어온다면(재클릭)
 		if (player->isDir[0])
 		{
@@ -154,11 +158,6 @@ void AKMK_PlayerHand::Tick(float DeltaTime)
 			if (!isCome && !isPick)
 			{
 				GetWorld()->SpawnActor<AKMK_Battery>(BatteryFact, trans);
-				if (n > 1)
-				{
-					n = 0;
-					isGrab = false;
-				}
 			}
 
 		}
@@ -174,34 +173,9 @@ void AKMK_PlayerHand::Tick(float DeltaTime)
 			if (!isCome && !isPick)
 			{
 				GetWorld()->SpawnActor<AKMK_Battery>(BatteryFact, trans);
-				if (n > 1)
-				{
-					n = 0;
-					isGrab = false;
-				}
 			}
 		}
 	}
-	else
-	{
-		if (!isCome || isPick ) return;
-		for (int i = 0; i < 2; i++)
-		{
-			if (player->isDir[i])
-			{
-				player->Bats[i]->SetVis(true);
-				if (isBatCom)
-				{
-					isGrab = true;
-				}
-				else
-				{
-					n++;
-				}
-			}
-		}
-	}
-
 	
 #pragma endregion
 
@@ -216,7 +190,7 @@ void AKMK_PlayerHand::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 	isGo = false;
 	isReverse = true;
 	SwitchName = *OtherActor->GetName();
-	GEngine->AddOnScreenDebugMessage(9, 1, FColor::White, FString::Printf(TEXT("%s"), *OtherActor->GetName()));
+	GEngine->AddOnScreenDebugMessage(9, 1, FColor::Emerald, FString::Printf(TEXT("%s"), *OtherActor->GetName()));
 	// 배터리가 손에 닿은 경우
 	if (OtherActor->ActorHasTag("Battery"))
 	{
@@ -227,10 +201,6 @@ void AKMK_PlayerHand::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 		// 잡은 상태로 변경
 		isGrab = true;
 		// 닿은 배터리는 제거
-		if (isCome)
-		{
-			return;
-		}
 		grabActor->Destroy();
 		// 오른손인 경우에
 		if (GetName().Contains("R"))
@@ -266,12 +236,21 @@ void AKMK_PlayerHand::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 	// 왼손인 상태면 밑에 상황이 필요 없음 => 반환
 	if (!GetName().Contains("R")) return;
 	// 점프손인 경우에, 점프 패드가 닿는다면
-	if (player->RMeshComp->GetStaticMesh() == player->Hands[0]->HandMesh[2] && OtherActor->ActorHasTag("Jump"))
+	if (isJump)
 	{
-		// 플레이어의 상태를 변경
-		FSM->isJump = true;
-		FSM->PState = PlayerHandFSM::JumpPack;
+		if (OtherActor->ActorHasTag("Jump") && player->RMeshComp->GetStaticMesh() == player->Hands[0]->HandMesh[2])
+		{
+			// 플레이어의 상태를 변경
+			FSM->isJump = true;
+			isJump = false;
+			FSM->PState = PlayerHandFSM::JumpPack;
+		}
 	}
+	else
+	{
+			box->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	}
+
 	// 평범한 손이고, panel에 닿는다면
 	if (player->RMeshComp->GetStaticMesh() == player->Hands[0]->HandMesh[0] && OtherActor->ActorHasTag("ElectricalPanel"))
 	{
@@ -279,6 +258,7 @@ void AKMK_PlayerHand::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 		FSM->PState = PlayerHandFSM::Energy;
 		FSM->t = 0;
 		FSM->isCharge = true;
+		isHold = true;
 	}
 
 

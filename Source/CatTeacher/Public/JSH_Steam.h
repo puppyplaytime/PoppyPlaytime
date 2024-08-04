@@ -38,5 +38,5 @@ public:
 
 	// ½Ã°£
 	float currtime = 0;
-	float offtime = 4;
+	float offtime = 10;
 };

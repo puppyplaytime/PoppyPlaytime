@@ -95,24 +95,71 @@ void AJSH_Switch::NotifyActorBeginOverlap(AActor* OtherActor)
 
                 Steam01->SteamON = true; // Only set Steam01 to true for BP_Switch_C_1
             }
-            else if (Hand->SwitchName == "BP_Switch_C_0")
+            else if (Hand->SwitchName == "BP_Switch_C_8")
             {
                 // 2번 통로 연기 -> cat01 destroy
                 GEngine->AddOnScreenDebugMessage(31, 3, FColor::Yellow, FString::Printf(TEXT("C2")));
+
+            	TArray<AActor*> FoundActors;
+            	UGameplayStatics::GetAllActorsWithTag(GetWorld(), FName("S2"), FoundActors);
+
+            	// 찾은 액터들 순회
+            	for (AActor* Actor : FoundActors)
+            	{
+            		AJSH_Cat* Cat = Cast<AJSH_Cat>(Actor);
+            		if (Cat)
+            		{
+            			// tt 변수를 true로 설정
+            			Cat->fsm->SwSt2 = true;
+            			Cat->Tags.Remove("2");
+            		}
+            	}
+            	
                 Steam02->SteamON = true; // Only set Steam02 to true for BP_Switch_C_0
             }
             // 3번 통로
-            else if (Hand->SwitchName == "BP_Switch_C_2")
+            else if (Hand->SwitchName == "BP_Switch_C_10")
             {
                 // 3번 통로 연기 -> cat01 destroy
                 GEngine->AddOnScreenDebugMessage(31, 3, FColor::Yellow, FString::Printf(TEXT("C3")));
+            	
+            	TArray<AActor*> FoundActors;
+            	UGameplayStatics::GetAllActorsWithTag(GetWorld(), FName("S3"), FoundActors);
+
+            	// 찾은 액터들 순회
+            	for (AActor* Actor : FoundActors)
+            	{
+            		AJSH_Cat* Cat = Cast<AJSH_Cat>(Actor);
+            		if (Cat)
+            		{
+            			// tt 변수를 true로 설정
+            			Cat->fsm->SwSt3 = true;
+            			Cat->Tags.Remove("FCat3");
+            		}
+            	}
+            	
                 Steam03->SteamON = true; // Only set Steam03 to true for BP_Switch_C_2
             }
             // 4번 통로
-            else if (Hand->SwitchName == "BP_Switch_C_3")
+            else if (Hand->SwitchName == "BP_Switch_C_12")
             {
                 // 4번 통로 연기 -> cat01 destroy
                 GEngine->AddOnScreenDebugMessage(31, 3, FColor::Yellow, FString::Printf(TEXT("C4")));
+            	
+            	TArray<AActor*> FoundActors;
+            	UGameplayStatics::GetAllActorsWithTag(GetWorld(), FName("S4"), FoundActors);
+
+            	// 찾은 액터들 순회
+            	for (AActor* Actor : FoundActors)
+            	{
+            		AJSH_Cat* Cat = Cast<AJSH_Cat>(Actor);
+            		if (Cat)
+            		{
+            			// tt 변수를 true로 설정
+            			Cat->fsm->SwSt4 = true;
+            			Cat->Tags.Remove("FCat4");
+            		}
+            	}
                 Steam04->SteamON = true; // Only set Steam04 to true for BP_Switch_C_3
             }
         }

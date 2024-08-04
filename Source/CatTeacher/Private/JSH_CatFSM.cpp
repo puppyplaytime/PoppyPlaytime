@@ -95,9 +95,10 @@ void UJSH_CatFSM::TickComponent(float DeltaTime, ELevelTick TickType, FActorComp
     /*FString logMsg2 = UEnum::GetValueAsString(cState);
     logMsg += TEXT(" - SelectedTag: ") + SelectedTag.ToString();
     GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Cyan, logMsg2);*/
-    
-    FString myState = UEnum::GetValueAsString(cState);
-    DrawDebugString(GetWorld() , GetOwner()->GetActorLocation(), myState , nullptr , FColor::Yellow , 0, true, 1);
+
+    // CatNab 상태 표시
+    //FString myState = UEnum::GetValueAsString(cState);
+    //DrawDebugString(GetWorld() , GetOwner()->GetActorLocation(), myState , nullptr , FColor::Yellow , 0, true, 1);
 
     UpdateState();
     UpdateStateFalse();
@@ -216,7 +217,9 @@ void UJSH_CatFSM::UpdateStateFalse()
 
 void UJSH_CatFSM::IdleState(float DeltaTime)
 {
+    me->GetCharacterMovement()->MaxWalkSpeed = 200.0f;
     currentTime += DeltaTime;
+    
     if (IdleTeleport)
     {
         me->FalseBox->SetCollisionProfileName(TEXT("NoCollision"));
@@ -440,19 +443,22 @@ void UJSH_CatFSM::CeilingState()
 
 void UJSH_CatFSM::DiscoveryState()
 {
-    if (bHasAttacked)
-    {
-        UE_LOG(LogTemp, Warning, TEXT("false"));
-        bHasAttacked = false;
-    }
 }
 
 void UJSH_CatFSM::AttackState()
 {
+    me->FalseBox->SetCollisionProfileName(TEXT("NoCollision"));
     if (bHasAttacked)
     {
-        UE_LOG(LogTemp, Warning, TEXT("Attack"));
-        bHasAttacked = false;
+        UWorld* World = me->GetWorld();
+        if (World)
+        {
+            APlayerController* PlayerController = World->GetFirstPlayerController();
+            if (PlayerController)
+            {
+                UKismetSystemLibrary::QuitGame(World, PlayerController, EQuitPreference::Quit, true);
+            }
+        }
     }
 }
 

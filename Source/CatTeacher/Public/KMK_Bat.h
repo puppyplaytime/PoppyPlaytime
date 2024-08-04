@@ -26,9 +26,10 @@ public:
 
 	// 배터리가 들어왔는지 확인하기 위한 변수
 	UPROPERTY(VisibleAnywhere)
-	bool isCome = false;
+	bool isHaveBat = false;
 
 	UPROPERTY(EditAnywhere)
 	class UStaticMeshComponent* meshBat;
 
+	class UKMK_PlayerRay* player;
 };

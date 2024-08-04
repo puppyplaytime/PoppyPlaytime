@@ -45,7 +45,6 @@ public:
 	UPROPERTY(EditAnywhere)
 	HandState PState = HandState::None;
 	int n = 0;
-	FString SwitchName;
 
 	UPROPERTY()
 	bool isGo = false;
@@ -95,6 +94,8 @@ public:
 	bool isPick = false;
 
 	bool isCome = false;
+
+	bool isJump = false;
 
 	UPROPERTY()
 	bool isBatCom = false;

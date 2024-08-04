@@ -97,16 +97,23 @@ void UKMK_PlayerRay::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 					for (int i = 0; i < 2; i++)
 					{
 						// 3-2. 손에 배터리를 넣고 싶다.
-						if (playerComp->isDir[i] && !Hands[i]->isGrab)
+						if (playerComp->isDir[i])
 						{
-							bat->isHaveBat = false;
-							// 2-2. 넣고 싶다
-							Bats[i]->SetVis(true);
-							Hands[i]->isGrab = true;
+							if (!Hands[i]->isGrab)
+							{
+								bat->isHaveBat = false;
+								// 2-2. 넣고 싶다
+								Bats[i]->SetVis(true);
+								Hands[i]->isGrab = true;
+							}
+							else
+							{
+								Bats[i]->SetVis(true);
+								Hands[i]->isGrab = true;
+							}
 						}
 					}
 				}
-				
 			}
 		}
 	}

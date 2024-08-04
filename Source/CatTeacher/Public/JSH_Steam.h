@@ -2,18 +2,22 @@
 
 #pragma once
 
+
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "JSH_RandomFalse.generated.h"
+#include "NiagaraComponent.h"
+#include "NiagaraSystem.h"
+#include "JSH_Steam.generated.h"
+
 
 UCLASS()
-class CATTEACHER_API AJSH_RandomFalse : public AActor
+class CATTEACHER_API AJSH_Steam : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	AJSH_RandomFalse();
+	AJSH_Steam();
 
 protected:
 	// Called when the game starts or when spawned
@@ -23,16 +27,16 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-private:
-	// 타이머 핸들
-	FTimerHandle TimerHandle;
-
-	// 태그를 찾고 랜덤으로 선택하는 함수
-	void FindAndSelectRandomTag();
-
-
 public:
-	UPROPERTY(EditAnywhere, Category = "Control")
-	float FalseRandomeTime = 15.0f;
-	
+	// 연기
+	UPROPERTY(EditAnywhere)
+	UNiagaraComponent* NSteam;
+
+	// 연기 on , off
+	UPROPERTY(EditAnywhere)
+	bool SteamON = false;
+
+	// 시간
+	float currtime = 0;
+	float offtime = 10;
 };

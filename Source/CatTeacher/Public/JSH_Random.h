@@ -23,6 +23,7 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+
 private:
 	// 타이머 핸들
 	FTimerHandle TimerHandle;
@@ -30,5 +31,7 @@ private:
 	// 태그를 찾고 랜덤으로 선택하는 함수
 	void FindAndSelectRandomTag();
 
-	
+public:
+	UPROPERTY(EditAnywhere, Category = "Control")
+	float TrueRandomeTime = 20.0f;
 };

@@ -29,7 +29,7 @@ void UJSH_CatFSM::BeginPlay()
     // CatNab 초기 이동 속도 조절
     if (me && me->GetCharacterMovement())
     {
-        me->GetCharacterMovement()->MaxWalkSpeed = 250.0f; // Set the desired max speed
+        me->GetCharacterMovement()->MaxWalkSpeed = 200.0f; // Set the desired max speed
     }
 }
 
@@ -95,14 +95,50 @@ void UJSH_CatFSM::TickComponent(float DeltaTime, ELevelTick TickType, FActorComp
     /*FString logMsg2 = UEnum::GetValueAsString(cState);
     logMsg += TEXT(" - SelectedTag: ") + SelectedTag.ToString();
     GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Cyan, logMsg2);*/
-    
-    FString myState = UEnum::GetValueAsString(cState);
-    DrawDebugString(GetWorld() , GetOwner()->GetActorLocation(), myState , nullptr , FColor::Yellow , 0, true, 1);
+
+    // CatNab 상태 표시
+    //FString myState = UEnum::GetValueAsString(cState);
+    //DrawDebugString(GetWorld() , GetOwner()->GetActorLocation(), myState , nullptr , FColor::Yellow , 0, true, 1);
 
     UpdateState();
     UpdateStateFalse();
 
-    
+    if (SwSt1)
+    {
+        if (me && me->Tags.Contains("S1"))
+        {
+            SwSt1 = false;
+            IdleTeleport = true;
+            cState = ECatState::Idle;
+        }
+    }
+    else if (SwSt2)
+    {
+        if (me && me->Tags.Contains("S2"))
+        {
+            SwSt2 = false;
+            IdleTeleport = true;
+            cState = ECatState::Idle;
+        } 
+    }
+    else if (SwSt3)
+    {
+        if (me && me->Tags.Contains("S3"))
+        {
+            SwSt3 = false;
+            IdleTeleport = true;
+            cState = ECatState::Idle;
+        } 
+    }
+    else if (SwSt4)
+    {
+        if (me && me->Tags.Contains("S4"))
+        {
+            SwSt4 = false;
+            IdleTeleport = true;
+            cState = ECatState::Idle;
+        } 
+    }
 }
 
 void UJSH_CatFSM::UpdateState()
@@ -181,7 +217,9 @@ void UJSH_CatFSM::UpdateStateFalse()
 
 void UJSH_CatFSM::IdleState(float DeltaTime)
 {
+    me->GetCharacterMovement()->MaxWalkSpeed = 200.0f;
     currentTime += DeltaTime;
+    
     if (IdleTeleport)
     {
         me->FalseBox->SetCollisionProfileName(TEXT("NoCollision"));
@@ -216,6 +254,9 @@ void UJSH_CatFSM::IdleState(float DeltaTime)
 
 void UJSH_CatFSM::RoundMoveState()
 {
+    // 왕복 이동 속도
+    me->GetCharacterMovement()->MaxWalkSpeed = RoundMoveSpeed;
+    
     static bool bMovingToTarget01_FCat1 = true; // FCat1 대상에 대한 이동 플래그
     static bool bMovingToTarget01_FCat2 = true; // FCat2 대상에 대한 이동 플래그
     static bool bMovingToTarget01_FCat3 = true; // FCat3 대상에 대한 이동 플래그
@@ -352,6 +393,8 @@ void UJSH_CatFSM::MoveWaitState()
 
 void UJSH_CatFSM::TrueMoveState()
 {
+    me->GetCharacterMovement()->MaxWalkSpeed = AttackMoveSpeed;
+
     FVector destination = targetPlayer->GetActorLocation();
     FVector dir = destination - me->GetActorLocation();
     me->AddMovementInput(dir.GetSafeNormal());
@@ -365,9 +408,6 @@ void UJSH_CatFSM::TrueMoveState()
 
 void UJSH_CatFSM::FalseMoveWaitState()
 {
-    // 가짜 고양이 총으로 삭제 위해서 Collision 변경
-    me->FalseBox->SetCollisionProfileName(TEXT("FalseCat"));
-    
     // 위치 가운데 정렬 
     FVector destinationM = targetMiddle->GetActorLocation();
     FVector dirM = destinationM - me->GetActorLocation();
@@ -381,6 +421,11 @@ void UJSH_CatFSM::FalseMoveWaitState()
 
 void UJSH_CatFSM::FalseMoveState()
 {
+    // 가짜 고양이 총으로 삭제 위해서 Collision 변경
+    me->FalseBox->SetCollisionProfileName(TEXT("FalseCat"));
+    
+    me->GetCharacterMovement()->MaxWalkSpeed = AttackMoveSpeed;
+    
     FVector destination = targetPlayer->GetActorLocation();
     FVector dir = destination - me->GetActorLocation();
     me->AddMovementInput(dir.GetSafeNormal());
@@ -398,19 +443,22 @@ void UJSH_CatFSM::CeilingState()
 
 void UJSH_CatFSM::DiscoveryState()
 {
-    if (bHasAttacked)
-    {
-        UE_LOG(LogTemp, Warning, TEXT("false"));
-        bHasAttacked = false;
-    }
 }
 
 void UJSH_CatFSM::AttackState()
 {
+    me->FalseBox->SetCollisionProfileName(TEXT("NoCollision"));
     if (bHasAttacked)
     {
-        UE_LOG(LogTemp, Warning, TEXT("Attack"));
-        bHasAttacked = false;
+        UWorld* World = me->GetWorld();
+        if (World)
+        {
+            APlayerController* PlayerController = World->GetFirstPlayerController();
+            if (PlayerController)
+            {
+                UKismetSystemLibrary::QuitGame(World, PlayerController, EQuitPreference::Quit, true);
+            }
+        }
     }
 }
 

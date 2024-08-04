@@ -15,10 +15,12 @@ class CATTEACHER_API AKMK_Battery : public AActor
 public:	
 	// Sets default values for this actor's properties
 	AKMK_Battery();
+
 	UPROPERTY(EditAnywhere)
 	class UStaticMeshComponent* meshComp = nullptr;
 	UPROPERTY(EditAnywhere)
 	class UBoxComponent* box;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -26,6 +28,8 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+
 	UPROPERTY(EditAnywhere)
 	bool isPush = false;
 

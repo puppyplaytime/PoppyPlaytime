@@ -37,53 +37,15 @@ void AKHH_Switch::Tick(float DeltaTime)
 
 }
 
-//void AKHH_Switch::NotifyActorBeginOverlap(AActor* OtherActor)
-//{
-//	Super::NotifyActorBeginOverlap(OtherActor);
-//
-//	UE_LOG(LogTemp,Warning,TEXT("switch1"));
-//	
-//
-//	auto* FSM = Cast<UKMK_PlayerHandFSM>(OtherActor);
-//	auto* Hand = Cast<AKMK_PlayerHand>(OtherActor);
-//
-//	if (FSM && OtherActor->ActorHasTag("Green"))
-//	{
-//		if (FSM->isCharge == true)
-//		{
-//			//FSM -> isCharge = false;
-//
-//			if (Hand->SwitchName == "BP_Switch_C_1")
-//			{
-//				Opendoor();
-//			}
-//			else if (Hand->SwitchName == "BP_Switch_C_7")
-//			{
-//				Opendoor();
-//			}
-//			else if (Hand->SwitchName == "BP_Switch_C_9")
-//			{
-//				Opendoor();
-//			}
-//
-//		}
-//
-//	}
-//}
-
 void AKHH_Switch::Opendoor()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Opendoor start"));
 	if (door != nullptr)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Opendoor start null"));
-
 		BatteryOpendoorComponent = door->FindComponentByClass<UKHH_BatteryOpenDoor>();
 
 		if (BatteryOpendoorComponent)
 		{
 			BatteryOpendoorComponent->ShouldMove = true;
-			UE_LOG(LogTemp, Warning, TEXT("if"));
 		}
 	}
 }

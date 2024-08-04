@@ -45,74 +45,88 @@ void UKMK_PlayerRay::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 
 	// hit된 물체 정보 들고오기
 	FHitResult hitInfo;
-	GetWorld()->LineTraceSingleByChannel(hitInfo, startPos, endPos, ECC_Visibility, params);
+	/*FHitResult hitInfo1;
+	GetWorld()->LineTraceSingleByChannel(hitInfo1, startPos, endPos, ECC_EngineTraceChannel1, params);*/
+	GetWorld()->LineTraceSingleByChannel(hitInfo, playerComp->startPos, endPos, ECC_GameTraceChannel8, params);
+	// DrawDebugLine(GetWorld(), playerComp->startPos, endPos, FColor::Blue, false, 1.f);
+	if(hitInfo.GetActor() != nullptr)GEngine->AddOnScreenDebugMessage(2, 1, FColor::Orange, FString::Printf(TEXT("%s"), *hitInfo.GetActor()->GetName()));
 	// 레이를 쏘고
-	bool bhit = GetWorld()->LineTraceSingleByChannel(hitInfo, startPos, endPos, ECC_Visibility, params);
+	bool bhit = GetWorld()->LineTraceSingleByChannel(hitInfo, playerComp->startPos, endPos, ECC_GameTraceChannel8, params);
 
 	if (hitInfo.GetActor() != nullptr && hitInfo.GetActor()->ActorHasTag("E_Bat"))
 	{
+		GEngine->AddOnScreenDebugMessage(2, 1, FColor::Orange, FString::Printf(TEXT("%f"), FVector::Distance(hitInfo.GetActor()->GetActorLocation(), GetOwner()->GetTargetLocation())));
+		// 일정거리에 있을때 인터렉션이 가능하게 만듦
+		if (FVector::Distance(hitInfo.GetActor()->GetActorLocation(), GetOwner()->GetTargetLocation()) < 400)
+		{
+			isCome = true;
+			Hands[0]->isCome = true;
+			Hands[1]->isCome = true;
+		}
 		// 벽에 있는 단자에 배터리가 들어있지 않은 경우
 		auto* bat = hitInfo.GetActor()->FindComponentByClass<UKMK_Bat>();
-		FVector dir = hitInfo.GetActor()->GetTargetLocation() - playerComp->startPos;
-		// 일정거리 내부라면, 배터리를 넣을 수 있는 상태가 됨
-		// GEngine->AddOnScreenDebugMessage(-1, 1, FColor::Orange, FString::Printf(TEXT("%f, %s"), dir.Length(), *hitInfo.GetActor()->GetActorLabel()));
-		if (!bat->isCome)
+
+		// 하고싶은 일 : 배터리를 넣었다 뺐다가 하게 하고 싶다
+		// 해야하는 일
+		// 1. 인터렉션이 가능하고
+		if (isCome && isRay)
 		{
-			// 일정거리 내부라면, 배터리를 넣을 수 있는 상태가 됨
-			if (dir.Length() < PDis)
-			{
-				Hands[0]->isCome = true;
-				Hands[1]->isCome = true;
-			}
-			// 클릭이 되고
-			if (isRay)
-			{	
-				// 배터리를 들고 있는 손을 파악해 배터리를 넣어줌
+			// 2. 단자에 배터리가 없을 경우
+			if(!bat->isHaveBat)
+			{ 
+				// 2-1. 손에 배터리가 있다면
 				for (int i = 0; i < 2; i++)
 				{
-					if (playerComp->isDir[i] && Hands[i]->isGrab)
+					if (Hands[i]->isGrab)
 					{
-						//playerComp->Hands[i]->n = 0;
-						playerComp->Hands[i]->isBatCom = true;
-						bat->isCome = true;
-						Hands[i]->isGrab = false;
-						Hands[i]->isCome = false;
+						// 2-2. 넣고 싶다
+						bat->isHaveBat = true;
+						// 2-3. 손에 있는 배터리를 끄고 싶다.
 						Bats[i]->SetVis(false);
+						// 2-4. 손이 grab상태가 아니게 하고 싶다
+						Hands[i]->isGrab = false;
 					}
 				}
 			}
-			
-		}
-		// 배터리가 단자에 들어있는 경우
-		else
-		{
-			if (dir.Length() < PDis)
+			// 3. 단자에 배터리가 있는 경우
+			else
 			{
-				Hands[0]->isCome = true;
-				Hands[1]->isCome = true;
-			}
-			// 거리를 확인한후, 인터렉션이 가능하게 만듦
-			if (playerComp->isDir[0])
-			{
-				bat->isCome = false;
-				Bats[0]->SetVis(true);
-				Hands[0]->isCome = false;
-			}
-			if(playerComp->isDir[1])
-			{
-				bat->isCome = false;
-				Bats[1]->SetVis(true);
-				Hands[1]->isCome = false;
+				// 3-1. 손에 배터리가 없을때
+				if (bat->isHaveBat && isRay)
+				{
+					for (int i = 0; i < 2; i++)
+					{
+						// 3-2. 손에 배터리를 넣고 싶다.
+						if (playerComp->isDir[i] && !Hands[i]->isGrab)
+						{
+							bat->isHaveBat = false;
+							// 2-2. 넣고 싶다
+							Bats[i]->SetVis(true);
+							Hands[i]->isGrab = true;
+						}
+					}
+				}
+				
 			}
 		}
-
 	}
+	else
+	{
+		isCome = false;
+		Hands[0]->isCome = false;
+		Hands[1]->isCome = false;
+	}
+
 	// 입력값이 들어오는 경우
 	if (isRay)
 	{
-		if(hitInfo.GetActor() != nullptr)GEngine->AddOnScreenDebugMessage(-1, 1, FColor::Orange, FString::Printf(TEXT("%s"), *hitInfo.GetActor()->GetActorLabel()));
 		// 레이를 그리고
-		DrawDebugLine(GetWorld(), startPos, endPos, FColor::Blue, false, 1.f);
+		if(hitInfo.GetActor() != nullptr) DrawDebugLine(GetWorld(), startPos, endPos, FColor::Blue, false, 1.f);
+		if (isCome)
+		{
+			isCome = false;
+			return;
+		}
 		//  오른손 이라면
 		if(playerComp->isDir[0])
 		{	
@@ -131,7 +145,13 @@ void UKMK_PlayerRay::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 				}
 				// 총을 들고있지 않다면
 				else
-				{
+				{	
+				
+					if (hitInfo.GetActor()->ActorHasTag("Jump") && FVector::Distance(hitInfo.GetActor()->GetActorLocation(), GetOwner()->GetActorLocation()) < 300)
+					{
+						Hands[0]->isJump = true;
+					}
+
 					// 오른손에 물체의 component를 넘겨주고
 					Hands[0]->hitinfo = hitInfo.GetComponent();
 					// 손을 뻗게 만든다

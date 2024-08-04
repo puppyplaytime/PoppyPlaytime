@@ -2,6 +2,7 @@
 
 
 #include "KMK_Bat.h"
+#include "KMK_PlayerRay.h"
 
 // Sets default values for this component's properties
 UKMK_Bat::UKMK_Bat()
@@ -17,6 +18,7 @@ void UKMK_Bat::BeginPlay()
 {
 	Super::BeginPlay();
 	meshBat = GetOwner()->FindComponentByClass<UStaticMeshComponent>();
+	player = GetWorld()->GetFirstPlayerController()->GetPawn()->FindComponentByClass<UKMK_PlayerRay>();
 }
 
 
@@ -24,8 +26,8 @@ void UKMK_Bat::BeginPlay()
 void UKMK_Bat::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	meshBat->SetVisibility(isCome);
+	// 배터리 여부에 따라 on/off
+	meshBat->SetVisibility(isHaveBat);
 
 }
 

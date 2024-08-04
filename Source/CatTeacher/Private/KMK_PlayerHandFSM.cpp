@@ -66,7 +66,7 @@ void UKMK_PlayerHandFSM::JumpHand()
 	{
 		if(movementComp->JumpZVelocity != JumpPower * 2)
 		{
-			movementComp->JumpZVelocity = JumpPower * 2;
+			movementComp->JumpZVelocity = JumpPower * 1.8f;
 			Player->Jump();
 			isJump = false;
 		}

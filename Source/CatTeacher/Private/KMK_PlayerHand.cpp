@@ -201,6 +201,8 @@ void AKMK_PlayerHand::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 	isGo = false;
 	isReverse = true;
 
+	SwitchName = *OtherActor->GetName();
+
 	GEngine->AddOnScreenDebugMessage(9, 1, FColor::White, FString::Printf(TEXT("%s"), *OtherActor->GetName()));
 	// 배터리가 손에 닿은 경우
 	if (OtherActor->ActorHasTag("Battery"))

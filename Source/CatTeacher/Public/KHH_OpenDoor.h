@@ -41,6 +41,7 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	class APawn* Player;
+
 	FVector CurrentLocation;
 	FVector TargetLocation;
 	float Speed;

@@ -92,8 +92,7 @@ void AJSH_Switch::NotifyActorBeginOverlap(AActor* OtherActor)
                         Cat->Tags.Remove("FCat1");
                     }
                 }
-
-                Steam01->SteamON = true; // Only set Steam01 to true for BP_Switch_C_1
+            	Steam01->SteamON = true;
             }
             else if (Hand->SwitchName == "BP_Switch_C_8")
             {

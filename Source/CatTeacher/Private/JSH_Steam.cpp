@@ -48,6 +48,8 @@ void AJSH_Steam::Tick(float DeltaTime)
 		if (currtime >= offtime)
 		{
 			NSteam->SetVisibility(false);
+			SteamON = false;
+			currtime = 0;
 		}
 	}
 }

@@ -23,7 +23,7 @@ void AJSH_RandomFalse::BeginPlay()
 	Super::BeginPlay();
 	
 	// Set timer to call FindAndSelectRandomTag every 10 seconds
-	GetWorldTimerManager().SetTimer(TimerHandle, this, &AJSH_RandomFalse::FindAndSelectRandomTag, 10.0f, true);
+	GetWorldTimerManager().SetTimer(TimerHandle, this, &AJSH_RandomFalse::FindAndSelectRandomTag, FalseRandomeTime, true);
 	// test
 }
 

@@ -251,6 +251,9 @@ void UJSH_CatFSM::IdleState(float DeltaTime)
 
 void UJSH_CatFSM::RoundMoveState()
 {
+    // 왕복 이동 속도
+    me->GetCharacterMovement()->MaxWalkSpeed = RoundMoveSpeed;
+    
     static bool bMovingToTarget01_FCat1 = true; // FCat1 대상에 대한 이동 플래그
     static bool bMovingToTarget01_FCat2 = true; // FCat2 대상에 대한 이동 플래그
     static bool bMovingToTarget01_FCat3 = true; // FCat3 대상에 대한 이동 플래그
@@ -387,6 +390,8 @@ void UJSH_CatFSM::MoveWaitState()
 
 void UJSH_CatFSM::TrueMoveState()
 {
+    me->GetCharacterMovement()->MaxWalkSpeed = AttackMoveSpeed;
+
     FVector destination = targetPlayer->GetActorLocation();
     FVector dir = destination - me->GetActorLocation();
     me->AddMovementInput(dir.GetSafeNormal());
@@ -400,9 +405,6 @@ void UJSH_CatFSM::TrueMoveState()
 
 void UJSH_CatFSM::FalseMoveWaitState()
 {
-    // 가짜 고양이 총으로 삭제 위해서 Collision 변경
-    me->FalseBox->SetCollisionProfileName(TEXT("FalseCat"));
-    
     // 위치 가운데 정렬 
     FVector destinationM = targetMiddle->GetActorLocation();
     FVector dirM = destinationM - me->GetActorLocation();
@@ -416,6 +418,11 @@ void UJSH_CatFSM::FalseMoveWaitState()
 
 void UJSH_CatFSM::FalseMoveState()
 {
+    // 가짜 고양이 총으로 삭제 위해서 Collision 변경
+    me->FalseBox->SetCollisionProfileName(TEXT("FalseCat"));
+    
+    me->GetCharacterMovement()->MaxWalkSpeed = AttackMoveSpeed;
+    
     FVector destination = targetPlayer->GetActorLocation();
     FVector dir = destination - me->GetActorLocation();
     me->AddMovementInput(dir.GetSafeNormal());

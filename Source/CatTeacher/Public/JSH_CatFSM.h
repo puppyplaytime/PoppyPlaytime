@@ -153,7 +153,10 @@ public:
 	
 	// idle 상태 관련 
 	bool IdleTeleport = false;
+	
+	UPROPERTY(EditAnywhere, Category = "Control")
 	float idletime = 15;
+	
 	float idlecurrtime = 0;
 
 
@@ -162,6 +165,14 @@ public:
 	bool SwSt2 = false;
 	bool SwSt3 = false;
 	bool SwSt4 = false;
+
+	// 이동 속도 관련
+	UPROPERTY(EditAnywhere, Category = "Control")
+	float RoundMoveSpeed = 200.0f;
+
+	UPROPERTY(EditAnywhere, Category = "Control")
+	float AttackMoveSpeed = 50.0f;
+	
 };
 
 

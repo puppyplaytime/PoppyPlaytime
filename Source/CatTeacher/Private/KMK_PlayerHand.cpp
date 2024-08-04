@@ -68,7 +68,7 @@ void AKMK_PlayerHand::Tick(float DeltaTime)
 	if (isHold)
 	{
 		holdTime += DeltaTime;
-		if (holdTime > 0.5f)
+		if (holdTime > HandTime)
 		{
 			holdTime = 0;
 			isHold = false;

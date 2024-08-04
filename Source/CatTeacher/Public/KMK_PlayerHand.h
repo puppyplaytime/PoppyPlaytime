@@ -107,4 +107,7 @@ public:
 
 	bool isHold = false;
 	float holdTime = 0;
+
+	UPROPERTY(EditAnywhere)
+	float HandTime = 0.5f;
 };

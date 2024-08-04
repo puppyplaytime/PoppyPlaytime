@@ -5,6 +5,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "NiagaraComponent.h"
+#include "NiagaraSystem.h"
 #include "JSH_Steam.generated.h"
 
 
@@ -24,4 +26,17 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+public:
+	// 연기
+	UPROPERTY(EditAnywhere)
+	UNiagaraComponent* NSteam;
+
+	// 연기 on , off
+	UPROPERTY(EditAnywhere)
+	bool SteamON = false;
+
+	// 시간
+	float currtime = 0;
+	float offtime = 4;
 };

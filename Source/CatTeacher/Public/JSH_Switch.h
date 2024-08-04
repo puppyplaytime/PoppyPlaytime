@@ -35,4 +35,15 @@ public:
 	FString SwitchName;
 
 	class UJSH_CatFSM* CatFsm;
+
+
+	class AJSH_Steam* Steam01;
+	class AJSH_Steam* Steam02;
+	class AJSH_Steam* Steam03;
+	class AJSH_Steam* Steam04;
+
+	bool steam01 = false;
+	bool steam02 = false;
+	bool steam03 = false;
+	bool steam04 = false;
 };

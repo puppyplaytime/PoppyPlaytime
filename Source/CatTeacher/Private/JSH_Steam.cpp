@@ -14,8 +14,8 @@ AJSH_Steam::AJSH_Steam()
 	PrimaryActorTick.bCanEverTick = true;
 	
 	// Create a Niagara Component
-	UNiagaraComponent* NiagaraComponent = CreateDefaultSubobject<UNiagaraComponent>(TEXT("NiagaraComponent"));
-	SetRootComponent(NiagaraComponent);
+	NSteam = CreateDefaultSubobject<UNiagaraComponent>(TEXT("NiagaraComponent"));
+	SetRootComponent(NSteam);
 	
 	// Load the Niagara System
 	static ConstructorHelpers::FObjectFinder<UNiagaraSystem> NiagaraSystem(TEXT("/Script/Niagara.NiagaraSystem'/Game/Effect/NG_Steam.NG_Steam'"));
@@ -23,12 +23,10 @@ AJSH_Steam::AJSH_Steam()
 	if (NiagaraSystem.Succeeded())
 	{
 		// Set the Niagara System to the Niagara Component
-		NiagaraComponent->SetAsset(NiagaraSystem.Object);
+		NSteam->SetAsset(NiagaraSystem.Object);
 	}
-
-	// Set the Niagara Component as the Root Component
-	RootComponent = NiagaraComponent;
 	
+	NSteam->SetVisibility(false);
 }
 
 // Called when the game starts or when spawned
@@ -43,5 +41,14 @@ void AJSH_Steam::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if (SteamON)
+	{
+		NSteam->SetVisibility(true);
+		currtime += DeltaTime;
+		if (currtime >= offtime)
+		{
+			NSteam->SetVisibility(false);
+		}
+	}
 }
 

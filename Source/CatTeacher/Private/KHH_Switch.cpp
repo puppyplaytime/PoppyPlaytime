@@ -8,6 +8,7 @@
 #include "KMK_PlayerHandFSM.h"
 #include "Components/BoxComponent.h"
 #include "Components/StaticMeshComponent.h"
+#include "KHH_BatteryOpenDoor.h"
 
 // Sets default values
 AKHH_Switch::AKHH_Switch()
@@ -72,13 +73,17 @@ void AKHH_Switch::Tick(float DeltaTime)
 
 void AKHH_Switch::Opendoor()
 {
-	AActor* OwnerActor = GetOwner();
-	if (OwnerActor)
+	UE_LOG(LogTemp, Warning, TEXT("Opendoor start"));
+	if (door != nullptr)
 	{
-		BossOpendoorComponent = OwnerActor->FindComponentByClass<UKHH_BossOpendoor>();
-		if (BossOpendoorComponent)
+		UE_LOG(LogTemp, Warning, TEXT("Opendoor start null"));
+
+		BatteryOpendoorComponent = door->FindComponentByClass<UKHH_BatteryOpenDoor>();
+
+		if (BatteryOpendoorComponent)
 		{
-			BossOpendoorComponent->ShouldMove = true;
+			BatteryOpendoorComponent->ShouldMove = true;
+			UE_LOG(LogTemp, Warning, TEXT("if"));
 		}
 	}
 }
@@ -94,22 +99,22 @@ const FHitResult& SweepResult)
 	auto* FSM = Cast<UKMK_PlayerHandFSM>(OtherActor);
 	auto* Hand = Cast<AKMK_PlayerHand>(OtherActor);
 	
-	UE_LOG(LogTemp, Warning, TEXT("switch1"));
-	if (OtherActor->ActorHasTag("Green"))
+	if (Hand)
 	{
-		if (FSM->isCharge == true && FSM)
+		FSM = Hand->FSM;
+		if (FSM->isCharge == false)
 		{
-			FSM->isCharge = false;
+			//FSM->isCharge = false;
+			if (Hand->SwitchName == "BP_Switch1_C_1")
+			{
+				Opendoor();
+			}
+			else if (Hand->SwitchName == "BP_Switch1_C_2")
+			{
+				Opendoor();
 
-			if (Hand->SwitchName == "BP_Switch_C_1")
-			{
-				Opendoor();
 			}
-			else if (Hand->SwitchName == "BP_Switch_C_7")
-			{
-				Opendoor();
-			}
-			else if (Hand->SwitchName == "BP_Switch_C_9")
+			else if (Hand->SwitchName == "BP_Switch1_C_4")
 			{
 				Opendoor();
 			}

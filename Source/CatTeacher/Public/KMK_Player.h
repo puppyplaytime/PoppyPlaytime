@@ -18,7 +18,7 @@ public:
 
 	UPROPERTY(VisibleAnywhere, Category = "Camera")
 	class USpringArmComponent* springArm = nullptr;
-
+	UPROPERTY(EditAnywhere, Category = "Camera")
 	TArray<class USpringArmComponent*> springArms;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Camera")
@@ -27,8 +27,8 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Component")
 	class UKMK_PlayerHandFSM* FSM = nullptr;
 
-	UPROPERTY(VisibleAnywhere, Category = "Modeling")
-	class UStaticMeshComponent* armMesh = nullptr;
+	UPROPERTY(EditAnywhere, Category = "Modeling")
+	class USkeletalMeshComponent* armMesh = nullptr;
 
 	UPROPERTY(VisibleAnywhere, Category = "Ray")
 	class UKMK_PlayerRay* playerRay = nullptr;

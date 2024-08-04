@@ -65,10 +65,22 @@ void AKMK_PlayerHand::Tick(float DeltaTime)
 		box->SetCollisionProfileName("Hand");
 		hand->SetWorldLocation(pickTrans);
 	}
+	if (isHold)
+	{
+		holdTime += DeltaTime;
+		if (holdTime > 0.5f)
+		{
+			holdTime = 0;
+			isHold = false;
+		}
+	}
+
+
 #pragma region HandMove
 	// 손이 돌아오는 코드
 	if (isReverse)
 	{
+		if(isHold) return;
 		// 방향 = 목적지(손의 원위치) - 손의 위치
 		dir = startPos - GetActorLocation();
 		// 거리측정
@@ -246,6 +258,7 @@ void AKMK_PlayerHand::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 		FSM->PState = PlayerHandFSM::Energy;
 		FSM->t = 0;
 		FSM->isCharge = true;
+		isHold = true;
 	}
 
 

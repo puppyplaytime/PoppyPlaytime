@@ -104,4 +104,7 @@ public:
 	class UKMK_Bat* b;
 
 	FString SwitchName;
+
+	bool isHold = false;
+	float holdTime = 0;
 };

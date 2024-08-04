@@ -27,7 +27,7 @@ AKHH_Switch::AKHH_Switch()
 void AKHH_Switch::BeginPlay()
 {
 	Super::BeginPlay();
-	BoxComp->OnComponentBeginOverlap.AddDynamic(this,&AKHH_Switch::OnMyBoxBeginOverlap);
+	//BoxComp->OnComponentBeginOverlap.AddDynamic(this,&AKHH_Switch::OnMyBoxBeginOverlap);
 }
 
 // Called every frame
@@ -37,74 +37,30 @@ void AKHH_Switch::Tick(float DeltaTime)
 
 }
 
-//void AKHH_Switch::NotifyActorBeginOverlap(AActor* OtherActor)
-//{
-//	Super::NotifyActorBeginOverlap(OtherActor);
-//
-//	UE_LOG(LogTemp,Warning,TEXT("switch1"));
-//	
-//
-//	auto* FSM = Cast<UKMK_PlayerHandFSM>(OtherActor);
-//	auto* Hand = Cast<AKMK_PlayerHand>(OtherActor);
-//
-//	if (FSM && OtherActor->ActorHasTag("Green"))
-//	{
-//		if (FSM->isCharge == true)
-//		{
-//			//FSM -> isCharge = false;
-//
-//			if (Hand->SwitchName == "BP_Switch_C_1")
-//			{
-//				Opendoor();
-//			}
-//			else if (Hand->SwitchName == "BP_Switch_C_7")
-//			{
-//				Opendoor();
-//			}
-//			else if (Hand->SwitchName == "BP_Switch_C_9")
-//			{
-//				Opendoor();
-//			}
-//
-//		}
-//
-//	}
-//}
-
 void AKHH_Switch::Opendoor()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Opendoor start"));
 	if (door != nullptr)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Opendoor start null"));
-
 		BatteryOpendoorComponent = door->FindComponentByClass<UKHH_BatteryOpenDoor>();
 
 		if (BatteryOpendoorComponent)
 		{
 			BatteryOpendoorComponent->ShouldMove = true;
-			UE_LOG(LogTemp, Warning, TEXT("if"));
 		}
 	}
 }
 
-void AKHH_Switch::OnMyBoxBeginOverlap(UPrimitiveComponent* OverlappedComponent, 
-AActor* OtherActor, 
-UPrimitiveComponent* OtherComp, 
-int32 OtherBodyIndex, 
-bool bFromSweep, 
-const FHitResult& SweepResult)
+void AKHH_Switch::NotifyActorBeginOverlap(AActor* OtherActor)
 {
+	Super::NotifyActorBeginOverlap(OtherActor);
+	AKMK_PlayerHand* Hand = Cast<AKMK_PlayerHand>(OtherActor);
 
-	auto* FSM = Cast<UKMK_PlayerHandFSM>(OtherActor);
-	auto* Hand = Cast<AKMK_PlayerHand>(OtherActor);
-	
-	if (Hand)
+	if (Hand && OtherActor->ActorHasTag("Green"))
 	{
 		FSM = Hand->FSM;
-		if (FSM->isCharge == false)
+		if (FSM && FSM->isCharge == true)
 		{
-			//FSM->isCharge = false;
+			FSM->isCharge = false;
 			if (Hand->SwitchName == "BP_Switch1_C_1")
 			{
 				Opendoor();

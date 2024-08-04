@@ -29,18 +29,16 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
-	//virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
 		
 	UPROPERTY(EditAnywhere)
 	AActor* door;
 
 	class UKHH_BatteryOpenDoor* BatteryOpendoorComponent;
 
+	class UKMK_PlayerHandFSM* FSM;
+
 	void Opendoor();
 
 	UFUNCTION()
-	
-	void OnMyBoxBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
-
+	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
 };

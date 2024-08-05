@@ -35,6 +35,7 @@ void UKMK_PlayerRay::BeginPlay()
 void UKMK_PlayerRay::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+
 	// 레이 셋팅
 	FCollisionQueryParams params;
 	params.AddIgnoredActor(GetOwner());
@@ -52,7 +53,11 @@ void UKMK_PlayerRay::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 	if(hitInfo.GetActor() != nullptr)GEngine->AddOnScreenDebugMessage(2, 1, FColor::Orange, FString::Printf(TEXT("%s"), *hitInfo.GetActor()->GetName()));
 	// 레이를 쏘고
 	bool bhit = GetWorld()->LineTraceSingleByChannel(hitInfo, playerComp->startPos, endPos, ECC_GameTraceChannel8, params);
-
+	if (isRay && startPoint < 0)
+	{
+		startPoint++;
+		return;
+	}
 	if (hitInfo.GetActor() != nullptr && hitInfo.GetActor()->ActorHasTag("E_Bat"))
 	{
 		GEngine->AddOnScreenDebugMessage(2, 1, FColor::Orange, FString::Printf(TEXT("%f"), FVector::Distance(hitInfo.GetActor()->GetActorLocation(), GetOwner()->GetTargetLocation())));

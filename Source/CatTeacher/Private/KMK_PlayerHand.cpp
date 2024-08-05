@@ -59,6 +59,7 @@ void AKMK_PlayerHand::BeginPlay()
 void AKMK_PlayerHand::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	
 	// 문고리 잡는 경우에 위치 고정
 	if (isPick)
 	{

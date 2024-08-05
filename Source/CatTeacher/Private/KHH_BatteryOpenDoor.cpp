@@ -35,7 +35,7 @@ void UKHH_BatteryOpenDoor::BeginPlay()
 void UKHH_BatteryOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
     Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-    if (GetOwner()->GetName().Contains("MG6"))
+    if (GetOwner()->GetActorLabel().Contains("MG6"))
     {
         SwitchComponent = Cast<AKHH_Switch>(doors[0]);
         BatComponent = doors[1]->FindComponentByClass<UKMK_Bat>();

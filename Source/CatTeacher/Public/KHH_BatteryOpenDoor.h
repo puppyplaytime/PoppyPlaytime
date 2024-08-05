@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "GameFramework/Actor.h"
 #include "KHH_BatteryOpenDoor.generated.h"
 
 
@@ -48,5 +49,13 @@ private:
    FVector NewLocation;
 
    void MoveDoor(float DeltaTime);   
+
+   UPROPERTY(EditAnywhere)
+   TArray<class AActor*> doors;
+
+   class AKHH_Switch* SwitchComponent;
+   class UKMK_Bat* BatComponent;
+   class UKMK_Bat* BatComponent1;
+
 };
 

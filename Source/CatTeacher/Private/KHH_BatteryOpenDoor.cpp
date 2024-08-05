@@ -2,6 +2,8 @@
 
 
 #include "KHH_BatteryOpenDoor.h"
+#include "KHH_Switch.h"
+#include "KMK_Bat.h"
 
 // Sets default values for this component's properties
 UKHH_BatteryOpenDoor::UKHH_BatteryOpenDoor()
@@ -12,7 +14,14 @@ UKHH_BatteryOpenDoor::UKHH_BatteryOpenDoor()
 
     // ...
 }
-
+// 하고싶은일 : 스위치, 배터리, 배터리 3개가 충족될 때 마지막 셔터가 열려야한다. 
+// 해야하는일 : 
+// 1. charge 된 상태, IShasPush 연결, 
+// 1-1 직접 할당
+//  // 필요요소 : 
+// 2. 내가 마지막문이라면
+// 3. 가져온 변수들이 모두 True일때
+// 4. movedoor을 할꺼다
 
 // Called when the game starts
 void UKHH_BatteryOpenDoor::BeginPlay()
@@ -21,13 +30,27 @@ void UKHH_BatteryOpenDoor::BeginPlay()
     OriginalLocation = GetOwner()->GetActorLocation();
 
 }
+
 // Called every frame
 void UKHH_BatteryOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
     Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-    if (ShouldMove) // 배터리가 들어갔을때 조건을 맞춰 넣어야함 // 
+    if (GetOwner()->GetName().Contains("MG6"))
     {
-        MoveDoor(DeltaTime);
+        SwitchComponent = Cast<AKHH_Switch>(doors[0]);
+        BatComponent = doors[1]->FindComponentByClass<UKMK_Bat>();
+        BatComponent1 = doors[2]->FindComponentByClass<UKMK_Bat>();
+
+        if (SwitchComponent->lastDoor == true && BatComponent->isHaveBat == true && BatComponent1->isHaveBat == true)
+        {
+            MoveDoor(DeltaTime);
+        }
+    }
+    else {
+        if (ShouldMove) // 배터리가 들어갔을때 조건을 맞춰 넣어야함 // 
+        {
+            MoveDoor(DeltaTime);
+        }
     }
 }
 

@@ -99,7 +99,7 @@ void AKMK_PlayerHand::Tick(float DeltaTime)
 			// 3. 레이 못쏘게 만들기
 			isRay = false;
 			// 손의 원위치 및 콜라이더 끄기
-			SetActorRelativeLocation(FVector(40, handPos, -16));
+			SetActorRelativeLocation(FVector(0));
 			box->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		}
 	}

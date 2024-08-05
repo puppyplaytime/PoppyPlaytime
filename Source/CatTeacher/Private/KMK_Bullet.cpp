@@ -27,9 +27,9 @@ AKMK_Bullet::AKMK_Bullet()
 	MovementComp = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("MovementComp"));
 	MovementComp->SetUpdatedComponent(RootComponent);
 
-	MovementComp->InitialSpeed = 1500;
-	MovementComp->MaxSpeed = 1500;
-	MovementComp->bShouldBounce = true;
+	MovementComp->InitialSpeed = 4000;
+	MovementComp->MaxSpeed = 4000;
+	//MovementComp->bShouldBounce = false;
 }
 
 // Called when the game starts or when spawned

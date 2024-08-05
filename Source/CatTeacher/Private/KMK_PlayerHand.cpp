@@ -155,7 +155,7 @@ void AKMK_PlayerHand::Tick(float DeltaTime)
 			player->Bats[0]->SetVis(false);
 
 			// 배터리가 슬롯에 들어가지 않았다면, 월드에 배터리를 생성해줌
-			if (!isCome && !isPick)
+			if (!isCome && !isPick || isGet)
 			{
 				GetWorld()->SpawnActor<AKMK_Battery>(BatteryFact, trans);
 			}
@@ -170,9 +170,10 @@ void AKMK_PlayerHand::Tick(float DeltaTime)
 			trans = player->Bats[1]->GetTransform();
 			player->Bats[1]->SetVis(false);
 
-			if (!isCome && !isPick)
+			if (!isCome && !isPick || isGet)
 			{
 				GetWorld()->SpawnActor<AKMK_Battery>(BatteryFact, trans);
+				
 			}
 		}
 	}

@@ -110,4 +110,6 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	float HandTime = 0.5f;
+
+	bool isGet = false;
 };

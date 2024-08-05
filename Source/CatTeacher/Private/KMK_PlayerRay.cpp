@@ -45,8 +45,6 @@ void UKMK_PlayerRay::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 
 	// hit된 물체 정보 들고오기
 	FHitResult hitInfo;
-	/*FHitResult hitInfo1;
-	GetWorld()->LineTraceSingleByChannel(hitInfo1, startPos, endPos, ECC_EngineTraceChannel1, params);*/
 	GetWorld()->LineTraceSingleByChannel(hitInfo, playerComp->startPos, endPos, ECC_GameTraceChannel8, params);
 	// DrawDebugLine(GetWorld(), playerComp->startPos, endPos, FColor::Blue, false, 1.f);
 	if(hitInfo.GetActor() != nullptr)GEngine->AddOnScreenDebugMessage(2, 1, FColor::Orange, FString::Printf(TEXT("%s"), *hitInfo.GetActor()->GetName()));
@@ -108,8 +106,10 @@ void UKMK_PlayerRay::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 							}
 							else
 							{
-								Bats[i]->SetVis(true);
+								// 배터리를 놓을 수 있게 만들어야함
+								Bats[i]->SetVis(false);
 								Hands[i]->isGrab = true;
+								playerComp->Hands[i]->isGet = true;
 							}
 						}
 					}

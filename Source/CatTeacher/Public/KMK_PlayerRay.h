@@ -49,6 +49,7 @@ public:
 	float PDis = 300;
 	
 	bool isCome = false;
+	bool isGet = false;
 #pragma endregion
 		
 };

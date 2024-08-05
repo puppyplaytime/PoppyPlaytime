@@ -68,11 +68,10 @@ void AKHH_Switch::NotifyActorBeginOverlap(AActor* OtherActor)
 			else if (Hand->SwitchName == "BP_Switch1_C_2")
 			{
 				Opendoor();
-
 			}
 			else if (Hand->SwitchName == "BP_Switch1_C_4")
 			{
-				Opendoor();
+				lastDoor = true;
 			}
 
 		}

@@ -1,6 +1,4 @@
 // Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "KMK_Battery.h"
 #include "GameFramework/MovementComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
@@ -14,11 +12,11 @@
 // Sets default values
 AKMK_Battery::AKMK_Battery()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 	meshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshComp"));
 	SetRootComponent(meshComp);
-	
+
 	meshComp->SetSimulatePhysics(true);
 }
 
@@ -32,7 +30,7 @@ void AKMK_Battery::BeginPlay()
 void AKMK_Battery::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	
+
 }
 
 // 배터리의 visible관리 함수

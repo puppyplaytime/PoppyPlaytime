@@ -32,4 +32,16 @@ public:
 	class UStaticMeshComponent* meshBat;
 
 	class UKMK_PlayerRay* player;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Battery", meta = (AllowPrivateAccess = "true"))
+
+	// 방법 1-2. 직접할당을 하겠다 :
+    AActor* TargetDoor; 
+
+    void SetTargetDoor(AActor* NewTargetDoor);
+
+	
+	class UKHH_BatteryOpenDoor* BatteryOpendoorComponent;
+
+
 };

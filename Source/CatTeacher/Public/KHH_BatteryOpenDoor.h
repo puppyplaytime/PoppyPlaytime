@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "GameFramework/Actor.h"
 #include "KHH_BatteryOpenDoor.generated.h"
 
 
@@ -30,8 +31,8 @@ public:
 private:
    UPROPERTY(EditAnywhere)
    FVector MoveOffset = FVector(0,0,270);
-   //마지막 셔터 문은 아래로 내려오는 것으로 
-   //FVector MoveOffset = FVector(0, 0, -270); // 언리얼에서 따로 설정해줘야 함 
+   // 마지막 셔터 문은 아래로 내려오는 것으로 
+   // FVector MoveOffset = FVector(0, 0, -270); // 언리얼에서 따로 설정해줘야 함 
    // Mobility => Movable
    
 
@@ -48,5 +49,13 @@ private:
    FVector NewLocation;
 
    void MoveDoor(float DeltaTime);   
+
+   UPROPERTY(EditAnywhere)
+   TArray<class AActor*> doors;
+
+   class AKHH_Switch* SwitchComponent;
+   class UKMK_Bat* BatComponent;
+   class UKMK_Bat* BatComponent1;
+
 };
 

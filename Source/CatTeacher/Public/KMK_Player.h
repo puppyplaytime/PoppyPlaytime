@@ -176,4 +176,15 @@ public:
 #pragma endregion
 	UPROPERTY()
 	class UPlayerAnimInstance* anim;
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<class UUserWidget> WidFact;
+	UPROPERTY()
+	class UPlayerWidget* widget;	
+
+	UPROPERTY(EditAnywhere)
+    class UMaterialInstance* matFact;
+	UPROPERTY(EditAnywhere)
+	UMaterialInstanceDynamic* myMatDynamic;
+	float gauzeSpd = 1;
+	class UImage* image;
 };

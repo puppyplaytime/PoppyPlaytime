@@ -23,6 +23,8 @@
 #include "Components/SkeletalMeshComponent.h"
 #include "KHH_Enemy.h"
 #include "PlayerAnimInstance.h"
+#include "Blueprint/UserWidget.h"
+#include "PlayerWidget.h"
 
 // Sets default values
 AKMK_Player::AKMK_Player()
@@ -109,6 +111,13 @@ AKMK_Player::AKMK_Player()
 void AKMK_Player::BeginPlay()
 {
 	Super::BeginPlay();
+	// 위잿 관련 스타트
+	widget = Cast<UPlayerWidget>(CreateWidget(GetWorld(), WidFact));
+	if (widget)
+	{
+		widget->AddToViewport();
+
+	}
 #pragma region Create Hand
 	float y;
 	float x;
@@ -176,6 +185,10 @@ void AKMK_Player::BeginPlay()
 	movementComp->GetNavAgentPropertiesRef().bCanCrouch = true;
 	// 애니메이션 관련 작업
 	anim = Cast<UPlayerAnimInstance>(armMesh->GetAnimInstance());
+	myMatDynamic = UMaterialInstanceDynamic::Create(matFact, this);
+
+	myMatDynamic->SetScalarParameterValue("Gauge", gauzeSpd);
+	widget->ArmImage->SetBrushFromMaterial(myMatDynamic);
 }
 
 // Called every frame
@@ -211,6 +224,27 @@ void AKMK_Player::Tick(float DeltaTime)
 	startPos = camera->GetComponentLocation();
 	endPos = startPos + camera->GetForwardVector() * rayDis;
 	endPos1 = startPos + camera->GetForwardVector() * rayDis1;
+
+	// 게이지바 변경
+	for (int i = 0; i < 2; i++)
+	{
+
+		if (Hands[i]->isGo)
+		{
+			gauzeSpd -= 0.03;
+			if(gauzeSpd < 0) gauzeSpd = 0;
+
+			myMatDynamic->SetScalarParameterValue("Gauge", gauzeSpd);
+		}
+
+		if (Hands[i]->isReverse)
+		{
+			gauzeSpd += 0.03 * 3;
+			if (gauzeSpd > 1) gauzeSpd = 1;
+			myMatDynamic->SetScalarParameterValue("Gauge", gauzeSpd);
+		}
+
+	}
 }
 
 // Called to bind functionality to input

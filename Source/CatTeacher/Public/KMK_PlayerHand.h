@@ -108,13 +108,18 @@ public:
 	bool isHold = false;
 	float holdTime = 0;
 
+
 	UPROPERTY(EditAnywhere)
 	float HandTime = 0.5f;
-	FRotator rot;
+
 	bool isGet = false;
 	class UKHH_RotateDoor* rotDoor;
 	bool isDoor = false;
+	FRotator firstRot;
+	FRotator rot;
 
+	UPROPERTY(EditAnywhere)
+	TArray<bool> isClosed ={false, false};
 	UFUNCTION()
 	void MakeBattery(int32 num);
 };

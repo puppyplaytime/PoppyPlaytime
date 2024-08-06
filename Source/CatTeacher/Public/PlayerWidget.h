@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "Components/Image.h"
 #include "PlayerWidget.generated.h"
 
 /**
@@ -15,5 +16,7 @@ class CATTEACHER_API UPlayerWidget : public UUserWidget
 	GENERATED_BODY()
 
 public:
-	
+	// 이미지 바인딩
+	UPROPERTY(meta = (BindWidget))
+	UImage* ArmImage;
 };

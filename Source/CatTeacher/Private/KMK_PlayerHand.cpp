@@ -16,6 +16,7 @@
 #include "KHH_BossOpendoor.h"
 #include "PlayerAnimInstance.h"
 #include "KHH_RotateDoor.h"
+#include "PlayerWidget.h"
 // Sets default values
 AKMK_PlayerHand::AKMK_PlayerHand()
 {
@@ -54,7 +55,7 @@ void AKMK_PlayerHand::BeginPlay()
 	box->OnComponentBeginOverlap.AddDynamic(this, &AKMK_PlayerHand::BeginOverlap);
 	box->BodyInstance.bUseCCD = true;
 	box->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	
+
 }
 
 // Called every frame
@@ -65,7 +66,6 @@ void AKMK_PlayerHand::Tick(float DeltaTime)
 	// 문고리 잡는 경우에 위치 고정
 	if (isPick)
 	{
-
 		box->SetCollisionProfileName("Hand");
 		hand->SetWorldLocation(pickTrans);
 	}
@@ -79,17 +79,32 @@ void AKMK_PlayerHand::Tick(float DeltaTime)
 			isHold = false;
 		}
 	}
+	// hatch열리고 닫게 하는 부분
 	if (isDoor)
 	{
+		// 문 닫기
 		if (isPick)
 		{
 			rot = FRotator(-50, 0, 0);
 			rotDoor->RotateDoor1(DeltaTime, rot);
+			if (rotDoor->GetOwner()->GetActorRotation().Pitch < -50)
+			{
+				isPick = false;
+				isDoor = false;
+				isClosed[0] = true;
+			}
 		}
+		// 문열기
 		else
 		{
 			rot = FRotator(50, 0, 0);
 			rotDoor->RotateDoor1(DeltaTime, rot);
+			if (rotDoor->GetOwner()->GetActorRotation().Pitch > 50)
+			{
+				isPick = false;
+				isDoor = false;
+				isClosed[1] = true;
+			}
 		}
 	}
 
@@ -246,6 +261,7 @@ void AKMK_PlayerHand::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 		if(OtherActor->FindComponentByClass<UKHH_BossOpendoor>() != nullptr)OtherActor->FindComponentByClass<UKHH_BossOpendoor>()->ShouldMove = true;
 		if (OtherActor->FindComponentByClass<UKHH_RotateDoor>() != nullptr)
 		{
+			firstRot = OtherActor->GetActorRotation();
 			rotDoor = OtherActor->FindComponentByClass<UKHH_RotateDoor>();
 			isDoor = true;
 		}

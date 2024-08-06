@@ -63,4 +63,7 @@ public:
 	bool isFire = false;
 
 	int cnt = 0;
+// 케이블 머티리얼
+	UPROPERTY(EditDefaultsOnly)
+	TArray<class UMaterialInterface*> cableMat;
 };

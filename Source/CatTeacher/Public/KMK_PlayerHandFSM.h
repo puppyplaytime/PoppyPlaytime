@@ -62,5 +62,5 @@ public:
 	bool isJump = false;
 	bool isFire = false;
 
-		
+	int cnt = 0;
 };

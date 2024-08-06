@@ -110,9 +110,11 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	float HandTime = 0.5f;
-
+	FRotator rot;
 	bool isGet = false;
-
 	class UKHH_RotateDoor* rotDoor;
 	bool isDoor = false;
+
+	UFUNCTION()
+	void MakeBattery(int32 num);
 };

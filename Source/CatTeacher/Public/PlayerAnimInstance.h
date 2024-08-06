@@ -14,6 +14,7 @@ class CATTEACHER_API UPlayerAnimInstance : public UAnimInstance
 {
 	GENERATED_BODY()
 public :
+	class AKMK_Player* player;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	float Speed;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
@@ -35,4 +36,10 @@ public :
 	void PlayFireMontage();
 	void PlayHandMontage();
 	void PlayHandInMontage();
+	void PlayChangeMontage();
+
+	UFUNCTION()
+	void AnimNotify_FireEnd();
+	UFUNCTION()
+	void AnimNotify_ChangeHand();
 };

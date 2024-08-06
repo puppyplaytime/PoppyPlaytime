@@ -81,12 +81,12 @@ void UKMK_PlayerHandFSM::JumpHand()
 #pragma region Gun
 void UKMK_PlayerHandFSM::GunHand()
 {
-	if (isFire)
+	if (isFire && cnt < 1)
 	{
 		// 총알 효과 재생
 		GetWorld()->SpawnActor<AKMK_Bullet>(bulletFact, bulletTrans);
-		isFire = false;
 		Player->anim->PlayFireMontage();
+		cnt++;
 	}
 }
 #pragma endregion

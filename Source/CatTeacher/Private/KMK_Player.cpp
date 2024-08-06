@@ -325,22 +325,21 @@ void AKMK_Player::InputE(const struct FInputActionValue& value)
 // 기본 손
 void AKMK_Player::InputNum1(const struct FInputActionValue& value)
 {
-	RMeshComp->SetStaticMesh(Hands[0]->HandMesh[0]);
+	anim->PlayChangeMontage();
 	FSM->PState = PlayerHandFSM::Normal;
 }
 
 // 에너지 충전 손
 void AKMK_Player::InputNum2(const struct FInputActionValue& value)
 {
-	RMeshComp->SetStaticMesh(Hands[0]->HandMesh[1]);
 	FSM->PState = PlayerHandFSM::GunPack;
-
+	anim->PlayChangeMontage();
 }
 // 점프 손
 void AKMK_Player::InputNum3(const struct FInputActionValue& value)
 {
-	RMeshComp->SetStaticMesh(Hands[0]->HandMesh[2]);
 	FSM->PState = PlayerHandFSM::JumpPack;
+	anim->PlayChangeMontage();
 }
 
 #pragma endregion

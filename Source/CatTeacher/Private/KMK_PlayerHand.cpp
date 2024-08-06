@@ -62,7 +62,7 @@ void AKMK_PlayerHand::BeginPlay()
 void AKMK_PlayerHand::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	
+#pragma region isPick
 	// 문고리 잡는 경우에 위치 고정
 	if (isPick)
 	{
@@ -79,6 +79,9 @@ void AKMK_PlayerHand::Tick(float DeltaTime)
 			isHold = false;
 		}
 	}
+#pragma endregion
+
+
 	// hatch열리고 닫게 하는 부분
 	if (isDoor)
 	{

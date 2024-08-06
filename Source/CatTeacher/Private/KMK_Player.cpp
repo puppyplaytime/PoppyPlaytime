@@ -22,6 +22,7 @@
 #include "Components/BoxComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "KHH_Enemy.h"
+#include "PlayerAnimInstance.h"
 
 // Sets default values
 AKMK_Player::AKMK_Player()
@@ -173,6 +174,8 @@ void AKMK_Player::BeginPlay()
 		}
 	}
 	movementComp->GetNavAgentPropertiesRef().bCanCrouch = true;
+	// 애니메이션 관련 작업
+	anim = Cast<UPlayerAnimInstance>(armMesh->GetAnimInstance());
 }
 
 // Called every frame
@@ -198,7 +201,6 @@ void AKMK_Player::Tick(float DeltaTime)
 	// 이동하기
 	// 회전방향으로 이동
 	// 1. controller rotation을 통해 transform 생성
-
 	FSM->bulletTrans = Hands[0]->arrow->GetComponentTransform();
 	FTransform t = FTransform(GetControlRotation());
 	dir = t.TransformVector(dir);

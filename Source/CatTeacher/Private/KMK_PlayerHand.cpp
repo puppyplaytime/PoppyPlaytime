@@ -14,6 +14,8 @@
 #include "Components/PrimitiveComponent.h"
 #include "KMK_Bat.h"
 #include "KHH_BossOpendoor.h"
+#include "PlayerAnimInstance.h"
+#include "KHH_RotateDoor.h"
 // Sets default values
 AKMK_PlayerHand::AKMK_PlayerHand()
 {
@@ -75,13 +77,17 @@ void AKMK_PlayerHand::Tick(float DeltaTime)
 			isHold = false;
 		}
 	}
-
+	if (isDoor)
+	{
+		rotDoor->RotateDoor1(DeltaTime);
+	}
 
 #pragma region HandMove
 	// 손이 돌아오는 코드
 	if (isReverse)
 	{
 		if(isHold) return;
+		player->anim->PlayHandInMontage();
 		// 방향 = 목적지(손의 원위치) - 손의 위치
 		dir = startPos - GetActorLocation();
 		// 거리측정
@@ -107,6 +113,7 @@ void AKMK_PlayerHand::Tick(float DeltaTime)
 	// 손이 나가는 부분
 	if (isGo)
 	{
+		player->anim->PlayHandMontage();
 		// 손에 배터리가 없는 경우에 손을 뻗으며 콜리전을 켜줌
 		if (!isGrab)box->SetCollisionProfileName("Hand");
 		// 일정 시간이 지나거나, 레이를 쏘지 않거나, 배터리가 없는 경우에
@@ -233,7 +240,12 @@ void AKMK_PlayerHand::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 		// 위치값을 받아와 위치에 넣어줌
 		pickTrans = OtherComp->GetChildComponent(0)->GetComponentLocation();
 		isPick = true;
-		OtherActor->FindComponentByClass<UKHH_BossOpendoor>()->ShouldMove = true;
+		if(OtherActor->FindComponentByClass<UKHH_BossOpendoor>() != nullptr)OtherActor->FindComponentByClass<UKHH_BossOpendoor>()->ShouldMove = true;
+		if (OtherActor->FindComponentByClass<UKHH_RotateDoor>() != nullptr)
+		{
+			rotDoor = OtherActor->FindComponentByClass<UKHH_RotateDoor>();
+			isDoor = true;
+		}
 	}
 	// 왼손인 상태면 밑에 상황이 필요 없음 => 반환
 	if (!GetName().Contains("R")) return;

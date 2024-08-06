@@ -46,5 +46,6 @@ public:
 	FRotator NewRotation;
 
 	void RotateDoor(float DeltaTime);	
+	void RotateDoor1(float DeltaTime);	
 		
 };

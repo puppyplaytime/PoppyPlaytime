@@ -8,6 +8,7 @@
 #include "Particles/ParticleSystem.h"
 #include "KMK_Bullet.h"
 #include "KMK_PlayerHand.h"
+#include "PlayerAnimInstance.h"
 
 // Sets default values for this component's properties
 UKMK_PlayerHandFSM::UKMK_PlayerHandFSM()
@@ -85,6 +86,7 @@ void UKMK_PlayerHandFSM::GunHand()
 		// 총알 효과 재생
 		GetWorld()->SpawnActor<AKMK_Bullet>(bulletFact, bulletTrans);
 		isFire = false;
+		Player->anim->PlayFireMontage();
 	}
 }
 #pragma endregion

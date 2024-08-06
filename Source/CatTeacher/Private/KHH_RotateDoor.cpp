@@ -57,4 +57,15 @@ void UKHH_RotateDoor::RotateDoor(float DeltaTime)
 	NewRotation = FMath::RInterpConstantTo(CurrentRotation, TargetRotation, DeltaTime, Speed);
 	GetOwner()->SetActorRotation(NewRotation);
 }
-
+void UKHH_RotateDoor::RotateDoor1(float DeltaTime)
+{
+	CurrentRotation = GetOwner()->GetActorRotation();
+	TargetRotation = InitialRotation + OpenAngle;
+	Speed = FRotator::NormalizeAxis((TargetRotation - InitialRotation).Pitch) / MoveTime;
+	if (Speed < 0)
+	{
+		Speed *= -1;
+	}
+	NewRotation = FMath::RInterpConstantTo(CurrentRotation, TargetRotation, DeltaTime, Speed);
+	GetOwner()->SetActorRotation(NewRotation);
+}

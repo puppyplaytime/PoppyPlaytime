@@ -16,3 +16,19 @@ void UPlayerAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
     Speed = FVector::DotProduct(v, forward);
     Spd = FVector::DotProduct(v, player->GetActorRightVector());
 }
+
+void UPlayerAnimInstance::PlayFireMontage()
+{
+    Montage_Play(Monts[0]);
+}
+
+void UPlayerAnimInstance::PlayHandMontage()
+{
+    Montage_Play(Monts[1]);
+}
+
+void UPlayerAnimInstance::PlayHandInMontage()
+{
+    Montage_JumpToSection("HandIn");
+}
+

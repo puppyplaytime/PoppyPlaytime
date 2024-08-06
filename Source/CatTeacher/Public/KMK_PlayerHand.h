@@ -112,4 +112,7 @@ public:
 	float HandTime = 0.5f;
 
 	bool isGet = false;
+
+	class UKHH_RotateDoor* rotDoor;
+	bool isDoor = false;
 };

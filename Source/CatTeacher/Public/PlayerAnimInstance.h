@@ -19,4 +19,20 @@ public :
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	float Spd;
 	virtual void NativeUpdateAnimation(float DeltaSeconds);
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool isGrab = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool isReverse= false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool isChangeHand = false;
+
+	UPROPERTY(EditDefaultsOnly)
+	TArray<class UAnimMontage*> Monts;
+
+	void PlayFireMontage();
+	void PlayHandMontage();
+	void PlayHandInMontage();
 };

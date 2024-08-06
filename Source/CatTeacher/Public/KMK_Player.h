@@ -175,5 +175,5 @@ public:
 		const FHitResult& SweepResult);*/
 #pragma endregion
 	UPROPERTY()
-	class UAnimInstance* anim;
+	class UPlayerAnimInstance* anim;
 };

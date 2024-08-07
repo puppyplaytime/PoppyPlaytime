@@ -42,6 +42,10 @@ private:
    float MoveTime = 3;
 
    UPROPERTY(EditAnywhere)
+	float DistanceThreshold = 270.0f;
+
+   UPROPERTY(EditAnywhere)
+   //class APawn* Enemy;
    class APawn* Player;
    FVector CurrentLocation;
    FVector TargetLocation;

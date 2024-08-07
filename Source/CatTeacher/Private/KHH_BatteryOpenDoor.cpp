@@ -44,6 +44,15 @@ void UKHH_BatteryOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, F
         if (SwitchComponent->lastDoor == true && BatComponent->isHaveBat == true && BatComponent1->isHaveBat == true)
         {
             MoveDoor(DeltaTime);
+
+            // Enemy와 문의 거리 계산
+            FVector DistanceVector = Player->GetActorLocation() - GetOwner()->GetActorLocation();
+            float Distance = DistanceVector.Length();
+
+            if (Distance <= DistanceThreshold)
+            {
+                Player->Destroy();
+            }
         }
     }
     else {

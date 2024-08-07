@@ -34,6 +34,12 @@ public:
 	AActor* batsave03;
 	AActor* batsave04;
 
+	AActor* Cat03;
+	AActor* Cat04;
+
+	class UJSH_CatFSM* Cat03Component;
+	class UJSH_CatFSM* Cat04Component;
+
 	bool FSMOnOff03 = true;
 	bool FSMOnOff04 = true;
 

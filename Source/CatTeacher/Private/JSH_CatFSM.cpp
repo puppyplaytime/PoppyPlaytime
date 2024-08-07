@@ -98,8 +98,8 @@ void UJSH_CatFSM::TickComponent(float DeltaTime, ELevelTick TickType, FActorComp
     GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Cyan, logMsg2);*/
 
     // CatNab 상태 표시
-    //FString myState = UEnum::GetValueAsString(cState);
-    //DrawDebugString(GetWorld() , GetOwner()->GetActorLocation(), myState , nullptr , FColor::Yellow , 0, true, 1);
+    FString myState = UEnum::GetValueAsString(cState);
+    DrawDebugString(GetWorld() , GetOwner()->GetActorLocation(), myState , nullptr , FColor::Yellow , 0, true, 1);
 
     UpdateState();
     UpdateStateFalse();
@@ -215,6 +215,15 @@ void UJSH_CatFSM::UpdateStateFalse()
             me->Tags.Remove("FCat4");
         }
     }
+}
+
+void UJSH_CatFSM::BatCatStop()
+{
+    me->FalseBox->SetCollisionProfileName(TEXT("NoCollision"));
+    FVector TargetLocation = target01->GetActorLocation();
+    me->SetActorLocation(TargetLocation);
+    
+    cState = ECatState::Die;
 }
 
 
@@ -471,4 +480,14 @@ void UJSH_CatFSM::BlockedState()
 
 void UJSH_CatFSM::DieState()
 {
+    if (me && me->Tags.Contains("S3"))
+    {
+        me->Tags.Remove("FCat3");
+    }
+    
+
+    if (me && me->Tags.Contains("S4"))
+    {
+        me->Tags.Remove("FCat4");
+    }
 }

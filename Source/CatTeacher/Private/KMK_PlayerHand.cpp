@@ -216,9 +216,14 @@ void AKMK_PlayerHand::Tick(float DeltaTime)
 // 손이 다른 물체들과 닿는 경우
 void AKMK_PlayerHand::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	// 물체가 닿은 경우에 손이 돌아오게 만들기 위함
 	isGo = false;
 	isReverse = true;
+	// 물체가 닿은 경우에 손이 돌아오게 만들기 위함
+	if (bFromSweep)
+	{
+		isGo = false;
+		isReverse = true;
+	}
 	SwitchName = *OtherActor->GetName();
 	GEngine->AddOnScreenDebugMessage(9, 1, FColor::Emerald, FString::Printf(TEXT("%s"), *OtherActor->GetName()));
 	// 배터리가 손에 닿은 경우

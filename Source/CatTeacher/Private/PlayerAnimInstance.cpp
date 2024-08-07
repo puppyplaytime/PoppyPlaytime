@@ -48,6 +48,7 @@ void UPlayerAnimInstance::AnimNotify_FireEnd()
 
 void UPlayerAnimInstance::AnimNotify_ChangeHand()
 {
+    
     if (player->FSM->PState == PlayerHandFSM::JumpPack)
     {
         player->RMeshComp->SetStaticMesh(player->Hands[0]->HandMesh[2]);

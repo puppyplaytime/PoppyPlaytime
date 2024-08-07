@@ -187,4 +187,10 @@ public:
 	UMaterialInstanceDynamic* myMatDynamic;
 	float gauzeSpd = 1;
 	class UImage* image;
+
+	bool bChangeHand;
+	bool bFireBullet;
+
+	FORCEINLINE void ChangeHandEnd() {bChangeHand = true;}
+	FORCEINLINE void FireBulletEnd() { bFireBullet = true;}
 };

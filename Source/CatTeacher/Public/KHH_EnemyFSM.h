@@ -41,7 +41,7 @@ public:
 	void IdleState();
 	void MoveState();
 
-	UPROPERTY(EditDefaultsOnly, Category=FSM)
+	UPROPERTY(EditAnywhere, Category=FSM)
 	float idleDelayTime = 2;
 	float currentTime = 0;
 

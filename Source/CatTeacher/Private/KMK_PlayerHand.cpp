@@ -62,6 +62,13 @@ void AKMK_PlayerHand::BeginPlay()
 void AKMK_PlayerHand::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	for (int i = 0; i < 3; i++)
+	{
+		if (player->isClick[i] && !player->bChangeHand)
+		{
+			return;
+		}
+	}
 #pragma region isPick
 	// 문고리 잡는 경우에 위치 고정
 	if (isPick)
@@ -169,7 +176,7 @@ void AKMK_PlayerHand::Tick(float DeltaTime)
 		dir.Normalize();
 		SetActorLocation(GetActorLocation() + dir * speed * DeltaTime);
 		// 레이 거리보다 멀게 나가거나 목적지에 거의 도착하면
-		if (distance > player->rayDis || distance < 5)
+		if (distance > player->rayDis || distance < 40)
 		{
 			// 돌아오게 만들기
 			isGo = false;

@@ -349,7 +349,7 @@ void AKMK_Player::InputWalk(const struct FInputActionValue& value)
 
 #pragma endregion
 #pragma region interaction
-// 상호작용
+// 상호작용 => 치트입니다
 void AKMK_Player::InputE(const struct FInputActionValue& value)
 {
 	isIntarctive = true;
@@ -359,19 +359,24 @@ void AKMK_Player::InputE(const struct FInputActionValue& value)
 // 기본 손
 void AKMK_Player::InputNum1(const struct FInputActionValue& value)
 {
+	isClick[0] = true;
+	FSM->cnt = 0;
 	anim->PlayChangeMontage();
 	FSM->PState = PlayerHandFSM::Normal;
 }
 
-// 에너지 충전 손
+// 총쏘기
 void AKMK_Player::InputNum2(const struct FInputActionValue& value)
 {
+	isClick[1] = true;
 	FSM->PState = PlayerHandFSM::GunPack;
 	anim->PlayChangeMontage();
 }
 // 점프 손
 void AKMK_Player::InputNum3(const struct FInputActionValue& value)
 {
+	isClick[2] = true;
+	FSM->cnt = 0;
 	FSM->PState = PlayerHandFSM::JumpPack;
 	anim->PlayChangeMontage();
 }

@@ -42,4 +42,5 @@ public :
 	void AnimNotify_FireEnd();
 	UFUNCTION()
 	void AnimNotify_ChangeHand();
+	int clickCount = 0;
 };

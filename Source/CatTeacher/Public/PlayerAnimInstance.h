@@ -14,9 +14,32 @@ class CATTEACHER_API UPlayerAnimInstance : public UAnimInstance
 {
 	GENERATED_BODY()
 public :
+	class AKMK_Player* player;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	float Speed;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	float Spd;
 	virtual void NativeUpdateAnimation(float DeltaSeconds);
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool isGrab = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool isReverse= false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool isChangeHand = false;
+
+	UPROPERTY(EditDefaultsOnly)
+	TArray<class UAnimMontage*> Monts;
+
+	void PlayFireMontage();
+	void PlayHandMontage();
+	void PlayHandInMontage();
+	void PlayChangeMontage();
+
+	UFUNCTION()
+	void AnimNotify_FireEnd();
+	UFUNCTION()
+	void AnimNotify_ChangeHand();
 };

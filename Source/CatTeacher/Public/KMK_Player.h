@@ -175,5 +175,16 @@ public:
 		const FHitResult& SweepResult);*/
 #pragma endregion
 	UPROPERTY()
-	class UAnimInstance* anim;
+	class UPlayerAnimInstance* anim;
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<class UUserWidget> WidFact;
+	UPROPERTY()
+	class UPlayerWidget* widget;	
+
+	UPROPERTY(EditAnywhere)
+    class UMaterialInstance* matFact;
+	UPROPERTY(EditAnywhere)
+	UMaterialInstanceDynamic* myMatDynamic;
+	float gauzeSpd = 1;
+	class UImage* image;
 };

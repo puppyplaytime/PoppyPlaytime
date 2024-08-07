@@ -14,6 +14,9 @@
 #include "Components/PrimitiveComponent.h"
 #include "KMK_Bat.h"
 #include "KHH_BossOpendoor.h"
+#include "PlayerAnimInstance.h"
+#include "KHH_RotateDoor.h"
+#include "PlayerWidget.h"
 // Sets default values
 AKMK_PlayerHand::AKMK_PlayerHand()
 {
@@ -52,7 +55,7 @@ void AKMK_PlayerHand::BeginPlay()
 	box->OnComponentBeginOverlap.AddDynamic(this, &AKMK_PlayerHand::BeginOverlap);
 	box->BodyInstance.bUseCCD = true;
 	box->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	
+
 }
 
 // Called every frame
@@ -66,6 +69,7 @@ void AKMK_PlayerHand::Tick(float DeltaTime)
 		box->SetCollisionProfileName("Hand");
 		hand->SetWorldLocation(pickTrans);
 	}
+	// 스위치 잡는 시간
 	if (isHold)
 	{
 		holdTime += DeltaTime;
@@ -75,13 +79,41 @@ void AKMK_PlayerHand::Tick(float DeltaTime)
 			isHold = false;
 		}
 	}
-
+	// hatch열리고 닫게 하는 부분
+	if (isDoor)
+	{
+		// 문 닫기
+		if (isPick)
+		{
+			rot = FRotator(-50, 0, 0);
+			rotDoor->RotateDoor1(DeltaTime, rot);
+			if (rotDoor->GetOwner()->GetActorRotation().Pitch < -50)
+			{
+				isPick = false;
+				isDoor = false;
+				isClosed[0] = true;
+			}
+		}
+		// 문열기
+		else
+		{
+			rot = FRotator(50, 0, 0);
+			rotDoor->RotateDoor1(DeltaTime, rot);
+			if (rotDoor->GetOwner()->GetActorRotation().Pitch > 50)
+			{
+				isPick = false;
+				isDoor = false;
+				isClosed[1] = true;
+			}
+		}
+	}
 
 #pragma region HandMove
 	// 손이 돌아오는 코드
 	if (isReverse)
 	{
 		if(isHold) return;
+		player->anim->PlayHandInMontage();
 		// 방향 = 목적지(손의 원위치) - 손의 위치
 		dir = startPos - GetActorLocation();
 		// 거리측정
@@ -99,6 +131,10 @@ void AKMK_PlayerHand::Tick(float DeltaTime)
 			isReverse = false;
 			// 3. 레이 못쏘게 만들기
 			isRay = false;
+			for (int i = 0; i < 2; i++)
+			{
+				player->CableComp[i]->SetRenderInMainPass(false);
+			}
 			// 손의 원위치 및 콜라이더 끄기
 			SetActorRelativeLocation(FVector(0));
 			box->SetCollisionEnabled(ECollisionEnabled::NoCollision);
@@ -107,6 +143,11 @@ void AKMK_PlayerHand::Tick(float DeltaTime)
 	// 손이 나가는 부분
 	if (isGo)
 	{
+		for (int i = 0; i < 2; i++)
+		{
+			player->CableComp[i]->SetRenderInMainPass(true);
+		}
+		player->anim->PlayHandMontage();
 		// 손에 배터리가 없는 경우에 손을 뻗으며 콜리전을 켜줌
 		if (!isGrab)box->SetCollisionProfileName("Hand");
 		// 일정 시간이 지나거나, 레이를 쏘지 않거나, 배터리가 없는 경우에
@@ -150,16 +191,7 @@ void AKMK_PlayerHand::Tick(float DeltaTime)
 			{
 				return;
 			}
-			// 오른손 배터리의 위치를 저장하고
-			trans = player->Bats[0]->GetTransform();
-			// 오른손 배터리가 안 보이게 만들어줌
-			player->Bats[0]->SetVis(false);
-
-			// 배터리가 슬롯에 들어가지 않았다면, 월드에 배터리를 생성해줌
-			if (!isCome && !isPick)
-			{
-				GetWorld()->SpawnActor<AKMK_Battery>(BatteryFact, trans);
-			}
+			MakeBattery(0);
 
 		}
 		// 왼손인 경우
@@ -168,13 +200,7 @@ void AKMK_PlayerHand::Tick(float DeltaTime)
 			// 왼손에 배터리를 들고있을 경우에만 배터리 생성하기 위함
 			if (player->isDir[0] || player->Hands[0]->isGrab) return;
 			// 위와 같은 로직
-			trans = player->Bats[1]->GetTransform();
-			player->Bats[1]->SetVis(false);
-
-			if (!isCome && !isPick)
-			{
-				GetWorld()->SpawnActor<AKMK_Battery>(BatteryFact, trans);
-			}
+			MakeBattery(1);
 		}
 	}
 	
@@ -232,7 +258,13 @@ void AKMK_PlayerHand::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 		// 위치값을 받아와 위치에 넣어줌
 		pickTrans = OtherComp->GetChildComponent(0)->GetComponentLocation();
 		isPick = true;
-		OtherActor->FindComponentByClass<UKHH_BossOpendoor>()->ShouldMove = true;
+		if(OtherActor->FindComponentByClass<UKHH_BossOpendoor>() != nullptr)OtherActor->FindComponentByClass<UKHH_BossOpendoor>()->ShouldMove = true;
+		if (OtherActor->FindComponentByClass<UKHH_RotateDoor>() != nullptr)
+		{
+			firstRot = OtherActor->GetActorRotation();
+			rotDoor = OtherActor->FindComponentByClass<UKHH_RotateDoor>();
+			isDoor = true;
+		}
 	}
 	// 왼손인 상태면 밑에 상황이 필요 없음 => 반환
 	if (!GetName().Contains("R")) return;
@@ -265,4 +297,17 @@ void AKMK_PlayerHand::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 
 }
 
+void AKMK_PlayerHand::MakeBattery(int32 num)
+{
+	// 오른손 배터리의 위치를 저장하고
+	trans = player->Bats[num]->GetTransform();
+	// 오른손 배터리가 안 보이게 만들어줌
+	player->Bats[num]->SetVis(false);
+
+	// 배터리가 슬롯에 들어가지 않았다면, 월드에 배터리를 생성해줌
+	if (!isCome && !isPick)
+	{
+		GetWorld()->SpawnActor<AKMK_Battery>(BatteryFact, trans);
+	}
+}
 

@@ -3,12 +3,14 @@
 
 #include "PlayerAnimInstance.h"
 #include "KMK_Player.h"
+#include "KMK_PlayerHandFSM.h"
+#include "KMK_PlayerHand.h"
 
 void UPlayerAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 {
     Super::NativeUpdateAnimation(DeltaSeconds);
 
-    AKMK_Player* player = Cast<AKMK_Player>(TryGetPawnOwner());
+    player = Cast<AKMK_Player>(TryGetPawnOwner());
 
     if (player == nullptr) return;
     FVector v = player->GetVelocity();
@@ -16,3 +18,47 @@ void UPlayerAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
     Speed = FVector::DotProduct(v, forward);
     Spd = FVector::DotProduct(v, player->GetActorRightVector());
 }
+
+void UPlayerAnimInstance::PlayFireMontage()
+{
+    Montage_Play(Monts[0]);
+}
+
+void UPlayerAnimInstance::PlayHandMontage()
+{
+    Montage_Play(Monts[1]);
+}
+
+void UPlayerAnimInstance::PlayChangeMontage()
+{
+    Montage_Play(Monts[2]);
+}
+
+void UPlayerAnimInstance::PlayHandInMontage()
+{
+    Montage_JumpToSection("HandIn");
+}
+
+void UPlayerAnimInstance::AnimNotify_FireEnd()
+{
+    auto* fsm = TryGetPawnOwner()->GetComponentByClass<UKMK_PlayerHandFSM>();
+    fsm->isFire = false;
+    fsm->cnt = 0;
+}
+
+void UPlayerAnimInstance::AnimNotify_ChangeHand()
+{
+    if (player->FSM->PState == PlayerHandFSM::JumpPack)
+    {
+        player->RMeshComp->SetStaticMesh(player->Hands[0]->HandMesh[2]);
+    }
+    else if (player->FSM->PState == PlayerHandFSM::GunPack)
+    {
+        player->RMeshComp->SetStaticMesh(player->Hands[0]->HandMesh[1]);
+    }
+    else
+    {
+        player->RMeshComp->SetStaticMesh(player->Hands[0]->HandMesh[0]);
+    }
+}
+

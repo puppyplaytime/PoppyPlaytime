@@ -22,6 +22,9 @@
 #include "Components/BoxComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "KHH_Enemy.h"
+#include "PlayerAnimInstance.h"
+#include "Blueprint/UserWidget.h"
+#include "PlayerWidget.h"
 
 // Sets default values
 AKMK_Player::AKMK_Player()
@@ -108,6 +111,13 @@ AKMK_Player::AKMK_Player()
 void AKMK_Player::BeginPlay()
 {
 	Super::BeginPlay();
+	// 위잿 관련 스타트
+	widget = Cast<UPlayerWidget>(CreateWidget(GetWorld(), WidFact));
+	if (widget)
+	{
+		widget->AddToViewport();
+
+	}
 #pragma region Create Hand
 	float y;
 	float x;
@@ -173,6 +183,12 @@ void AKMK_Player::BeginPlay()
 		}
 	}
 	movementComp->GetNavAgentPropertiesRef().bCanCrouch = true;
+	// 애니메이션 관련 작업
+	anim = Cast<UPlayerAnimInstance>(armMesh->GetAnimInstance());
+	myMatDynamic = UMaterialInstanceDynamic::Create(matFact, this);
+
+	myMatDynamic->SetScalarParameterValue("Gauge", gauzeSpd);
+	widget->ArmImage->SetBrushFromMaterial(myMatDynamic);
 }
 
 // Called every frame
@@ -198,7 +214,6 @@ void AKMK_Player::Tick(float DeltaTime)
 	// 이동하기
 	// 회전방향으로 이동
 	// 1. controller rotation을 통해 transform 생성
-
 	FSM->bulletTrans = Hands[0]->arrow->GetComponentTransform();
 	FTransform t = FTransform(GetControlRotation());
 	dir = t.TransformVector(dir);
@@ -209,6 +224,27 @@ void AKMK_Player::Tick(float DeltaTime)
 	startPos = camera->GetComponentLocation();
 	endPos = startPos + camera->GetForwardVector() * rayDis;
 	endPos1 = startPos + camera->GetForwardVector() * rayDis1;
+
+	// 게이지바 변경
+	for (int i = 0; i < 2; i++)
+	{
+
+		if (Hands[i]->isGo)
+		{
+			gauzeSpd -= 0.03;
+			if(gauzeSpd < 0) gauzeSpd = 0;
+
+			myMatDynamic->SetScalarParameterValue("Gauge", gauzeSpd);
+		}
+
+		if (Hands[i]->isReverse)
+		{
+			gauzeSpd += 0.03 * 3;
+			if (gauzeSpd > 1) gauzeSpd = 1;
+			myMatDynamic->SetScalarParameterValue("Gauge", gauzeSpd);
+		}
+
+	}
 }
 
 // Called to bind functionality to input
@@ -323,22 +359,21 @@ void AKMK_Player::InputE(const struct FInputActionValue& value)
 // 기본 손
 void AKMK_Player::InputNum1(const struct FInputActionValue& value)
 {
-	RMeshComp->SetStaticMesh(Hands[0]->HandMesh[0]);
+	anim->PlayChangeMontage();
 	FSM->PState = PlayerHandFSM::Normal;
 }
 
 // 에너지 충전 손
 void AKMK_Player::InputNum2(const struct FInputActionValue& value)
 {
-	RMeshComp->SetStaticMesh(Hands[0]->HandMesh[1]);
 	FSM->PState = PlayerHandFSM::GunPack;
-
+	anim->PlayChangeMontage();
 }
 // 점프 손
 void AKMK_Player::InputNum3(const struct FInputActionValue& value)
 {
-	RMeshComp->SetStaticMesh(Hands[0]->HandMesh[2]);
 	FSM->PState = PlayerHandFSM::JumpPack;
+	anim->PlayChangeMontage();
 }
 
 #pragma endregion

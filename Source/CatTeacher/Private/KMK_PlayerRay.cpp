@@ -17,8 +17,6 @@ UKMK_PlayerRay::UKMK_PlayerRay()
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
-
-	// ...
 }
 
 
@@ -46,8 +44,6 @@ void UKMK_PlayerRay::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 
 	// hit된 물체 정보 들고오기
 	FHitResult hitInfo;
-	/*FHitResult hitInfo1;
-	GetWorld()->LineTraceSingleByChannel(hitInfo1, startPos, endPos, ECC_EngineTraceChannel1, params);*/
 	GetWorld()->LineTraceSingleByChannel(hitInfo, playerComp->startPos, endPos, ECC_GameTraceChannel8, params);
 	// DrawDebugLine(GetWorld(), playerComp->startPos, endPos, FColor::Blue, false, 1.f);
 	if(hitInfo.GetActor() != nullptr)GEngine->AddOnScreenDebugMessage(2, 1, FColor::Orange, FString::Printf(TEXT("%s"), *hitInfo.GetActor()->GetName()));
@@ -96,25 +92,28 @@ void UKMK_PlayerRay::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 			// 3. 단자에 배터리가 있는 경우
 			else
 			{
-				// 3-1. 손에 배터리가 없을때
 				if (bat->isHaveBat && isRay)
 				{
 					for (int i = 0; i < 2; i++)
 					{
-						// 3-2. 손에 배터리를 넣고 싶다.
 						if (playerComp->isDir[i])
 						{
+							// 3-1. 손에 배터리가 없을때
+							
 							if (!Hands[i]->isGrab)
 							{
+								// 3-2. 손에 배터리를 넣고 싶다.
 								bat->isHaveBat = false;
-								// 2-2. 넣고 싶다
 								Bats[i]->SetVis(true);
 								Hands[i]->isGrab = true;
 							}
-							else
+							// 4. 손에 배터리가 있을 때,
+							else if (Hands[i]->isGrab)
 							{
-								Bats[i]->SetVis(true);
-								Hands[i]->isGrab = true;
+								// 4-1. 배터리를 떨어뜨리고 싶다.
+								Bats[i]->SetVis(false);
+								Hands[i]->isGrab = false;
+								GetWorld()->SpawnActor<AKMK_Battery>(Hands[i]->BatteryFact, Hands[i]->trans);
 							}
 						}
 					}

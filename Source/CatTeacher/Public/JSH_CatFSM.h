@@ -172,7 +172,10 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = "Control")
 	float AttackMoveSpeed = 50.0f;
-	
+
+
+	// 03, 04 배터리 관련
+	class UKMK_Bat* BatComponent;
 };
 
 

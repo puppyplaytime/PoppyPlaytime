@@ -40,7 +40,7 @@ void UKHH_BatteryOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, F
         SwitchComponent = Cast<AKHH_Switch>(doors[0]);
         BatComponent = doors[1]->FindComponentByClass<UKMK_Bat>();
         BatComponent1 = doors[2]->FindComponentByClass<UKMK_Bat>();
-
+        
         if (SwitchComponent->lastDoor == true && BatComponent->isHaveBat == true && BatComponent1->isHaveBat == true)
         {
             MoveDoor(DeltaTime);

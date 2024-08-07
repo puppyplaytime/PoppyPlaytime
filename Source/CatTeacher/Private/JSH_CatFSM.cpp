@@ -8,6 +8,7 @@
 #include "MovieSceneSequenceID.h"
 #include "Components/BoxComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "JSH_Battery.h"
 
 // Sets default values for this component's properties
 UJSH_CatFSM::UJSH_CatFSM()
@@ -139,6 +140,8 @@ void UJSH_CatFSM::TickComponent(float DeltaTime, ELevelTick TickType, FActorComp
             cState = ECatState::Idle;
         } 
     }
+
+    
 }
 
 void UJSH_CatFSM::UpdateState()

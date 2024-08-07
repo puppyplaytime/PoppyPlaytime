@@ -67,11 +67,13 @@ void AJSH_Switch::NotifyActorBeginOverlap(AActor* OtherActor)
     if (Hand && OtherActor->ActorHasTag("Green"))
     {
         FSM = Hand->FSM;
+    	
 
         if (FSM && FSM->isCharge == true)
         {
             GEngine->AddOnScreenDebugMessage(8, 3, FColor::Yellow, FString::Printf(TEXT("On Switch")));
             FSM->isCharge = false;
+        	FSM->PState = PlayerHandFSM::Normal;
 
             if (Hand->SwitchName == "BP_Switch_C_1")
             {

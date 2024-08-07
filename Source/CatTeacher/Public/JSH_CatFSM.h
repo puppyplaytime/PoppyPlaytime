@@ -172,7 +172,18 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = "Control")
 	float AttackMoveSpeed = 50.0f;
-	
+
+
+	// 03, 04 배터리 관련
+	class UKMK_Bat* BatComponent;
+
+	// 처음 03, 04 배터리 일떄 , 03, 04 고양이 없는 상태
+	bool FirstBatTrue03 = true;
+	bool FirstBatTrue04 = true;
+
+
+	//
+	void BatCatStop();
 };
 
 

@@ -3,6 +3,7 @@
   <component name="Encoding">
     <file url="file://$PROJECT_DIR$/Source/CatTeacher/Private/JSH_CatFSM.cpp" charset="x-windows-949" />
     <file url="file://$PROJECT_DIR$/Source/CatTeacher/Private/JSH_Switch.cpp" charset="x-windows-949" />
+    <file url="file://$PROJECT_DIR$/Source/CatTeacher/Private/KHH_BatteryOpenDoor.cpp" charset="x-windows-949" />
     <file url="file://$PROJECT_DIR$/Source/CatTeacher/Private/KMK_PlayerHandFSM.cpp" charset="x-windows-949" />
     <file url="PROJECT" charset="x-windows-949" />
   </component>

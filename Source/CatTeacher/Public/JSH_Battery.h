@@ -4,17 +4,17 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "KMK_Bat.generated.h"
+#include "JSH_Battery.generated.h"
 
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class CATTEACHER_API UKMK_Bat : public UActorComponent
+class CATTEACHER_API UJSH_Battery : public UActorComponent
 {
 	GENERATED_BODY()
 
 public:	
 	// Sets default values for this component's properties
-	UKMK_Bat();
+	UJSH_Battery();
 
 protected:
 	// Called when the game starts
@@ -24,24 +24,31 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	// 배터리가 들어왔는지 확인하기 위한 변수
 	UPROPERTY(EditAnywhere)
-	bool isHaveBat = false;
+	TArray<class AActor*> Steam;
+	
+	class UKMK_Bat* BatComponent03;
+	class UKMK_Bat* BatComponent04;
+	
 
-	UPROPERTY(EditAnywhere)
-	class UStaticMeshComponent* meshBat;
+	AActor* batsave03;
+	AActor* batsave04;
 
-	class UKMK_PlayerRay* player;
+	AActor* Cat03;
+	AActor* Cat04;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Battery", meta = (AllowPrivateAccess = "true"))
+	class UJSH_CatFSM* Cat03Component;
+	class UJSH_CatFSM* Cat04Component;
 
-	// 방법 1-2. 직접할당을 하겠다 :
-    AActor* TargetDoor; 
+	bool FSMOnOff03 = true;
+	bool FSMOnOff04 = true;
 
-    void SetTargetDoor(AActor* NewTargetDoor);
+	void FindTaggedActors();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool BPNiagaraOnOff = true;
+
 
 	
-	class UKHH_BatteryOpenDoor* BatteryOpendoorComponent;
-
-
+	
 };

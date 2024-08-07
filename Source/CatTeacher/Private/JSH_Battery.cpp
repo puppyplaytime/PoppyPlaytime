@@ -40,7 +40,7 @@ void UJSH_Battery::TickComponent(float DeltaTime, ELevelTick TickType, FActorCom
 	// niagara 꺼지고 , 3번 문 fsm 활성화
 
 	Cat03Component = Cat03->FindComponentByClass<UJSH_CatFSM>();
-
+	Cat04Component = Cat04->FindComponentByClass<UJSH_CatFSM>();
 	
 	BatComponent03 = batsave03->FindComponentByClass<UKMK_Bat>();
 	FSMOnOff03 = BatComponent03->isHaveBat;
@@ -60,10 +60,12 @@ void UJSH_Battery::TickComponent(float DeltaTime, ELevelTick TickType, FActorCom
 	if (BatComponent04->isHaveBat == false)
 	{
 		FSMOnOff04 = false;
+		Cat04Component->IdleState(DeltaTime);
 	}
 	if (BatComponent04->isHaveBat == true)
 	{
 		FSMOnOff04 = true;
+		Cat04Component->BatCatStop();
 	}
 
 	
@@ -94,6 +96,9 @@ void UJSH_Battery::FindTaggedActors()
 			batsave04 = FoundActors04[0];
 		}
 
+
+
+		
 		//  FSM 가져올 고양이 찾기
 		TArray<AActor*> FCat03;
 		
@@ -101,6 +106,14 @@ void UJSH_Battery::FindTaggedActors()
 		if (FCat03.Num() > 0)
 		{
 			Cat03 = FCat03[0];
+		}
+
+		TArray<AActor*> FCat04;
+		
+		UGameplayStatics::GetAllActorsWithTag(World, FName("S4"), FCat04);
+		if (FCat04.Num() > 0)
+		{
+			Cat04 = FCat04[0];
 		}
 		
 

@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
 #include "GameFramework/Actor.h"
+#include "KHH_Enemy.h"
+#include "Templates/SubclassOf.h"
 #include "KHH_BatteryOpenDoor.generated.h"
 
 
@@ -42,7 +44,8 @@ private:
    float MoveTime = 3;
 
    UPROPERTY(EditAnywhere)
-	float DistanceThreshold = 270.0f;
+	float DistanceThreshold = 300.0f;
+
 
    UPROPERTY(EditAnywhere)
    //class APawn* Enemy;
@@ -61,5 +64,12 @@ private:
    class UKMK_Bat* BatComponent;
    class UKMK_Bat* BatComponent1;
 
+   class UKHH_EnemyFSM* destroycomponent;
+   class UKHH_EnemyFSM* destroycomponent1;
+    UPROPERTY(EditAnywhere)
+	TSubclassOf<class AKHH_Enemy> del;
+
+
+   int count =0;
 };
 

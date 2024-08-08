@@ -36,6 +36,7 @@ void UKMK_PlayerHandFSM::BeginPlay()
 void UKMK_PlayerHandFSM::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+
 	if (PState != PlayerHandFSM::Energy && !isCharge)
 	{
 		Player->CableComp[0]->SetMaterial(0, cableMat[0]);

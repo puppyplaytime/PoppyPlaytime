@@ -70,7 +70,6 @@ public:
 
 	class UStaticMeshComponent* RMeshComp;
 #pragma endregion
-
 #pragma region InputVaribles
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	class UInputMappingContext* IMC_Mapping = nullptr;
@@ -118,6 +117,8 @@ public:
 
 	UPROPERTY()
 	TArray<bool> isDir = {false, false};
+	UPROPERTY()
+	TArray<bool> isClick = {false, false, false};
 
 	UPROPERTY()
 	bool isIntarctive = false;
@@ -193,4 +194,8 @@ public:
 
 	FORCEINLINE void ChangeHandEnd() {bChangeHand = true;}
 	FORCEINLINE void FireBulletEnd() { bFireBullet = true;}
+
+	// 소리관련
+	UPROPERTY(EditAnywhere, Category = "Sound")
+	TArray<class USoundBase*> sounds;
 };

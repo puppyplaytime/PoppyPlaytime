@@ -49,7 +49,7 @@ public:
 	//UFUNCTION()
     //void OnDestroyed(AActor* DestroyedActor);
 
-	UPROPERTY(EditDefaultsOnly, Category=FSM)
+	UPROPERTY(EditAnywhere, Category=FSM)
 	float idleDelayTime = 2;
 	float currentTime = 0;
 

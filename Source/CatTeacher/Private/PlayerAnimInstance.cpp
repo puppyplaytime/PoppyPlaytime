@@ -41,14 +41,17 @@ void UPlayerAnimInstance::PlayHandInMontage()
 
 void UPlayerAnimInstance::AnimNotify_FireEnd()
 {
+    player->FireBulletEnd();
     auto* fsm = TryGetPawnOwner()->GetComponentByClass<UKMK_PlayerHandFSM>();
     fsm->isFire = false;
     fsm->cnt = 0;
+    clickCount++;
 }
 
 void UPlayerAnimInstance::AnimNotify_ChangeHand()
 {
-    
+    player->ChangeHandEnd();
+
     if (player->FSM->PState == PlayerHandFSM::JumpPack)
     {
         player->RMeshComp->SetStaticMesh(player->Hands[0]->HandMesh[2]);

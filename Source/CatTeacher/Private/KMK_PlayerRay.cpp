@@ -10,6 +10,7 @@
 #include "Components/ArrowComponent.h"
 #include "KMK_Bat.h"
 #include "KMK_Battery.h"
+#include "Camera/CameraComponent.h"
 
 // Sets default values for this component's properties
 UKMK_PlayerRay::UKMK_PlayerRay()
@@ -46,7 +47,7 @@ void UKMK_PlayerRay::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 	FHitResult hitInfo;
 	GetWorld()->LineTraceSingleByChannel(hitInfo, playerComp->startPos, endPos, ECC_GameTraceChannel8, params);
 	// DrawDebugLine(GetWorld(), playerComp->startPos, endPos, FColor::Blue, false, 1.f);
-	if(hitInfo.GetActor() != nullptr)GEngine->AddOnScreenDebugMessage(2, 1, FColor::Orange, FString::Printf(TEXT("%s"), *hitInfo.GetActor()->GetName()));
+
 	// 레이를 쏘고
 	bool bhit = GetWorld()->LineTraceSingleByChannel(hitInfo, playerComp->startPos, endPos, ECC_GameTraceChannel8, params);
 	if (isRay && startPoint < 0)
@@ -56,7 +57,6 @@ void UKMK_PlayerRay::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 	}
 	if (hitInfo.GetActor() != nullptr && hitInfo.GetActor()->ActorHasTag("E_Bat"))
 	{
-		GEngine->AddOnScreenDebugMessage(2, 1, FColor::Orange, FString::Printf(TEXT("%f"), FVector::Distance(hitInfo.GetActor()->GetActorLocation(), GetOwner()->GetTargetLocation())));
 		// 일정거리에 있을때 인터렉션이 가능하게 만듦
 		if (FVector::Distance(hitInfo.GetActor()->GetActorLocation(), GetOwner()->GetTargetLocation()) < 400)
 		{
@@ -131,6 +131,7 @@ void UKMK_PlayerRay::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 	// 입력값이 들어오는 경우
 	if (isRay)
 	{
+		if (hitInfo.GetActor() != nullptr)GEngine->AddOnScreenDebugMessage(2, 1, FColor::Orange, FString::Printf(TEXT("%s"), *hitInfo.GetActor()->GetActorLabel()));
 		// 레이를 그리고
 		if(hitInfo.GetActor() != nullptr) DrawDebugLine(GetWorld(), startPos, endPos, FColor::Blue, false, 1.f);
 		if (isCome)
@@ -157,7 +158,6 @@ void UKMK_PlayerRay::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 				// 총을 들고있지 않다면
 				else
 				{	
-				
 					if (hitInfo.GetActor()->ActorHasTag("Jump") && FVector::Distance(hitInfo.GetActor()->GetActorLocation(), GetOwner()->GetActorLocation()) < 300)
 					{
 						Hands[0]->isJump = true;
@@ -165,11 +165,20 @@ void UKMK_PlayerRay::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 
 					// 오른손에 물체의 component를 넘겨주고
 					Hands[0]->hitinfo = hitInfo.GetComponent();
+
 					// 손을 뻗게 만든다
 					// 손 초기값
 					Hands[0]->handPos = 27;
-					// 손의 도착지점
-					Hands[0]->endPos = hitInfo.ImpactPoint;
+
+                    if (hitInfo.GetActor()->GetActorLabel().Contains("wall") || hitInfo.GetActor()->GetActorLabel().Contains("Cube"))
+                    {
+                        Hands[0]->endPos = playerComp->startPos + playerComp->camera->GetForwardVector() * 500;
+                    }
+					else
+					{
+						// 손의 도착지점
+						Hands[0]->endPos = hitInfo.ImpactPoint;
+					}
 					// 손을 뻗게 만듦
 					if (Hands[0]->isGrab || Hands[0]->isPick)
 					{
@@ -177,6 +186,7 @@ void UKMK_PlayerRay::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 						Hands[0]->isPick = false;
 					}
 					else Hands[0]->isGo = true;
+
 				}
 			}
 			// 물체가 맞지 않은 경우
@@ -193,7 +203,15 @@ void UKMK_PlayerRay::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 				{
 					// 손을 뻗는다
 					Hands[0]->handPos = 27;
-					Hands[0]->endPos = playerComp->endPos;
+					if (hitInfo.GetActor()->GetActorLabel().Contains("Wall") || hitInfo.GetActor()->GetActorLabel().Contains("Cube"))
+					{
+						Hands[0]->endPos = playerComp->startPos + playerComp->camera->GetForwardVector() * 1000;
+					}
+					else
+					{
+						// 손의 도착지점
+						Hands[0]->endPos = hitInfo.ImpactPoint;
+					}
 					Hands[0]->isGo = true;
 				}
 				// 아니라면
@@ -217,10 +235,19 @@ void UKMK_PlayerRay::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 			// 물체가 있다면
 			if (bhit)
 			{
-				Hands[1]->endPos = hitInfo.ImpactPoint;
+				
+				if (hitInfo.GetActor()->GetActorLabel().Contains("Wall") || hitInfo.GetActor()->GetActorLabel().Contains("Cube"))
+				{
+					Hands[1]->endPos = playerComp->startPos + playerComp->camera->GetForwardVector() * 1000;
+				}
+				else
+				{
+					Hands[1]->endPos = hitInfo.ImpactPoint;
+				}
 				Hands[1]->hitinfo = hitInfo.GetComponent();
 			}
-			else Hands[1]->endPos = playerComp->endPos;
+			else Hands[1]->endPos = playerComp->startPos + playerComp->camera->GetForwardVector() * 1000;
+
 			// 공통적으로 수행
 			Hands[1]->handPos = -27;
 			Hands[1]->isRay = true;

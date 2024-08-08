@@ -4,17 +4,16 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "KHH_OpenDoor.generated.h"
+#include "LeverComponent.generated.h"
 
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class CATTEACHER_API UKHH_OpenDoor : public UActorComponent
+class CATTEACHER_API ULeverComponent : public UActorComponent
 {
 	GENERATED_BODY()
-
 public:	
 	// Sets default values for this component's properties
-	UKHH_OpenDoor();
+	ULeverComponent();
 
 protected:
 	// Called when the game starts
@@ -24,31 +23,20 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-private:
 	UPROPERTY(EditAnywhere)
-	FVector MoveOffset = FVector(0, 0, -270);
-
-	FVector OriginalLocation;
+	FRotator OpenAngle = FRotator(0, 0, 180);
+	FRotator InitialRotation;
 
 	UPROPERTY(EditAnywhere)
-	float MoveTime = 0.4f;
+	float MoveTime = 3;
 
 	UPROPERTY(EditAnywhere)
-	float DistanceThreshold = 400.0f;
+	bool LeverMove = false;
 
-	UPROPERTY(EditAnywhere)
-	bool ShouldMove = false;
-
-	UPROPERTY(EditAnywhere)
-	class AActor* Door;
-	
-	class AKHH_Enemy* Player;
-
-
-	FVector CurrentLocation;
-	FVector TargetLocation;
+	FRotator CurrentRotation;
+	FRotator TargetRotation;
 	float Speed;
-	FVector NewLocation;
+	FRotator NewRotation;
 
-	void MoveDoor(float DeltaTime);	
+		
 };

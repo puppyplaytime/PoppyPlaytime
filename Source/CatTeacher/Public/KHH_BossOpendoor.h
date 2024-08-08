@@ -29,15 +29,10 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	FVector MoveOffset = FVector(300, 0, 0);
-	// BossMap door(300, 0, 0)
-	// Delight last shutter door(0, 0, -270)
-
 	FVector OriginalLocation;
 
 	UPROPERTY(EditAnywhere)
-	float MoveTime;	
-	// BossMap door MoveTime = 3
-	// Delight last shutter door MoveTime = 0.4
+	float MoveTime = 10;
 
 	UPROPERTY(EditAnywhere)
 	bool ShouldMove = false;

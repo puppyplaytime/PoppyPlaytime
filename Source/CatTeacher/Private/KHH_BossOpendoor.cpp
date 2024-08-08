@@ -36,6 +36,7 @@ void UKHH_BossOpendoor::TickComponent(float DeltaTime, ELevelTick TickType, FAct
 		Speed = FVector::Distance(OriginalLocation, TargetLocation) / MoveTime;
 		NewLocation = FMath::VInterpConstantTo(CurrentLocation, TargetLocation, DeltaTime, Speed);
 		GetOwner()->SetActorLocation(NewLocation);
+
 	} else return;
 }
 

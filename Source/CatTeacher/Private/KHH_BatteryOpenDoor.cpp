@@ -56,12 +56,12 @@ void UKHH_BatteryOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, F
                 {
                     destroycomponent = Player->FindComponentByClass<UKHH_EnemyFSM>();
                     destroycomponent->mState = EEnemyState::Destroy;
-
+                 
                     if (count == 0) 
                     {
                         FTransform spawnLocation = FTransform(FVector(2561.733490, 393.345482, 68.000018));
-                        auto* a = GetWorld()->SpawnActor<AKHH_Enemy>(del, spawnLocation);
-                        destroycomponent1 = a->FindComponentByClass<UKHH_EnemyFSM>();
+                        enemy = GetWorld()->SpawnActor<AKHH_Enemy>(del, spawnLocation);
+                        destroycomponent1 = enemy->FindComponentByClass<UKHH_EnemyFSM>();
                         destroycomponent1->mState = EEnemyState::Spawn;
                         count ++;
                     }

@@ -30,13 +30,15 @@ public:
    UPROPERTY(EditAnywhere)
    bool ShouldMove = false;
 
+   UPROPERTY(EditAnywhere)
+   class AKHH_Enemy* enemy;
 private:
    UPROPERTY(EditAnywhere)
    FVector MoveOffset = FVector(0,0,270);
    // 마지막 셔터 문은 아래로 내려오는 것으로 
    // FVector MoveOffset = FVector(0, 0, -270); // 언리얼에서 따로 설정해줘야 함 
    // Mobility => Movable
-   
+
 
    FVector OriginalLocation;
 

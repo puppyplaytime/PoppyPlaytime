@@ -67,7 +67,7 @@ void UJSH_Battery::TickComponent(float DeltaTime, ELevelTick TickType, FActorCom
 		if (repeat04)
 		{
 			FSMOnOff04 = false;
-			Cat03Component->batoff();
+			Cat04Component->batoff();
 			repeat04 = false;
 		}
 	}

@@ -4,6 +4,7 @@
 #include "KMK_Bat.h"
 #include "KMK_PlayerRay.h"
 #include "KHH_BatteryOpenDoor.h"
+#include "Engine/StaticMeshActor.h"
 
 // Sets default values for this component's properties
 UKMK_Bat::UKMK_Bat()
@@ -20,6 +21,19 @@ void UKMK_Bat::BeginPlay()
 	Super::BeginPlay();
 	meshBat = GetOwner()->FindComponentByClass<UStaticMeshComponent>();
 	player = GetWorld()->GetFirstPlayerController()->GetPawn()->FindComponentByClass<UKMK_PlayerRay>();
+	// 머테리얼 변경
+	myMatDynamic = UMaterialInstanceDynamic::Create(matFact, this);
+	if (batProgress != nullptr)
+	{
+		// batProgress->SetMaterial(0, myMatDynamic);
+        auto* b = batProgress->GetStaticMeshComponent();
+        if (b)
+        {
+            b->SetMaterial(0, myMatDynamic);
+        }
+		myMatDynamic->SetScalarParameterValue("Gage", 0);
+	}
+	
 }
 
 // 배터리가 들어간 상태일때 문이 열리도록 하고 싶다. 
@@ -39,7 +53,16 @@ void UKMK_Bat::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 
 	if (isHaveBat == true)
 	{
-		SetTargetDoor(TargetDoor);
+		if(TargetDoor != nullptr)SetTargetDoor(TargetDoor);
+		if (batProgress != nullptr)
+		{
+			spd += ChargeSpeed;
+			ChargeGage(spd);
+			if (spd > 100)
+			{
+				spd = 100;
+			}
+		}
 	}
 
 }
@@ -55,5 +78,10 @@ void UKMK_Bat::SetTargetDoor(AActor* NewTargetDoor)
 			BatteryOpendoorComponent->ShouldMove = true;
 		}
 	}
+}
+
+void UKMK_Bat::ChargeGage(float DeltaTime)
+{
+	myMatDynamic->SetScalarParameterValue("Gage", DeltaTime);
 }
 

@@ -185,6 +185,7 @@ void AKMK_Player::BeginPlay()
 	movementComp->GetNavAgentPropertiesRef().bCanCrouch = true;
 	// 애니메이션 관련 작업
 	anim = Cast<UPlayerAnimInstance>(armMesh->GetAnimInstance());
+	// 머테리얼 변경
 	myMatDynamic = UMaterialInstanceDynamic::Create(matFact, this);
 
 	myMatDynamic->SetScalarParameterValue("Gauge", gauzeSpd);
@@ -353,7 +354,20 @@ void AKMK_Player::InputWalk(const struct FInputActionValue& value)
 void AKMK_Player::InputE(const struct FInputActionValue& value)
 {
 	isIntarctive = true;
+	// UGameplayStatics::OpenLevel(this, "JSH_Alpha");
+	auto* load = CreateWidget(GetWorld(), LoadFact);
+	load->AddToViewport(3);
+
+	FTimerHandle timerHandle;
+	GetWorldTimerManager().SetTimer(timerHandle, this, &AKMK_Player::ChangeLevel, loadTime, false);
+
 }
+
+void AKMK_Player::ChangeLevel()
+{
+	UGameplayStatics::OpenLevel(this, "JSH_Alpha");
+}
+
 #pragma endregion
 #pragma region ChangeHand
 // 기본 손
@@ -420,4 +434,5 @@ void AKMK_Player::NotifyHit(UPrimitiveComponent* MyComp, AActor* Other, UPrimiti
 		FSM->PState = PlayerHandFSM::Normal;
 	}
 }
+
 #pragma endregion

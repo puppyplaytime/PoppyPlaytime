@@ -184,6 +184,8 @@ public:
 
 	//
 	void BatCatStop();
+
+	void batoff();
 };
 
 

@@ -226,6 +226,11 @@ void UJSH_CatFSM::BatCatStop()
     cState = ECatState::Die;
 }
 
+void UJSH_CatFSM::batoff()
+{
+    cState = ECatState::Idle;
+}
+
 
 void UJSH_CatFSM::IdleState(float DeltaTime)
 {

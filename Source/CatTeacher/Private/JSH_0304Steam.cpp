@@ -21,7 +21,7 @@ AJSH_0304Steam::AJSH_0304Steam()
 	SetRootComponent(NSteam);
 	
 	// Load the Niagara System
-	static ConstructorHelpers::FObjectFinder<UNiagaraSystem> NiagaraSystem(TEXT("/Script/Niagara.NiagaraSystem'/Game/Effect/NG_Steam.NG_Steam'"));
+	static ConstructorHelpers::FObjectFinder<UNiagaraSystem> NiagaraSystem(TEXT("/Script/Niagara.NiagaraSystem'/Game/Effect/NG_Steam3.NG_Steam3'"));
 
 	if (NiagaraSystem.Succeeded())
 	{

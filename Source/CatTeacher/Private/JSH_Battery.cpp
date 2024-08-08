@@ -77,10 +77,6 @@ void UJSH_Battery::TickComponent(float DeltaTime, ELevelTick TickType, FActorCom
 		Cat04Component->BatCatStop();
 		repeat04 = true;
 	}
-
-	
-	
-	
 }
 
 void UJSH_Battery::FindTaggedActors()

@@ -8,6 +8,10 @@
 #include "GameFramework/Pawn.h"
 #include "Kismet/GameplayStatics.h"
 #include "Components/ActorComponent.h"
+#include "TimerManager.h"
+#include "UObject/NoExportTypes.h"
+#include "Engine/World.h"
+
 
 // Sets default values for this component's properties
 UKHH_EnemyFSM::UKHH_EnemyFSM()
@@ -30,6 +34,11 @@ void UKHH_EnemyFSM::BeginPlay()
 	target = GetWorld()->GetFirstPlayerController()->GetPawn();
 	//AAIController
 	Speed = P_Speed;
+
+	/*if (me)
+	{
+		me->OnDestroyed.AddDynamic(this, &UKHH_EnemyFSM::OnDestroyed);
+	}*/
 }
 
 
@@ -52,8 +61,16 @@ void UKHH_EnemyFSM::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 		MoveState();
 		break;
 
-	case EEnemyState::Stop:
-		MoveStop();
+	case EEnemyState::MoveStop:
+		MoveStopState();
+		break;
+
+	case EEnemyState::Destroy:
+		DestroyState();
+		break;
+	
+	case EEnemyState::Spawn:
+		SpawnState();
 		break;
 	}
 }
@@ -73,11 +90,11 @@ void UKHH_EnemyFSM::MoveState()
 	P_Speed = Speed;
 	FVector destination = target->GetTargetLocation();
 	FVector dir = destination - me->GetActorLocation();
-	ai->MoveToLocation(destination);
 
+	ai->MoveToLocation(destination);
 }
 
-void UKHH_EnemyFSM::MoveStop()
+void UKHH_EnemyFSM::MoveStopState()
 {
 	//player¶û ´«ÀÌ ¸¶ÁÖÄ¡¸é ¸ØÃç¾ßÇÔ 
 	//´«ÀÌ ¾È¸¶ÁÖÄ¡¸é ±×´ë·Î move, µû¶ó°¡¾ßÇÔ 
@@ -86,4 +103,26 @@ void UKHH_EnemyFSM::MoveStop()
 	P_Speed = 0;
 }
 
+void UKHH_EnemyFSM::DestroyState()
+{	
+	//me -> Destroy();
+	//mState = EEnemyState::Spawn;
+	if (me)
+	{
+		me->Destroy();
+	}
+}
+//
+//void UKHH_EnemyFSM::OnDestroyed(AActor* DestroyedActor)
+//{
+//	if (DestroyedActor == me)
+//	{
+//		GetWorld()->GetTimerManager().SetTimer(RespawnTimerHandle, this, &UKHH_EnemyFSM::SpawnState, 2.0f, false);
+//	}
+//}
+
+void UKHH_EnemyFSM::SpawnState()
+{
+
+}
 

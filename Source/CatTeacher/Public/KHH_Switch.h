@@ -41,6 +41,6 @@ public:
 
 	UFUNCTION()
 	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
-
+	UPROPERTY(EditAnywhere)
 	bool lastDoor = false; 
 };

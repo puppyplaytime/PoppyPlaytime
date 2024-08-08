@@ -115,7 +115,7 @@ void AKMK_Player::BeginPlay()
 	widget = Cast<UPlayerWidget>(CreateWidget(GetWorld(), WidFact));
 	if (widget)
 	{
-		widget->AddToViewport();
+		widget->AddToViewport(1);
 
 	}
 #pragma region Create Hand

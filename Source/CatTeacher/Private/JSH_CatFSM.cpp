@@ -468,16 +468,17 @@ void UJSH_CatFSM::DiscoveryState()
 }
 
 
-
 void UJSH_CatFSM::AttackState()
 {
     me->FalseBox->SetCollisionProfileName(TEXT("NoCollision"));
+
     if (bHasAttacked)
     {
         // Get me's location and store it in tt
         tt = me->GetActorLocation();
+
         // Destroy me
-        me->Destroy();
+        me->fsm->BatCatStop();
         
         // Get the player controller
         APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
@@ -494,6 +495,9 @@ void UJSH_CatFSM::AttackState()
                 // Calculate the new rotation for the camera to look at tt
                 FRotator NewControlRotation = Direction.Rotation();
                 
+                // Adjust the Pitch to make the camera look slightly upwards (e.g., +10 degrees)
+                NewControlRotation.Pitch += 15.0f;
+
                 // Set the player's control rotation to the new rotation
                 PlayerController->SetControlRotation(NewControlRotation);
 
@@ -528,8 +532,69 @@ void UJSH_CatFSM::AttackState()
 
 
 
+// void UJSH_CatFSM::AttackState()
+// {
+//     me->FalseBox->SetCollisionProfileName(TEXT("NoCollision"));
+//
+//     
+//     if (bHasAttacked)
+//     {
+//         // Get me's location and store it in tt
+//         tt = me->GetActorLocation();
+//         // Destroy me
+//         me->fsm->BatCatStop();
+//         
+//         // Get the player controller
+//         APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+//         if (PlayerController)
+//         {
+//             // Get the player's pawn (character or any actor controlled by the player)
+//             APawn* PlayerPawn = PlayerController->GetPawn();
+//             if (PlayerPawn)
+//             {
+//                 // Calculate the direction vector from the player to tt
+//                 FVector Direction = tt - PlayerPawn->GetActorLocation();
+//                 Direction.Z = 0; // Keep the camera level, ignore the height difference
+//                 
+//                 // Calculate the new rotation for the camera to look at tt
+//                 FRotator NewControlRotation = Direction.Rotation();
+//                 
+//                 // Set the player's control rotation to the new rotation
+//                 PlayerController->SetControlRotation(NewControlRotation);
+//
+//                 // Find all actors with the tag "FcatAttack"
+//                 TArray<AActor*> FoundActors;
+//                 UGameplayStatics::GetAllActorsWithTag(GetWorld(), FName("FcatAttack"), FoundActors);
+//
+//                 for (AActor* Actor : FoundActors)
+//                 {
+//                     // Calculate the position 1 cm in front of the player's eyes
+//                     FVector EyeLocation;
+//                     FRotator EyeRotation;
+//                     PlayerPawn->GetActorEyesViewPoint(EyeLocation, EyeRotation);
+//                     FVector NewLocation = EyeLocation + EyeRotation.Vector() * 1.0f;
+//
+//                     // Set the actor's location
+//                     Actor->SetActorLocation(NewLocation);
+//
+//                     // Calculate the new rotation to look in the opposite direction of the player's view
+//                     FRotator OppositeRotation = EyeRotation;
+//                     OppositeRotation.Yaw += 180.0f; // Rotate 180 degrees around the Z axis (Yaw)
+//
+//                     // Set the actor's rotation
+//                     Actor->SetActorRotation(OppositeRotation);
+//                 }
+//             }
+//         }
+//     }
+// }
 
 
+
+
+//
+//
+//
 // void UJSH_CatFSM::AttackState()
 // {
 //     me->FalseBox->SetCollisionProfileName(TEXT("NoCollision"));

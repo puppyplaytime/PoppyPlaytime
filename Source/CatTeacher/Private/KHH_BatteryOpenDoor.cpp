@@ -4,6 +4,8 @@
 #include "KHH_BatteryOpenDoor.h"
 #include "KHH_Switch.h"
 #include "KMK_Bat.h"
+#include "KHH_Enemy.h"
+#include "KHH_EnemyFSM.h"
 
 // Sets default values for this component's properties
 UKHH_BatteryOpenDoor::UKHH_BatteryOpenDoor()
@@ -44,14 +46,26 @@ void UKHH_BatteryOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, F
         if (SwitchComponent->lastDoor == true && BatComponent->isHaveBat == true && BatComponent1->isHaveBat == true)
         {
             MoveDoor(DeltaTime);
-
-            // Enemy와 문의 거리 계산
-            FVector DistanceVector = Player->GetActorLocation() - GetOwner()->GetActorLocation();
-            float Distance = DistanceVector.Length();
-
-            if (Distance <= DistanceThreshold)
+            if (Player) 
             {
-                Player->Destroy();
+                // Enemy와 문의 거리 계산
+                FVector DistanceVector = Player->GetActorLocation() - GetOwner()->GetActorLocation();
+                float Distance = DistanceVector.Length();
+
+                if (Distance <= DistanceThreshold)
+                {
+                    destroycomponent = Player->FindComponentByClass<UKHH_EnemyFSM>();
+                    destroycomponent->mState = EEnemyState::Destroy;
+
+                    if (count == 0) 
+                    {
+                        FTransform spawnLocation = FTransform(FVector(2561.733490, 393.345482, 68.000018));
+                        auto* a = GetWorld()->SpawnActor<AKHH_Enemy>(del, spawnLocation);
+                        destroycomponent1 = a->FindComponentByClass<UKHH_EnemyFSM>();
+                        destroycomponent1->mState = EEnemyState::Spawn;
+                        count ++;
+                    }
+                }
             }
         }
     }

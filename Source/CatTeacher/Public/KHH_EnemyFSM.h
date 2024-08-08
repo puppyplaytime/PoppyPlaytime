@@ -11,7 +11,9 @@ enum class EEnemyState : uint8
 {
 	Idle,
 	Move,
-	Stop,
+	MoveStop,
+	Destroy,
+	Spawn,
 };
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -40,6 +42,12 @@ public:
 
 	void IdleState();
 	void MoveState();
+	void MoveStopState();
+	void DestroyState();
+	void SpawnState();
+
+	//UFUNCTION()
+    //void OnDestroyed(AActor* DestroyedActor);
 
 	UPROPERTY(EditDefaultsOnly, Category=FSM)
 	float idleDelayTime = 2;
@@ -54,9 +62,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class AAIController* ai;
 
-	void MoveStop();
 	UPROPERTY(EditDefaultsOnly, Category=FSM)
 	float P_Speed;
 	float Speed;
-	
+
+
 };

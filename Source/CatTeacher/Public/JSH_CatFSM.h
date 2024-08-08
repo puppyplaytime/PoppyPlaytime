@@ -186,6 +186,9 @@ public:
 	void BatCatStop();
 
 	void batoff();
+
+	FVector tt;
+	
 };
 
 

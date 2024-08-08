@@ -48,7 +48,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool BPNiagaraOnOff = true;
 
-
-	
-	
+	bool repeat03 = false;
+	bool repeat04 = false;
 };

@@ -59,7 +59,8 @@ void AKHH_Switch::NotifyActorBeginOverlap(AActor* OtherActor)
 	{
 		FSM = Hand->FSM;
 		if (FSM && FSM->isCharge == true)
-		{
+		{	
+			FSM->PState = PlayerHandFSM::Normal;
 			FSM->isCharge = false;
 			if (Hand->SwitchName == "BP_Switch1_C_1")
 			{

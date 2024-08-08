@@ -69,7 +69,6 @@ private:
     UPROPERTY(EditAnywhere)
 	TSubclassOf<class AKHH_Enemy> del;
 
-
    int count =0;
 };
 

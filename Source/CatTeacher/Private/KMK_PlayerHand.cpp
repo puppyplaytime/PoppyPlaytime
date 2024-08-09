@@ -17,6 +17,7 @@
 #include "PlayerAnimInstance.h"
 #include "KHH_RotateDoor.h"
 #include "PlayerWidget.h"
+#include "LeverComponent.h"
 // Sets default values
 AKMK_PlayerHand::AKMK_PlayerHand()
 {
@@ -269,7 +270,7 @@ void AKMK_PlayerHand::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 		}
 	}
 	// 잡을 수 있는 오브젝트에 닿은 경우
-	if (OtherComp->ComponentHasTag("Handle"))
+	if (OtherComp->ComponentHasTag("Handle") || OtherComp->GetName().Contains("Lever"))
 	{
 		// 평범한 손이 아니면 반환
 		if (player->RMeshComp->GetStaticMesh() != player->Hands[0]->HandMesh[0]) return;
@@ -283,6 +284,7 @@ void AKMK_PlayerHand::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 			rotDoor = OtherActor->FindComponentByClass<UKHH_RotateDoor>();
 			isDoor = true;
 		}
+
 	}
 	// 왼손인 상태면 밑에 상황이 필요 없음 => 반환
 	if (!GetName().Contains("R")) return;

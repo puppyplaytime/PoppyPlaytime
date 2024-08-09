@@ -63,7 +63,7 @@ void ULeverComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
             AnimInstance = MeshComp->GetAnimInstance();
         }
     }
-
+    // 1. enemy 내부에 있는 ULevelAnimInstance 가져오기
     if (ULeverAnimInstance* LeverAnim = Cast<ULeverAnimInstance>(AnimInstance))
     {
         if(me)GEngine->AddOnScreenDebugMessage(10, 1, FColor::Magenta, FString::Printf(TEXT("find!")));

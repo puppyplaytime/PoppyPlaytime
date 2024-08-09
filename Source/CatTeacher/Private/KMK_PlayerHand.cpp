@@ -59,6 +59,10 @@ void AKMK_PlayerHand::BeginPlay()
 	box->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	VFXComp = FindComponentByClass< UNiagaraComponent>();
 	if(VFXComp) VFXComp->SetVisibility(false);
+	// 머테리얼 변경
+	myMatDynamic = UMaterialInstanceDynamic::Create(matFact, this);
+	if(matFact != nullptr) hand->SetMaterial(0, myMatDynamic);
+	myMatDynamic->SetScalarParameterValue("charge_light", 0);
 }
 
 // Called every frame
@@ -312,6 +316,7 @@ void AKMK_PlayerHand::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 		FSM->PState = PlayerHandFSM::Energy;
 		FSM->t = 0;
 		FSM->isCharge = true;
+		myMatDynamic->SetScalarParameterValue("charge_light", 4);
 		VFXComp->SetVisibility(true);
 		isHold = true;
 	}

@@ -123,4 +123,9 @@ public:
 	TArray<bool> isClosed ={false, false};
 	UFUNCTION()
 	void MakeBattery(int32 num);
+
+	UPROPERTY(EditAnywhere)
+    class UMaterialInstance* matFact;
+
+	UMaterialInstanceDynamic* myMatDynamic;
 };

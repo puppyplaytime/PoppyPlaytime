@@ -42,6 +42,7 @@ void UKMK_PlayerHandFSM::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 	{
 		Player->CableComp[0]->SetMaterial(0, cableMat[0]);
 		Player->Hands[0]->VFXComp->SetVisibility(false);
+		Player->Hands[0]->myMatDynamic->SetScalarParameterValue("charge_light", 0);
 	}
 	// 스테이트 변경
 	switch (PState)

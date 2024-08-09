@@ -5,6 +5,8 @@
 #include "JSH_CatFSM.h"
 #include "KMK_Bullet.h"
 #include "Components/BoxComponent.h"
+#include "Animation/AnimSequence.h"
+#include "Animation/AnimInstance.h"
 
 // Sets default values
 AJSH_Cat::AJSH_Cat()
@@ -30,11 +32,35 @@ void AJSH_Cat::BeginPlay()
 	
 }
 
-// Called every frame
 void AJSH_Cat::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if (PlayAttackAnimation)
+	{
+		// Load the animation sequence
+		static UAnimSequence* AttackAnim = LoadObject<UAnimSequence>(nullptr, TEXT("/Game/Project/JSH/Asset/4/source/Armature_A_NappyCat_Jumpscare_Normal.Armature_A_NappyCat_Jumpscare_Normal"));
+		currtime += DeltaTime;
+		if (AttackAnim)
+		{
+			timestart = true;
+			// Play the animation on the mesh
+			GetMesh()->PlayAnimation(AttackAnim, false);
+			// 스켈레톤 문제로 , 몽타주 노티파이를 찍을 수 가 없어서 , animation 실행 시간으로 대체 해야 할듯
+			GEngine->AddOnScreenDebugMessage(28, 3, FColor::Green, FString::Printf(TEXT("animation")));
+			PlayAttackAnimation = false;
+		}
+	}
+	if (timestart)
+	{
+		currtime += DeltaTime;
+		if (currtime >= aniendtime)
+		{
+			GEngine->AddOnScreenDebugMessage(28, 3, FColor::Green, FString::Printf(TEXT("game end")));
+			timestart = false;
+			currtime = 0;
+		}
+	}
 }
 
 // Called to bind functionality to input

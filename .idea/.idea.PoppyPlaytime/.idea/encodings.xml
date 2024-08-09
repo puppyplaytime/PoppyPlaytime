@@ -5,6 +5,7 @@
     <file url="file://$PROJECT_DIR$/Source/CatTeacher/Private/JSH_Cat.cpp" charset="x-windows-949" />
     <file url="file://$PROJECT_DIR$/Source/CatTeacher/Private/JSH_CatFSM.cpp" charset="x-windows-949" />
     <file url="file://$PROJECT_DIR$/Source/CatTeacher/Private/JSH_RandomFalse.cpp" charset="x-windows-949" />
+    <file url="file://$PROJECT_DIR$/Source/CatTeacher/Private/KHH_OpenDoor.cpp" charset="x-windows-949" />
     <file url="file://$PROJECT_DIR$/Source/CatTeacher/Private/KHH_RotateDoor.cpp" charset="x-windows-949" />
     <file url="file://$PROJECT_DIR$/Source/CatTeacher/Private/KMK_PlayerHand.cpp" charset="x-windows-949" />
     <file url="file://$PROJECT_DIR$/Source/CatTeacher/Public/JSH_Cat.h" charset="x-windows-949" />

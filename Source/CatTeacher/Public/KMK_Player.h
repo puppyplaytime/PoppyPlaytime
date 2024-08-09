@@ -182,6 +182,8 @@ public:
 	TSubclassOf<class UUserWidget> WidFact;
 	UPROPERTY()
 	class UPlayerWidget* widget;	
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<class UUserWidget> LoadFact;
 
 	UPROPERTY(EditAnywhere)
     class UMaterialInstance* matFact;
@@ -199,4 +201,9 @@ public:
 	// 소리관련
 	UPROPERTY(EditAnywhere, Category = "Sound")
 	TArray<class USoundBase*> sounds;
+
+	void ChangeLevel();
+
+	UPROPERTY(EditAnywhere)
+	float loadTime = 3;
 };

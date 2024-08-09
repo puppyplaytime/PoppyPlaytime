@@ -468,16 +468,17 @@ void UJSH_CatFSM::DiscoveryState()
 }
 
 
-
 void UJSH_CatFSM::AttackState()
 {
     me->FalseBox->SetCollisionProfileName(TEXT("NoCollision"));
+
     if (bHasAttacked)
     {
         // Get me's location and store it in tt
         tt = me->GetActorLocation();
+
         // Destroy me
-        me->Destroy();
+        me->fsm->BatCatStop();
         
         // Get the player controller
         APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
@@ -494,8 +495,17 @@ void UJSH_CatFSM::AttackState()
                 // Calculate the new rotation for the camera to look at tt
                 FRotator NewControlRotation = Direction.Rotation();
                 
+                // Adjust the Pitch to make the camera look slightly upwards (e.g., +15 degrees)
+                NewControlRotation.Pitch += 18.0f;
+
                 // Set the player's control rotation to the new rotation
                 PlayerController->SetControlRotation(NewControlRotation);
+
+                // Disable the player's ability to control the camera
+                PlayerController->SetIgnoreLookInput(true);
+
+                // Disable the player's ability to move
+                PlayerController->SetIgnoreMoveInput(true);
 
                 // Find all actors with the tag "FcatAttack"
                 TArray<AActor*> FoundActors;
@@ -518,120 +528,18 @@ void UJSH_CatFSM::AttackState()
 
                     // Set the actor's rotation
                     Actor->SetActorRotation(OppositeRotation);
+
+                    AJSH_Cat* atcat = Cast<AJSH_Cat>(Actor);
+
+                    atcat->PlayAttackAnimation = true;  // --->> cat tick
                 }
             }
+            //me->PlayAttackAnimation = true;
         }
     }
 }
 
 
-
-
-
-
-
-// void UJSH_CatFSM::AttackState()
-// {
-//     me->FalseBox->SetCollisionProfileName(TEXT("NoCollision"));
-//     if (bHasAttacked)
-//     {
-//         // Get me's location and store it in tt
-//         tt = me->GetActorLocation();
-//         
-//         // Destroy me
-//         me->Destroy();
-//         
-//         // Get the player controller
-//         APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
-//         if (PlayerController)
-//         {
-//             // Get the player's pawn (character or any actor controlled by the player)
-//             APawn* PlayerPawn = PlayerController->GetPawn();
-//             if (PlayerPawn)
-//             {
-//                 // Calculate the direction vector from the player to tt
-//                 FVector Direction = tt - PlayerPawn->GetActorLocation();
-//                 Direction.Z = 0; // Keep the camera level, ignore the height difference
-//                 
-//                 // Calculate the new rotation for the camera to look at tt
-//                 FRotator NewControlRotation = Direction.Rotation();
-//                 
-//                 // Set the player's control rotation to the new rotation
-//                 PlayerController->SetControlRotation(NewControlRotation);
-//                 
-//                 // Find the actor with the tag "FcatAttack"
-//                 for (TActorIterator<AActor> It(GetWorld()); It; ++It)
-//                 {
-//                     AActor* Actor = *It;
-//                     if (Actor->ActorHasTag("FcatAttack"))
-//                     {
-//                         // Get the player's camera location and forward vector
-//                         FVector CameraLocation;
-//                         FRotator CameraRotation;
-//                         PlayerController->GetPlayerViewPoint(CameraLocation, CameraRotation);
-//
-//                         // Calculate the new location 1 cm in front of the camera
-//                         FVector NewLocation = CameraLocation + CameraRotation.Vector() * 1.0f;
-//
-//                         // Set the actor's new location
-//                         Actor->SetActorLocation(NewLocation);
-//
-//                         // Make the actor face the player
-//                         FVector ActorDirection = CameraLocation - NewLocation;
-//                         FRotator ActorRotation = ActorDirection.Rotation();
-//                         Actor->SetActorRotation(ActorRotation);
-//
-//                         // Break after finding and updating the first actor with the tag
-//                         break;
-//                     }
-//                 }
-//             }
-//         }
-//     }
-// }
-
-
-
-
-// void UJSH_CatFSM::AttackState()
-// {
-//     me->FalseBox->SetCollisionProfileName(TEXT("NoCollision"));
-//     if (bHasAttacked)
-//     {
-//         // Get me's location and store it in tt
-//         FVector tt = me->GetActorLocation();
-//         
-//         // Destroy me
-//         me->Destroy();
-//         
-//         // Get the player controller
-//         APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
-//         if (PlayerController)
-//         {
-//             // Option 1: Move camera to a new camera actor at the location
-//             ACameraActor* CameraActor = GetWorld()->SpawnActor<ACameraActor>(tt, FRotator::ZeroRotator);
-//             if (CameraActor)
-//             {
-//                 PlayerController->SetViewTargetWithBlend(CameraActor, 0.5f); // Adjust the blend time as needed
-//             }
-//             // Option 2: Directly move the player's view (if you have a camera component)
-//             // Note: Ensure you have a camera component in your player character
-//             // PlayerController->SetViewTargetWithBlend(PlayerController->GetPawn(), 0.5f); // Example for using player's camera
-//         }
-//     }
-// }
-
-
-
-// UWorld* World = me->GetWorld();
-// if (World)
-// {
-//     APlayerController* PlayerController = World->GetFirstPlayerController();
-//     if (PlayerController)
-//     {
-//         UKismetSystemLibrary::QuitGame(World, PlayerController, EQuitPreference::Quit, true);
-//     }
-// }
 
 
 

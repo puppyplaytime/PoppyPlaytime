@@ -28,7 +28,7 @@ public:
 	UPROPERTY(EditAnywhere)
 	bool isHaveBat = false;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(VisibleAnywhere)
 	class UStaticMeshComponent* meshBat;
 
 	class UKMK_PlayerRay* player;
@@ -40,8 +40,16 @@ public:
 
     void SetTargetDoor(AActor* NewTargetDoor);
 
-	
 	class UKHH_BatteryOpenDoor* BatteryOpendoorComponent;
+	UPROPERTY(EditAnywhere)
+	class AStaticMeshActor* batProgress; 
+	UPROPERTY(EditAnywhere, Category = "Progress")
+	float ChargeSpeed  = 0.02f;
+	float spd =0;
+	UPROPERTY(EditAnywhere)
+    class UMaterialInstance* matFact;
+	UPROPERTY(VisibleAnywhere)
+	class UMaterialInstanceDynamic* myMatDynamic;
 
-
+	void ChargeGage(float DeltaTime);
 };

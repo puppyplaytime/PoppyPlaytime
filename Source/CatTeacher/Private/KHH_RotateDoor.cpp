@@ -29,6 +29,14 @@ void UKHH_RotateDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
+	if (isOpen)
+	{
+		RotateDoor1(DeltaTime, FRotator(50, 0, 0));
+		if (GetOwner()->GetActorRotation().Pitch > 50)
+		{
+			isOpen = false;
+		}
+	}
 	Target = Cast<AKMK_Player>(GetWorld()->GetFirstPlayerController()->GetCharacter());
 
 	if (!Target) return;

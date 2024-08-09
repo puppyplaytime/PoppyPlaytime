@@ -26,7 +26,7 @@ AKHH_Enemy::AKHH_Enemy()
 void AKHH_Enemy::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 }
 
 // Called every frame

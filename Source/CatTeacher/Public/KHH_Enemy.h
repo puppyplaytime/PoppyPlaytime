@@ -29,4 +29,5 @@ public:
 public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category=FSMComponent)
 	class UKHH_EnemyFSM* fsm;
+
 };

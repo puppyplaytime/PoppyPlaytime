@@ -2,6 +2,9 @@
 
 
 #include "LeverComponent.h"
+#include "KMK_Player.h"
+#include "LeverAnimInstance.h"
+#include "KHH_Enemy.h"
 
 // Sets default values for this component's properties
 ULeverComponent::ULeverComponent()
@@ -21,26 +24,62 @@ void ULeverComponent::BeginPlay()
 	InitialRotation = GetOwner()->GetActorRotation();
 	// ...
 	
+
 }
 
 
 // Called every frame
+//void ULeverComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+//{
+//	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+//
+//	if(me)GEngine->AddOnScreenDebugMessage(10, 1, FColor::Magenta, FString::Printf(TEXT("find!")));
+//	//if (leverAnim->LeverMove)
+//
+//	
+//	if (LeverMove)
+//	{
+//		CurrentRotation = GetOwner()->GetActorRotation();
+//		TargetRotation = InitialRotation + OpenAngle;
+//		Speed = FRotator::NormalizeAxis((TargetRotation - InitialRotation).Roll) / MoveTime;
+//		if (Speed < 0)
+//		{
+//			Speed *= -1;
+//		}
+//		NewRotation = FMath::RInterpConstantTo(CurrentRotation, TargetRotation, DeltaTime, Speed);
+//		GetOwner()->SetActorRotation(NewRotation);
+//	}
+//}
+
 void ULeverComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+    Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	// ...
-	if (LeverMove)
-	{
-		CurrentRotation = GetOwner()->GetActorRotation();
-		TargetRotation = InitialRotation + OpenAngle;
-		Speed = FRotator::NormalizeAxis((TargetRotation - InitialRotation).Roll) / MoveTime;
-		if (Speed < 0)
-		{
-			Speed *= -1;
-		}
-		NewRotation = FMath::RInterpConstantTo(CurrentRotation, TargetRotation, DeltaTime, Speed);
-		GetOwner()->SetActorRotation(NewRotation);
-	}
+    UAnimInstance* AnimInstance = nullptr;
+    if (AActor* Owner = GetOwner())
+    {
+        if (USkeletalMeshComponent* MeshComp = Owner->FindComponentByClass<USkeletalMeshComponent>())
+        {
+            AnimInstance = MeshComp->GetAnimInstance();
+        }
+    }
+
+    if (ULeverAnimInstance* LeverAnim = Cast<ULeverAnimInstance>(AnimInstance))
+    {
+        if(me)GEngine->AddOnScreenDebugMessage(10, 1, FColor::Magenta, FString::Printf(TEXT("find!")));
+        if (LeverAnim->LeverMove)
+        {
+            CurrentRotation = GetOwner()->GetActorRotation();
+            TargetRotation = InitialRotation + OpenAngle;
+            Speed = FRotator::NormalizeAxis((TargetRotation - InitialRotation).Roll) / MoveTime;
+            if (Speed < 0)
+            {
+                Speed *= -1;
+            }
+            NewRotation = FMath::RInterpConstantTo(CurrentRotation, TargetRotation, DeltaTime, Speed);
+            GetOwner()->SetActorRotation(NewRotation);
+        }
+    }
 }
+
 

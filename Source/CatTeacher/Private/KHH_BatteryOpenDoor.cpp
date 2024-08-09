@@ -6,6 +6,7 @@
 #include "KMK_Bat.h"
 #include "KHH_Enemy.h"
 #include "KHH_EnemyFSM.h"
+#include "LeverComponent.h"
 
 // Sets default values for this component's properties
 UKHH_BatteryOpenDoor::UKHH_BatteryOpenDoor()
@@ -59,8 +60,17 @@ void UKHH_BatteryOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, F
                  
                     if (count == 0) 
                     {
-                        FTransform spawnLocation = FTransform(FVector(2561.733490, 393.345482, 68.000018));
+                        FTransform spawnLocation = FTransform(FVector(1091.563649, 394.258328, 68.000004));
+                         //(1091.563649, 394.258328, 68.000004) 셔터 앞
+                        //(2561.733490, 393.345482, 68.000018) lever 앞
                         enemy = GetWorld()->SpawnActor<AKHH_Enemy>(del, spawnLocation);
+                        auto* comp = lever->FindComponentByClass<ULeverComponent>();
+
+                        if (comp)
+                        {
+                            comp->me = enemy;
+                        }
+
                         destroycomponent1 = enemy->FindComponentByClass<UKHH_EnemyFSM>();
                         destroycomponent1->mState = EEnemyState::Spawn;
                         count ++;
@@ -69,6 +79,7 @@ void UKHH_BatteryOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, F
             }
         }
     }
+
     else {
         if (ShouldMove) // 배터리가 들어갔을때 조건을 맞춰 넣어야함 // 
         {

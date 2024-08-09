@@ -98,7 +98,6 @@ void UKHH_EnemyFSM::MoveStopState()
 {
 	//player랑 눈이 마주치면 멈춰야함 
 	//눈이 안마주치면 그대로 move, 따라가야함 
-	// 나중에 눈동자도 같이 움지이도록 해야할 것
 	// player의 speed를 0으로 
 	P_Speed = 0;
 }
@@ -112,17 +111,18 @@ void UKHH_EnemyFSM::DestroyState()
 		me->Destroy();
 	}
 }
-//
-//void UKHH_EnemyFSM::OnDestroyed(AActor* DestroyedActor)
-//{
-//	if (DestroyedActor == me)
-//	{
-//		GetWorld()->GetTimerManager().SetTimer(RespawnTimerHandle, this, &UKHH_EnemyFSM::SpawnState, 2.0f, false);
-//	}
-//}
-
 void UKHH_EnemyFSM::SpawnState()
 {
 
 }
+
+//void UKHH_EnemyFSM::OnMyStartMove()
+//{
+//	
+//}
+//
+//void UKHH_EnemyFSM::OnMyRunStart()
+//{
+//	Anim->LeverMove = false;
+//}
 

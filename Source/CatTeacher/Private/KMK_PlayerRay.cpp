@@ -131,7 +131,7 @@ void UKMK_PlayerRay::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 	// 입력값이 들어오는 경우
 	if (isRay)
 	{
-		if (hitInfo.GetActor() != nullptr)GEngine->AddOnScreenDebugMessage(2, 1, FColor::Orange, FString::Printf(TEXT("%s"), *hitInfo.GetActor()->GetActorLabel()));
+	
 		// 레이를 그리고
 		if(hitInfo.GetActor() != nullptr) DrawDebugLine(GetWorld(), startPos, endPos, FColor::Blue, false, 1.f);
 		if (isCome)
@@ -203,6 +203,12 @@ void UKMK_PlayerRay::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 				{
 					// 손을 뻗는다
 					Hands[0]->handPos = 27;
+					if (hitInfo.GetActor() == nullptr)
+					{
+						Hands[0]->isGo = true;
+						Hands[0]->endPos = playerComp->startPos + playerComp->camera->GetForwardVector() * 1000;
+						return;
+					}
 					if (hitInfo.GetActor()->GetActorLabel().Contains("Wall") || hitInfo.GetActor()->GetActorLabel().Contains("Cube"))
 					{
 						Hands[0]->endPos = playerComp->startPos + playerComp->camera->GetForwardVector() * 1000;

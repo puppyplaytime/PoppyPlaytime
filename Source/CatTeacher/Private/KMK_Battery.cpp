@@ -44,7 +44,7 @@ void AKMK_Battery::SetVis(bool isPut)
 
 void AKMK_Battery::NotifyHit(UPrimitiveComponent* MyComp, AActor* Other, UPrimitiveComponent* OtherComp, bool bSelfMoved, FVector HitLocation, FVector HitNormal, FVector NormalImpulse, const FHitResult& Hit)
 {
-	if (Other->GetActorLabel().Contains("Cube"))
+	if (Other->GetActorLabel().Contains("Bool"))
 	{
 		meshComp->SetWorldScale3D(FVector(1));
 	}

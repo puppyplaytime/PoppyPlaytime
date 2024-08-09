@@ -95,9 +95,10 @@ void AKMK_PlayerHand::Tick(float DeltaTime)
 		// 문 닫기
 		if (isPick)
 		{
+			rotDoor->isOpen = false;
 			rot = FRotator(-50, 0, 0);
 			rotDoor->RotateDoor1(DeltaTime, rot);
-			if (rotDoor->GetOwner()->GetActorRotation().Pitch < -50)
+			if (rotDoor->GetOwner()->GetActorRotation().Pitch < 0)
 			{
 				isPick = false;
 				isDoor = false;
@@ -107,12 +108,12 @@ void AKMK_PlayerHand::Tick(float DeltaTime)
 		// 문열기
 		else
 		{
-			rot = FRotator(50, 0, 0);
-			rotDoor->RotateDoor1(DeltaTime, rot);
+			rotDoor->isOpen = true;
 			if (rotDoor->GetOwner()->GetActorRotation().Pitch > 50)
 			{
 				isPick = false;
 				isDoor = false;
+				rotDoor->isOpen = false;
 				isClosed[1] = true;
 			}
 		}
@@ -236,6 +237,8 @@ void AKMK_PlayerHand::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 	// 배터리가 손에 닿은 경우
 	if (OtherActor->ActorHasTag("Battery"))
 	{
+		// 평범한 손이 아니면 반환
+		if (player->RMeshComp->GetStaticMesh() != player->Hands[0]->HandMesh[0]) return;
 		// grabActor에 할당
 		grabActor = Cast<AKMK_Battery>(OtherActor);
 		// 이미 배터리를 잡고 있는 경우에는 반환

@@ -48,6 +48,7 @@ public:
 	void RotateDoor(float DeltaTime);	
 	void RotateDoor1(float DeltaTime, FRotator angle);
 
-
+	UPROPERTY(EditAnywhere)
+	bool isOpen = false;
 		
 };

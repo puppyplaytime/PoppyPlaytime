@@ -35,4 +35,12 @@ public:
 	class UBoxComponent* FalseBox;
 
 	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
+	
+
+	// 애니메이션 시퀀스를 제어하기 위한 변수
+	bool PlayAttackAnimation = false;
+
+	bool timestart = false;
+	float currtime = 0;
+	float aniendtime = 1.7;
 };

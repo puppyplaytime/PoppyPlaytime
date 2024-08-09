@@ -528,8 +528,13 @@ void UJSH_CatFSM::AttackState()
 
                     // Set the actor's rotation
                     Actor->SetActorRotation(OppositeRotation);
+
+                    AJSH_Cat* atcat = Cast<AJSH_Cat>(Actor);
+
+                    atcat->PlayAttackAnimation = true;  // --->> cat tick
                 }
             }
+            //me->PlayAttackAnimation = true;
         }
     }
 }

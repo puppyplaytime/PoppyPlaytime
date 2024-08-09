@@ -25,6 +25,7 @@
 #include "PlayerAnimInstance.h"
 #include "Blueprint/UserWidget.h"
 #include "PlayerWidget.h"
+#include "Components/Image.h"
 
 // Sets default values
 AKMK_Player::AKMK_Player()
@@ -190,12 +191,36 @@ void AKMK_Player::BeginPlay()
 
 	myMatDynamic->SetScalarParameterValue("Gauge", gauzeSpd);
 	widget->ArmImage->SetBrushFromMaterial(myMatDynamic);
+	
+	whiteHand.Add(widget->White1);
+	whiteHand.Add(widget->White2);
+	whiteHand.Add(widget->White3);
+	
+	for (int i = 0; i < 3; i++)
+	{
+		whiteHand[i]->SetColorAndOpacity(FLinearColor(1, 1, 1, 0));
+	}
 }
 
 // Called every frame
 void AKMK_Player::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	for (int i = 0; i < 3; i++)
+	{
+		if (isOn[i])
+		{
+			disTime -= DeltaTime * disSpeed;
+			whiteHand[i]->SetColorAndOpacity(FLinearColor(1, 1, 1, disTime));
+			if (disTime < 0)
+			{
+				isOn[i] = false;
+				disTime = 1;
+				whiteHand[i]->SetColorAndOpacity(FLinearColor(1, 1, 1, 0));
+			}
+		}
+	}
 	for (int i = 0; i < 2; i++)
 	{
 		FString s;
@@ -365,7 +390,7 @@ void AKMK_Player::InputE(const struct FInputActionValue& value)
 
 void AKMK_Player::ChangeLevel()
 {
-	UGameplayStatics::OpenLevel(this, "JSH_Alpha");
+	UGameplayStatics::OpenLevel(this, levelName);
 }
 
 #pragma endregion
@@ -377,6 +402,8 @@ void AKMK_Player::InputNum1(const struct FInputActionValue& value)
 	FSM->cnt = 0;
 	anim->PlayChangeMontage();
 	FSM->PState = PlayerHandFSM::Normal;
+	whiteHand[0]->SetColorAndOpacity(FLinearColor(1, 1, 1, 1));
+	isOn[0] = true;
 }
 
 // 총쏘기
@@ -385,6 +412,8 @@ void AKMK_Player::InputNum2(const struct FInputActionValue& value)
 	isClick[1] = true;
 	FSM->PState = PlayerHandFSM::GunPack;
 	anim->PlayChangeMontage();
+	whiteHand[1]->SetColorAndOpacity(FLinearColor(1, 1, 1, 1));
+	isOn[1] = true;
 }
 // 점프 손
 void AKMK_Player::InputNum3(const struct FInputActionValue& value)
@@ -393,6 +422,8 @@ void AKMK_Player::InputNum3(const struct FInputActionValue& value)
 	FSM->cnt = 0;
 	FSM->PState = PlayerHandFSM::JumpPack;
 	anim->PlayChangeMontage();
+	whiteHand[2]->SetColorAndOpacity(FLinearColor(1, 1, 1, 1));
+	isOn[2] = true;
 }
 
 #pragma endregion

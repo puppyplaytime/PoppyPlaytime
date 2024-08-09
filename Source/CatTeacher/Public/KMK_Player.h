@@ -204,5 +204,12 @@ public:
 	void ChangeLevel();
 
 	UPROPERTY(EditAnywhere)
+	FName levelName = "JSH_Alpha1";
+	UPROPERTY(EditAnywhere)
 	float loadTime = 3;
+	UPROPERTY(EditAnywhere)
+	float disSpeed = 1;
+	TArray<class UImage*> whiteHand;
+	TArray<bool>isOn = { false, false, false};
+	float disTime = 1;
 };

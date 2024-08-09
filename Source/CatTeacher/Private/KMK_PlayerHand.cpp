@@ -17,7 +17,8 @@
 #include "PlayerAnimInstance.h"
 #include "KHH_RotateDoor.h"
 #include "PlayerWidget.h"
-#include "LeverComponent.h"
+#include "../../../../Plugins/FX/Niagara/Source/Niagara/Public/NiagaraFunctionLibrary.h"
+#include "../../../../Plugins/FX/Niagara/Source/Niagara/Public/NiagaraComponent.h"
 // Sets default values
 AKMK_PlayerHand::AKMK_PlayerHand()
 {
@@ -56,7 +57,12 @@ void AKMK_PlayerHand::BeginPlay()
 	box->OnComponentBeginOverlap.AddDynamic(this, &AKMK_PlayerHand::BeginOverlap);
 	box->BodyInstance.bUseCCD = true;
 	box->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-
+	VFXComp = FindComponentByClass< UNiagaraComponent>();
+	if(VFXComp) VFXComp->SetVisibility(false);
+	// 머테리얼 변경
+	myMatDynamic = UMaterialInstanceDynamic::Create(matFact, this);
+	if(matFact != nullptr) hand->SetMaterial(0, myMatDynamic);
+	myMatDynamic->SetScalarParameterValue("charge_light", 0);
 }
 
 // Called every frame
@@ -270,7 +276,7 @@ void AKMK_PlayerHand::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 		}
 	}
 	// 잡을 수 있는 오브젝트에 닿은 경우
-	if (OtherComp->ComponentHasTag("Handle") || OtherComp->GetName().Contains("Lever"))
+	if (OtherComp->ComponentHasTag("Handle"))
 	{
 		// 평범한 손이 아니면 반환
 		if (player->RMeshComp->GetStaticMesh() != player->Hands[0]->HandMesh[0]) return;
@@ -284,7 +290,6 @@ void AKMK_PlayerHand::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 			rotDoor = OtherActor->FindComponentByClass<UKHH_RotateDoor>();
 			isDoor = true;
 		}
-
 	}
 	// 왼손인 상태면 밑에 상황이 필요 없음 => 반환
 	if (!GetName().Contains("R")) return;
@@ -311,6 +316,8 @@ void AKMK_PlayerHand::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 		FSM->PState = PlayerHandFSM::Energy;
 		FSM->t = 0;
 		FSM->isCharge = true;
+		myMatDynamic->SetScalarParameterValue("charge_light", 4);
+		VFXComp->SetVisibility(true);
 		isHold = true;
 	}
 

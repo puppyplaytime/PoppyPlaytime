@@ -45,7 +45,8 @@ public:
 	UPROPERTY(EditAnywhere)
 	HandState PState = HandState::None;
 	int n = 0;
-
+	UPROPERTY(EditAnywhere)
+	class UNiagaraComponent* VFXComp;
 	UPROPERTY()
 	bool isGo = false;
 	bool isReverse = false;
@@ -122,4 +123,9 @@ public:
 	TArray<bool> isClosed ={false, false};
 	UFUNCTION()
 	void MakeBattery(int32 num);
+
+	UPROPERTY(EditAnywhere)
+    class UMaterialInstance* matFact;
+
+	UMaterialInstanceDynamic* myMatDynamic;
 };

@@ -175,6 +175,7 @@ public:
 		bool bFromSweep,
 		const FHitResult& SweepResult);*/
 #pragma endregion
+
 	UPROPERTY()
 	class UPlayerAnimInstance* anim;
 	UPROPERTY(EditAnywhere)

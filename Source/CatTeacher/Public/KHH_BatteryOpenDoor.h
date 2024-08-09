@@ -32,6 +32,9 @@ public:
 
    UPROPERTY(EditAnywhere)
    class AKHH_Enemy* enemy;
+
+    UPROPERTY(EditAnywhere)
+   class AActor* lever;
 private:
    UPROPERTY(EditAnywhere)
    FVector MoveOffset = FVector(0,0,270);

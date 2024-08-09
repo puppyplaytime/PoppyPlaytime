@@ -28,15 +28,20 @@ public:
 	FRotator InitialRotation;
 
 	UPROPERTY(EditAnywhere)
-	float MoveTime = 3;
+	float MoveTime = 1;
 
 	UPROPERTY(EditAnywhere)
 	bool LeverMove = false;
+
 
 	FRotator CurrentRotation;
 	FRotator TargetRotation;
 	float Speed;
 	FRotator NewRotation;
+
+
+	UPROPERTY(EditAnywhere)
+	class AKHH_Enemy* me;
 
 		
 };

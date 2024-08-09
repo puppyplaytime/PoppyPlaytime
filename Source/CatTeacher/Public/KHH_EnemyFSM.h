@@ -37,6 +37,7 @@ public:
 public:
 	UPROPERTY(EditAnywhere)
 	bool isChange = false;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=FSM)
 	EEnemyState mState = EEnemyState::Idle;
 
@@ -66,5 +67,10 @@ public:
 	float P_Speed;
 	float Speed;
 
+	//UPROPERTY()
+	//class ULeverAnimInstance* Anim;
+
+	//void OnMyStartMove();
+	//void OnMyRunStart();
 
 };

@@ -58,6 +58,7 @@ void AJSH_Cat::Tick(float DeltaTime)
 		{
 			GEngine->AddOnScreenDebugMessage(28, 3, FColor::Green, FString::Printf(TEXT("game end")));
 			timestart = false;
+			currtime = 0;
 		}
 	}
 }

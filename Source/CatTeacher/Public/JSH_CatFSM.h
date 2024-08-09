@@ -129,6 +129,9 @@ public:
 public:
 	FTimerHandle TagSelectionTimerHandle;
 
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<class UCameraShakeBase> ccamera;
+	
 	//------------
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=FSM)
 	FName SelectedTag;
@@ -188,7 +191,7 @@ public:
 	void batoff();
 
 	FVector tt;
-	
+
 };
 
 

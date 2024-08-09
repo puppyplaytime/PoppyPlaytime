@@ -30,7 +30,7 @@ void UJSH_CatFSM::BeginPlay()
 
     cState = ECatState::RoundMove;
 
-
+    
     
     // CatNab 초기 이동 속도 조절
     if (me && me->GetCharacterMovement())
@@ -145,8 +145,6 @@ void UJSH_CatFSM::TickComponent(float DeltaTime, ELevelTick TickType, FActorComp
             cState = ECatState::Idle;
         } 
     }
-
-    
 }
 
 void UJSH_CatFSM::UpdateState()
@@ -496,11 +494,11 @@ void UJSH_CatFSM::AttackState()
                 FRotator NewControlRotation = Direction.Rotation();
                 
                 // Adjust the Pitch to make the camera look slightly upwards (e.g., +15 degrees)
-                NewControlRotation.Pitch += 18.0f;
+                NewControlRotation.Pitch += 23.0f;
 
                 // Set the player's control rotation to the new rotation
                 PlayerController->SetControlRotation(NewControlRotation);
-
+ 
                 // Disable the player's ability to control the camera
                 PlayerController->SetIgnoreLookInput(true);
 
@@ -530,7 +528,7 @@ void UJSH_CatFSM::AttackState()
                     Actor->SetActorRotation(OppositeRotation);
 
                     AJSH_Cat* atcat = Cast<AJSH_Cat>(Actor);
-
+                    
                     atcat->PlayAttackAnimation = true;  // --->> cat tick
                 }
             }

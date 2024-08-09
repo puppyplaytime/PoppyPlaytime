@@ -5,6 +5,7 @@
 
 #include "JSH_Cat.h"
 #include "JSH_CatDoor.h"
+#include "JSH_Light.h"
 #include "KHH_RotateDoor.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -27,15 +28,13 @@ void UJSH_TopCatFSM::BeginPlay()
 	// ...
 
 	// 체크용으로 top 해둔거임
-	tState = TCatState::TopOpen;
-	DoorOpen = false;
-	topStart = true;
+	tState = TCatState::Idle;
 	// -----------------------------
 
 
 	
-
 	CatDoor = Cast<AJSH_CatDoor>(UGameplayStatics::GetActorOfClass(GetWorld(), AJSH_CatDoor::StaticClass()));
+	DoorLight = Cast<AJSH_Light>(UGameplayStatics::GetActorOfClass(GetWorld(), AJSH_Light::StaticClass()));
 
 	if (CatDoor)
 	{
@@ -48,7 +47,6 @@ void UJSH_TopCatFSM::BeginPlay()
 	{
 		tState = TCatState::TopOpen;
 	}
-	
 }
 
 
@@ -61,6 +59,10 @@ void UJSH_TopCatFSM::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 	{
 	case TCatState::Idle:
 		IdleState(DeltaTime);
+		break;
+
+	case TCatState::Prepare:
+		PrepareState(DeltaTime);
 		break;
 		
 	case TCatState::TopOpen:
@@ -86,6 +88,30 @@ void UJSH_TopCatFSM::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 
 void UJSH_TopCatFSM::IdleState(float DeltaTime)
 {
+	currtime += DeltaTime;
+	DoorLight->LightOn = false;
+	DoorLight->LightOff = true;
+	
+	if(currtime >= 5)
+	{
+		tState = TCatState::Prepare;
+		currtime = 0;
+	}
+}
+
+void UJSH_TopCatFSM::PrepareState(float DeltaTime)
+{
+	lighttime += DeltaTime;
+	DoorLight->LightOn = true;
+	DoorLight->LightOff = false;
+	
+	if (lighttime >= opentime)
+	{
+		tState = TCatState::TopOpen;
+		DoorOpen = false;
+		topStart = true;
+		lighttime = 0;
+	}
 }
 
 void UJSH_TopCatFSM::TopOpenState(float DeltaTime)

@@ -11,6 +11,7 @@ UENUM(BlueprintType)
 enum class TCatState : uint8
 {
 	Idle,
+	Prepare,
 	TopOpen,
 	Attack,
 };
@@ -40,6 +41,9 @@ public:
 
 	// 대기 상태
 	void IdleState(float DeltaTime);
+
+	// 준비
+	void PrepareState(float DeltaTime);
 	
 	// 천장 열리는 
 	void TopOpenState(float DeltaTime);
@@ -71,4 +75,10 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<class AActor> TopCat;
+
+
+	// Light
+	class AJSH_Light* DoorLight;
+	float lighttime = 0;
+	float opentime = 5;
 };

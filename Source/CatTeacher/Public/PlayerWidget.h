@@ -19,4 +19,11 @@ public:
 	// 이미지 바인딩
 	UPROPERTY(meta = (BindWidget))
 	UImage* ArmImage;
+	UPROPERTY(meta = (BindWidget))
+	UImage* White1;
+	UPROPERTY(meta = (BindWidget))
+	UImage* White2;
+	UPROPERTY(meta = (BindWidget))
+	UImage* White3;
+
 };

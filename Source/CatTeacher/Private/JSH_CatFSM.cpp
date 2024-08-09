@@ -496,7 +496,7 @@ void UJSH_CatFSM::AttackState()
                 FRotator NewControlRotation = Direction.Rotation();
                 
                 // Adjust the Pitch to make the camera look slightly upwards (e.g., +15 degrees)
-                NewControlRotation.Pitch += 15.0f;
+                NewControlRotation.Pitch += 18.0f;
 
                 // Set the player's control rotation to the new rotation
                 PlayerController->SetControlRotation(NewControlRotation);

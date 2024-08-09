@@ -45,7 +45,8 @@ public:
 	UPROPERTY(EditAnywhere)
 	HandState PState = HandState::None;
 	int n = 0;
-
+	UPROPERTY(EditAnywhere)
+	class UNiagaraComponent* VFXComp;
 	UPROPERTY()
 	bool isGo = false;
 	bool isReverse = false;

@@ -10,6 +10,7 @@
 #include "KMK_PlayerHand.h"
 #include "PlayerAnimInstance.h"
 #include "../../../../Plugins/Runtime/CableComponent/Source/CableComponent/Classes/CableComponent.h"
+#include "../../../../Plugins/FX/Niagara/Source/Niagara/Public/NiagaraComponent.h"
 
 // Sets default values for this component's properties
 UKMK_PlayerHandFSM::UKMK_PlayerHandFSM()
@@ -40,6 +41,7 @@ void UKMK_PlayerHandFSM::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 	if (PState != PlayerHandFSM::Energy && !isCharge)
 	{
 		Player->CableComp[0]->SetMaterial(0, cableMat[0]);
+		Player->Hands[0]->VFXComp->SetVisibility(false);
 	}
 	// 스테이트 변경
 	switch (PState)

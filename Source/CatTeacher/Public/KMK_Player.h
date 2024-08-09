@@ -204,6 +204,7 @@ public:
 
 	void ChangeLevel();
 
+
 	UPROPERTY(EditAnywhere)
 	FName levelName = "JSH_Alpha1";
 	UPROPERTY(EditAnywhere)

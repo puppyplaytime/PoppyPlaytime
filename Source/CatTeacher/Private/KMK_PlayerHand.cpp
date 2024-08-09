@@ -17,6 +17,8 @@
 #include "PlayerAnimInstance.h"
 #include "KHH_RotateDoor.h"
 #include "PlayerWidget.h"
+#include "../../../../Plugins/FX/Niagara/Source/Niagara/Public/NiagaraFunctionLibrary.h"
+#include "../../../../Plugins/FX/Niagara/Source/Niagara/Public/NiagaraComponent.h"
 // Sets default values
 AKMK_PlayerHand::AKMK_PlayerHand()
 {
@@ -55,7 +57,8 @@ void AKMK_PlayerHand::BeginPlay()
 	box->OnComponentBeginOverlap.AddDynamic(this, &AKMK_PlayerHand::BeginOverlap);
 	box->BodyInstance.bUseCCD = true;
 	box->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-
+	VFXComp = FindComponentByClass< UNiagaraComponent>();
+	if(VFXComp) VFXComp->SetVisibility(false);
 }
 
 // Called every frame
@@ -309,6 +312,7 @@ void AKMK_PlayerHand::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 		FSM->PState = PlayerHandFSM::Energy;
 		FSM->t = 0;
 		FSM->isCharge = true;
+		VFXComp->SetVisibility(true);
 		isHold = true;
 	}
 

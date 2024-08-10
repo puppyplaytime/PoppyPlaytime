@@ -86,4 +86,6 @@ public:
 
 
 	class AKMK_PlayerHand* PlayerHand;
+
+	bool start = false;
 };

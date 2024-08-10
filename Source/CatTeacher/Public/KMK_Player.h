@@ -106,6 +106,12 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
     class UInputAction* IA_ClickL = nullptr;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Input")
+    class UInputAction* IA_Cheat1 = nullptr;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Input")
+    class UInputAction* IA_Cheat2 = nullptr;
 #pragma endregion
 #pragma region variables
 	FVector dir = FVector(0);
@@ -143,6 +149,11 @@ public:
 	void InputNum2(const struct FInputActionValue& value);
 	void InputNum3(const struct FInputActionValue& value);
 
+	//void Cheat1(const struct FInputActionValue& value);
+	//bool isCheat1 = false;
+	void Cheat2(const struct FInputActionValue& value);
+	UPROPERTY(BlueprintReadWrite)
+	bool isCheat2 = false;
 	// ���콺 Ŭ�� 
 	// 1. ongoing�϶�, �����Ÿ� ���� ��ü�� ������ ��ü�� ��� ���·� ����
 	// 2. cancle �Ǹ�, ray �������� �����

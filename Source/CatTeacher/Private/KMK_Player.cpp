@@ -295,8 +295,7 @@ void AKMK_Player::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 		// 달리기 바인딩
 		playerInput->BindAction(IA_Run, ETriggerEvent::Started, this, &AKMK_Player::InputRun);
 		playerInput->BindAction(IA_Run, ETriggerEvent::Completed, this, &AKMK_Player::InputWalk);
-		// 상호작용
-		playerInput->BindAction(IA_ClickE, ETriggerEvent::Started, this, &AKMK_Player::InputE);
+
 		// 손 변경 바인딩
 		playerInput->BindAction(IA_Click1, ETriggerEvent::Started, this, &AKMK_Player::InputNum1);
 		playerInput->BindAction(IA_Click2, ETriggerEvent::Started, this, &AKMK_Player::InputNum2);
@@ -310,6 +309,15 @@ void AKMK_Player::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 		playerInput->BindAction(IA_ClickL, ETriggerEvent::Started, this, &AKMK_Player::InputML);
 		// playerInput->BindAction(IA_ClickL, ETriggerEvent::Canceled, this, &AKMK_Player::InputMLComp);
 		playerInput->BindAction(IA_ClickL, ETriggerEvent::Completed, this, &AKMK_Player::InputMLComp);
+#pragma region cheat
+		// 이스터에그
+		playerInput->BindAction(IA_ClickE, ETriggerEvent::Started, this, &AKMK_Player::InputE);
+		// 딜라이트
+		// playerInput->BindAction(IA_Cheat1, ETriggerEvent::Started, this, &AKMK_Player::Cheat1);
+		// 캣냅
+		playerInput->BindAction(IA_Cheat2, ETriggerEvent::Started, this, &AKMK_Player::Cheat2);
+#pragma endregion
+
 	}
 
 }
@@ -393,6 +401,10 @@ void AKMK_Player::ChangeLevel()
 	UGameplayStatics::OpenLevel(this, levelName);
 }
 
+void AKMK_Player::Cheat2(const struct FInputActionValue& value)
+{
+	isCheat2 = !isCheat2;
+}
 #pragma endregion
 #pragma region ChangeHand
 // 기본 손
@@ -425,6 +437,8 @@ void AKMK_Player::InputNum3(const struct FInputActionValue& value)
 	whiteHand[2]->SetColorAndOpacity(FLinearColor(1, 1, 1, 1));
 	isOn[2] = true;
 }
+
+
 
 #pragma endregion
 #pragma region MouseRight click

@@ -30,6 +30,8 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	float MoveTime = 0.7;
+	UPROPERTY(EditAnywhere)
+	float OpenTime = 15;
 
 	UPROPERTY(EditAnywhere)
 	float DistanceThreshold = 150.0f;
@@ -46,7 +48,7 @@ public:
 	FRotator NewRotation;
 
 	void RotateDoor(float DeltaTime);	
-	void RotateDoor1(float DeltaTime, FRotator angle);
+	void RotateDoor1(float DeltaTime, FRotator angle, float time);
 
 	UPROPERTY(EditAnywhere)
 	bool isOpen = false;

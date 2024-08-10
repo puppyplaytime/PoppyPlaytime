@@ -14,6 +14,7 @@ enum class EEnemyState : uint8
 	MoveStop,
 	Destroy,
 	Spawn,
+	Die,
 };
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -46,6 +47,7 @@ public:
 	void MoveStopState();
 	void DestroyState();
 	void SpawnState();
+	void DieState();
 
 	//UFUNCTION()
     //void OnDestroyed(AActor* DestroyedActor);
@@ -71,6 +73,6 @@ public:
 	//class ULeverAnimInstance* Anim;
 
 	//void OnMyStartMove();
-	//void OnMyRunStart();
+	void OnMyRunStart();
 
 };

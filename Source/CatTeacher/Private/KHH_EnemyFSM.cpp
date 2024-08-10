@@ -71,6 +71,10 @@ void UKHH_EnemyFSM::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 	
 	case EEnemyState::Spawn:
 		SpawnState();
+		break;	
+
+	case EEnemyState::Die:
+		SpawnState();
 		break;
 	}
 }
@@ -113,7 +117,19 @@ void UKHH_EnemyFSM::DestroyState()
 }
 void UKHH_EnemyFSM::SpawnState()
 {
+	// destroy되고 스폰된 상태
+	// 배터리 오픈 도어에 스폰되어 있기는한데 옮길 수 있도록..
+	// 특정 부분에서
+	// leveMove가 true이면 
+	// die state로
+	mState = EEnemyState::Die;
+	// 그게 아니면 딜라이트 죽음 애니메이션 
+}
 
+void UKHH_EnemyFSM::DieState()
+{	
+	OnMyRunStart();
+	// 달려 오는 애니메이션 
 }
 
 //void UKHH_EnemyFSM::OnMyStartMove()
@@ -121,8 +137,12 @@ void UKHH_EnemyFSM::SpawnState()
 //	
 //}
 //
-//void UKHH_EnemyFSM::OnMyRunStart()
-//{
-//	Anim->LeverMove = false;
-//}
+void UKHH_EnemyFSM::OnMyRunStart()
+{
+	if (->LeverMove = false)
+	{
+
+	}
+	// levermove 변수를 갖고 올 수 있어야함. 그래서 
+}
 

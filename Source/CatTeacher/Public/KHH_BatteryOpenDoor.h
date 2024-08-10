@@ -54,7 +54,7 @@ private:
 
    UPROPERTY(EditAnywhere)
    //class APawn* Enemy;
-   class APawn* Player;
+   class AActor* Player;
    FVector CurrentLocation;
    FVector TargetLocation;
    float Speed;
@@ -75,5 +75,8 @@ private:
 	TSubclassOf<class AKHH_Enemy> del;
 
    int count =0;
+
+   UFUNCTION(BlueprintCallable)
+   void SpawnEnemy();
 };
 

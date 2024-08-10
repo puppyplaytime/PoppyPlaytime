@@ -124,10 +124,10 @@ void UJSH_TopCatFSM::PrepareState(float DeltaTime)
 
     if (lighttime >= opentime)
     {
-        tState = TCatState::TopOpen;
         DoorOpen = false;
         topStart = true;
         lighttime = 0;
+        tState = TCatState::TopOpen;
     }
 }
 
@@ -138,7 +138,7 @@ void UJSH_TopCatFSM::TopOpenState(float DeltaTime)
         CatDoor->fsm->isOpen = true;
         topStart = false;
     }
-    
+
     if (CatDoor->GetActorRotation().Pitch >= 50)
     {
         currtime += DeltaTime;
@@ -147,13 +147,25 @@ void UJSH_TopCatFSM::TopOpenState(float DeltaTime)
             tState = TCatState::Attack;
             bHasAttacked = true;
             currtime = 0;
-            CatDoor->fsm->isOpen = false;
+            start = false;
+            //CatDoor->fsm->isOpen = false;
         }
     }
-    else if (CatDoor->GetActorRotation().Pitch <= 0)
+    
+    if (CatDoor->GetActorRotation().Pitch >= 1)
     {
-        tState = TCatState::Idle;
-        currtime = 0;
+        start = true;
+    }
+    
+    if (start)
+    {
+        if (CatDoor->GetActorRotation().Pitch <= 0)
+        {
+            tState = TCatState::Idle;
+            //CatDoor->fsm->isOpen = false;
+            currtime = 0;
+            start = false;
+        }  
     }
 }
 

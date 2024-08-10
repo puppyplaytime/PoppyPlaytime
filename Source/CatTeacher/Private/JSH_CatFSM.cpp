@@ -9,6 +9,8 @@
 #include "Components/BoxComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "JSH_Battery.h"
+#include "JSH_CatDoor.h"
+#include "KHH_RotateDoor.h"
 #include "GameFramework/PlayerController.h"
 #include "Camera/CameraActor.h"
 #include "GameFramework/Pawn.h"
@@ -29,13 +31,24 @@ void UJSH_CatFSM::BeginPlay()
     me = Cast<AJSH_Cat>(GetOwner());
 
     cState = ECatState::RoundMove;
-
-
+    
+    
     
     // CatNab 초기 이동 속도 조절
     if (me && me->GetCharacterMovement())
     {
         me->GetCharacterMovement()->MaxWalkSpeed = 200.0f; // Set the desired max speed
+    }
+
+
+    // Cat Door 찾기
+    CatDoor = Cast<AJSH_CatDoor>(UGameplayStatics::GetActorOfClass(GetWorld(), AJSH_CatDoor::StaticClass()));
+
+    if (CatDoor)
+    {
+        // 'Door'라는 이름으로 액터의 참조를 저장합니다.
+        FName DoorName = "Door";
+        CatDoor->SetActorLabel(DoorName.ToString());
     }
 }
 
@@ -81,8 +94,8 @@ void UJSH_CatFSM::TickComponent(float DeltaTime, ELevelTick TickType, FActorComp
         AttackState();
         break;
 
-    case ECatState::Blocked:
-        BlockedState();
+    case ECatState::top:
+        TopState();
         break;
         
     case ECatState::Die:
@@ -146,7 +159,12 @@ void UJSH_CatFSM::TickComponent(float DeltaTime, ELevelTick TickType, FActorComp
         } 
     }
 
-    
+    // if (DoorOpen)
+    // {
+    //     cState = ECatState::top;
+    //     DoorOpen = false;
+    //     topStart = true;
+    // }
 }
 
 void UJSH_CatFSM::UpdateState()
@@ -496,11 +514,11 @@ void UJSH_CatFSM::AttackState()
                 FRotator NewControlRotation = Direction.Rotation();
                 
                 // Adjust the Pitch to make the camera look slightly upwards (e.g., +15 degrees)
-                NewControlRotation.Pitch += 18.0f;
+                NewControlRotation.Pitch += 23.0f;
 
                 // Set the player's control rotation to the new rotation
                 PlayerController->SetControlRotation(NewControlRotation);
-
+ 
                 // Disable the player's ability to control the camera
                 PlayerController->SetIgnoreLookInput(true);
 
@@ -530,7 +548,7 @@ void UJSH_CatFSM::AttackState()
                     Actor->SetActorRotation(OppositeRotation);
 
                     AJSH_Cat* atcat = Cast<AJSH_Cat>(Actor);
-
+                    
                     atcat->PlayAttackAnimation = true;  // --->> cat tick
                 }
             }
@@ -541,10 +559,13 @@ void UJSH_CatFSM::AttackState()
 
 
 
-
-
-void UJSH_CatFSM::BlockedState()
+void UJSH_CatFSM::TopState()
 {
+    // if (topStart)
+    // {
+    //     CatDoor->fsm->isOpen = true;
+    //     topStart = false;
+    // }
 }
 
 void UJSH_CatFSM::DieState()

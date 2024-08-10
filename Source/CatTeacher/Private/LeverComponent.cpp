@@ -54,30 +54,22 @@ void ULeverComponent::BeginPlay()
 void ULeverComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
     Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-    UAnimInstance* AnimInstance = nullptr;
-    if (AActor* Owner = GetOwner())
+    if (LeverMove)
     {
-        if (USkeletalMeshComponent* MeshComp = Owner->FindComponentByClass<USkeletalMeshComponent>())
+        CurrentRotation = GetOwner()->GetActorRotation();
+        TargetRotation = InitialRotation + OpenAngle;
+        Speed = FRotator::NormalizeAxis((TargetRotation - InitialRotation).Roll) / MoveTime;
+        if (Speed < 0)
         {
-            AnimInstance = MeshComp->GetAnimInstance();
+            Speed *= -1;
         }
-    }
-    // 1. enemy 내부에 있는 ULevelAnimInstance 가져오기
-    if (ULeverAnimInstance* LeverAnim = Cast<ULeverAnimInstance>(AnimInstance))
-    {
-        if(me)GEngine->AddOnScreenDebugMessage(10, 1, FColor::Magenta, FString::Printf(TEXT("find!")));
-        if (LeverAnim->LeverMove)
+        NewRotation = FMath::RInterpConstantTo(CurrentRotation, TargetRotation, DeltaTime, Speed);
+        GetOwner()->SetActorRotation(NewRotation);
+
+        if (GetOwner()->GetActorRotation().Roll >= 80 )
         {
-            CurrentRotation = GetOwner()->GetActorRotation();
-            TargetRotation = InitialRotation + OpenAngle;
-            Speed = FRotator::NormalizeAxis((TargetRotation - InitialRotation).Roll) / MoveTime;
-            if (Speed < 0)
-            {
-                Speed *= -1;
-            }
-            NewRotation = FMath::RInterpConstantTo(CurrentRotation, TargetRotation, DeltaTime, Speed);
-            GetOwner()->SetActorRotation(NewRotation);
+            GetOwner()->SetActorRotation(TargetRotation);
+            LeverMove = false;
         }
     }
 }

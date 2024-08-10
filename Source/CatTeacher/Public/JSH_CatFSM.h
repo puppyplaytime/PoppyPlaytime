@@ -20,7 +20,7 @@ enum class ECatState : uint8
 	Ceiling,
 	Attack,
 	Discovery,
-	Blocked,
+	top,
 	Die,
 };
 
@@ -81,7 +81,7 @@ public:
 	void AttackState();
 
 	// 길 막혔을때
-	void BlockedState();
+	void TopState();
 
 	// 죽음 상태
 	void DieState();
@@ -129,6 +129,9 @@ public:
 public:
 	FTimerHandle TagSelectionTimerHandle;
 
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<class UCameraShakeBase> ccamera;
+	
 	//------------
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=FSM)
 	FName SelectedTag;
@@ -188,7 +191,12 @@ public:
 	void batoff();
 
 	FVector tt;
-	
+
+	// 천장 문
+	class AJSH_CatDoor* CatDoor;
+	bool DoorOpen = false;
+	bool topStart = false;
+
 };
 
 

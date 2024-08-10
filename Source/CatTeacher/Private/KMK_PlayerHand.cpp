@@ -19,6 +19,7 @@
 #include "PlayerWidget.h"
 #include "../../../../Plugins/FX/Niagara/Source/Niagara/Public/NiagaraFunctionLibrary.h"
 #include "../../../../Plugins/FX/Niagara/Source/Niagara/Public/NiagaraComponent.h"
+#include <LeverComponent.h>
 // Sets default values
 AKMK_PlayerHand::AKMK_PlayerHand()
 {
@@ -80,6 +81,7 @@ void AKMK_PlayerHand::Tick(float DeltaTime)
 	// 문고리 잡는 경우에 위치 고정
 	if (isPick)
 	{
+		GEngine->AddOnScreenDebugMessage(11, 5, FColor::Purple, FString::Printf(TEXT("%s"), *pickTrans.ToString()));
 		box->SetCollisionProfileName("Hand");
 		hand->SetWorldLocation(pickTrans);
 	}
@@ -95,7 +97,6 @@ void AKMK_PlayerHand::Tick(float DeltaTime)
 	}
 #pragma endregion
 
-
 	// hatch열리고 닫게 하는 부분
 	if (isDoor)
 	{
@@ -104,24 +105,37 @@ void AKMK_PlayerHand::Tick(float DeltaTime)
 		{
 			rotDoor->isOpen = false;
 			rot = FRotator(-50, 0, 0);
-			rotDoor->RotateDoor1(DeltaTime, rot);
+			rotDoor->RotateDoor1(DeltaTime, rot, rotDoor->MoveTime);
+			// 문이 다 닫힌 경우, 들어가는 조건문
 			if (rotDoor->GetOwner()->GetActorRotation().Pitch < 0)
 			{
+				// 밑에 두 변수가 false 이면 해치 공격이 종료
+				isClosed = false;
+				isDie = false;
+
+				// 신경 X
 				isPick = false;
 				isDoor = false;
-				isClosed[0] = true;
+				
 			}
 		}
 		// 문열기
 		else
 		{
 			rotDoor->isOpen = true;
+			// 해치부분 공격이 시작됨을 알려줌
+			isClosed = true;
+			// 문이 다 열린 경우의 들어가는 조건문
 			if (rotDoor->GetOwner()->GetActorRotation().Pitch > 50)
 			{
+				// 해치부분 공격을 마무리 시킴
+				isClosed = false;
+				// 플레이어가 죽어야하는 타이밍 bool변수
+				isDie = true;
+				// 신경쓰지마세요
 				isPick = false;
 				isDoor = false;
 				rotDoor->isOpen = false;
-				isClosed[1] = true;
 			}
 		}
 	}
@@ -158,6 +172,7 @@ void AKMK_PlayerHand::Tick(float DeltaTime)
 			box->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		}
 	}
+
 	// 손이 나가는 부분
 	if (isGo)
 	{
@@ -234,13 +249,13 @@ void AKMK_PlayerHand::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 	isGo = false;
 	isReverse = true;
 	// 물체가 닿은 경우에 손이 돌아오게 만들기 위함
-	if (bFromSweep)
-	{
-		isGo = false;
-		isReverse = true;
-	}
+//     if (bFromSweep)
+//     {
+//         isGo = false;
+//         isReverse = true;
+//     }
 	SwitchName = *OtherActor->GetName();
-	GEngine->AddOnScreenDebugMessage(9, 1, FColor::Emerald, FString::Printf(TEXT("%s"), *OtherActor->GetName()));
+	GEngine->AddOnScreenDebugMessage(9, 1, FColor::Emerald, FString::Printf(TEXT("%s"), *SwitchName));
 	// 배터리가 손에 닿은 경우
 	if (OtherActor->ActorHasTag("Battery"))
 	{
@@ -282,6 +297,7 @@ void AKMK_PlayerHand::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 		if (player->RMeshComp->GetStaticMesh() != player->Hands[0]->HandMesh[0]) return;
 		// 위치값을 받아와 위치에 넣어줌
 		pickTrans = OtherComp->GetChildComponent(0)->GetComponentLocation();
+		
 		isPick = true;
 		if(OtherActor->FindComponentByClass<UKHH_BossOpendoor>() != nullptr)OtherActor->FindComponentByClass<UKHH_BossOpendoor>()->ShouldMove = true;
 		if (OtherActor->FindComponentByClass<UKHH_RotateDoor>() != nullptr)
@@ -289,6 +305,13 @@ void AKMK_PlayerHand::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 			firstRot = OtherActor->GetActorRotation();
 			rotDoor = OtherActor->FindComponentByClass<UKHH_RotateDoor>();
 			isDoor = true;
+		}
+		lever = OtherActor->FindComponentByClass<ULeverComponent>();
+		if(lever != nullptr)
+		{
+			leverRot = OtherActor->GetActorRotation();
+			lever->LeverMove = true;
+			isLever = true;
 		}
 	}
 	// 왼손인 상태면 밑에 상황이 필요 없음 => 반환
@@ -320,7 +343,6 @@ void AKMK_PlayerHand::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 		VFXComp->SetVisibility(true);
 		isHold = true;
 	}
-
 
 }
 

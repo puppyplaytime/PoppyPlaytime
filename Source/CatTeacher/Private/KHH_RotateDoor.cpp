@@ -31,7 +31,7 @@ void UKHH_RotateDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 
 	if (isOpen)
 	{
-		RotateDoor1(DeltaTime, FRotator(50, 0, 0));
+		RotateDoor1(DeltaTime, FRotator(50, 0, 0), OpenTime);
 		if (GetOwner()->GetActorRotation().Pitch > 50)
 		{
 			isOpen = false;
@@ -65,11 +65,11 @@ void UKHH_RotateDoor::RotateDoor(float DeltaTime)
 	NewRotation = FMath::RInterpConstantTo(CurrentRotation, TargetRotation, DeltaTime, Speed);
 	GetOwner()->SetActorRotation(NewRotation);
 }
-void UKHH_RotateDoor::RotateDoor1(float DeltaTime, FRotator angle)
+void UKHH_RotateDoor::RotateDoor1(float DeltaTime, FRotator angle, float time)
 {
 	CurrentRotation = GetOwner()->GetActorRotation();
 	TargetRotation = InitialRotation + angle;
-	Speed = FRotator::NormalizeAxis((TargetRotation - InitialRotation).Pitch) / MoveTime;
+	Speed = FRotator::NormalizeAxis((TargetRotation - InitialRotation).Pitch) / time;
 	if (Speed < 0)
 	{
 		Speed *= -1;

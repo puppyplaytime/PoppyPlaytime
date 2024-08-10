@@ -25,7 +25,14 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	FRotator OpenAngle = FRotator(0, 0, 180);
+	
 	FRotator InitialRotation;
+
+	UPROPERTY(EditAnywhere)
+	AActor* Targetshutter;
+	void SetTargetShutter(AActor* NewTargetShutter);
+	class UKHH_BossOpendoor* BossOpendoorComponent;
+
 
 	UPROPERTY(EditAnywhere)
 	float MoveTime = 1;

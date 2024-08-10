@@ -24,7 +24,7 @@ class CATTEACHER_API AKMK_PlayerHand : public AActor
 public:	
 	// Sets default values for this actor's properties
 	AKMK_PlayerHand();
-	UPROPERTY(EditAnywhere, Category = "Hand")
+	UPROPERTY(EditAnywhere, Category = "Hand",BlueprintReadWrite)
 	class UStaticMeshComponent* hand = nullptr;
 	UPROPERTY(EditAnywhere, Category = "Hand")
 	TArray<class UStaticMesh*> HandMesh;

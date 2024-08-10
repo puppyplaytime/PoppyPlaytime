@@ -16,18 +16,18 @@ public:
 	AKMK_Player();
 #pragma region CreateVar
 
-	UPROPERTY(VisibleAnywhere, Category = "Camera")
+	UPROPERTY(VisibleAnywhere, Category = "Camera", BlueprintReadWrite)
 	class USpringArmComponent* springArm = nullptr;
-	UPROPERTY(EditAnywhere, Category = "Camera")
+	UPROPERTY(EditAnywhere, Category = "Camera", BlueprintReadWrite)
 	TArray<class USpringArmComponent*> springArms;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Camera")
+	UPROPERTY(EditAnywhere, Category = "Camera", BlueprintReadWrite)
 	class UCameraComponent* camera = nullptr;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Component")
 	class UKMK_PlayerHandFSM* FSM = nullptr;
 
-	UPROPERTY(EditAnywhere, Category = "Modeling")
+	UPROPERTY(EditAnywhere, Category = "Modeling", BlueprintReadWrite)
 	class USkeletalMeshComponent* armMesh = nullptr;
 
 	UPROPERTY(VisibleAnywhere, Category = "Ray")

@@ -40,10 +40,12 @@ void AJSH_Cat::Tick(float DeltaTime)
 	if (PlayAttackAnimation)
 	{
 		// Load the animation sequence
+		static USoundWave* AttackSound = LoadObject<USoundWave>(nullptr, TEXT("/Game/Project/JSH/Audio/Sw_catnap_jumpscare.Sw_catnap_jumpscare"));
 		static UAnimSequence* AttackAnim = LoadObject<UAnimSequence>(nullptr, TEXT("/Game/Project/JSH/Asset/4/source/Armature_A_NappyCat_Jumpscare_Normal.Armature_A_NappyCat_Jumpscare_Normal"));
 		currtime += DeltaTime;
 		if (AttackAnim)
 		{
+			UGameplayStatics::PlaySoundAtLocation(GetWorld(), AttackSound, GetActorLocation());
 			timestart = true;
 			// Play the animation on the mesh
 			GetMesh()->PlayAnimation(AttackAnim, false);

@@ -42,9 +42,7 @@ void AJSH_RandomFalse::FindAndSelectRandomTag()
 	// 레벨에 있는 태그 중에서 필터링된 태그들만 찾기
 
 
-
-
-
+	
 	
 	for (TActorIterator<AJSH_Cat> ActorItr(GetWorld()); ActorItr; ++ActorItr)
 	{

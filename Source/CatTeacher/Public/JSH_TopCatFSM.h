@@ -78,7 +78,9 @@ public:
 
 
 	// Light
-	class AJSH_Light* DoorLight;
+	//class AJSH_Light* DoorLight;
+
+	TArray<class AJSH_Light*> DoorLights;
 	float lighttime = 0;
 	float opentime = 5;
 };

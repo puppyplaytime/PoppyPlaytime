@@ -3,6 +3,8 @@
 #include "JSH_CatDoor.h"
 #include "JSH_Light.h"
 #include "KHH_RotateDoor.h"
+#include "KMK_Player.h"
+#include "KMK_PlayerHand.h"
 #include "Kismet/GameplayStatics.h"
 
 // Sets default values for this component's properties
@@ -34,6 +36,7 @@ void UJSH_TopCatFSM::BeginPlay()
             DoorLights.Add(Light);
         }
     }
+    
 
     if (CatDoor)
     {
@@ -45,6 +48,14 @@ void UJSH_TopCatFSM::BeginPlay()
     if (AttackStart)
     {
         tState = TCatState::TopOpen;
+    }
+    
+    
+    PlayerHand = Cast<AKMK_PlayerHand>(UGameplayStatics::GetActorOfClass(GetWorld(), AKMK_PlayerHand::StaticClass()));
+
+    if (!PlayerHand)
+    {
+        UE_LOG(LogTemp, Warning, TEXT("KMK_PlayerHand not found in level!"));
     }
 }
 
@@ -122,16 +133,15 @@ void UJSH_TopCatFSM::PrepareState(float DeltaTime)
 
 void UJSH_TopCatFSM::TopOpenState(float DeltaTime)
 {
-    currtime += DeltaTime;
-
     if (topStart)
     {
         CatDoor->fsm->isOpen = true;
         topStart = false;
     }
     
-    if (CatDoor->fsm->isOpen)
+    if (CatDoor->GetActorRotation().Pitch >= 50)
     {
+        currtime += DeltaTime;
         if (currtime >= toptime)
         {
             tState = TCatState::Attack;
@@ -140,7 +150,7 @@ void UJSH_TopCatFSM::TopOpenState(float DeltaTime)
             CatDoor->fsm->isOpen = false;
         }
     }
-    else if (CatDoor->fsm->isOpen == false)
+    else if (CatDoor->GetActorRotation().Pitch <= 0)
     {
         tState = TCatState::Idle;
         currtime = 0;
@@ -151,7 +161,85 @@ void UJSH_TopCatFSM::AttackState()
 {
     if (bHasAttacked)
     {
-        bHasAttacked = false;
-        // Attack 로직은 기존과 동일합니다.
+    	bHasAttacked = false;
+        // Get me's location and store it in tt
+    	if (TopCat)
+    	{
+    		AActor* SpawnedActor = GetWorld()->SpawnActor<AActor>(TopCat);
+    		
+    		if (SpawnedActor)
+    		{
+    			// Set the actor to be hidden in the game
+    			SpawnedActor->SetActorHiddenInGame(true);
+
+    			// Optionally, disable collision if you don't want the actor to interact with other objects
+    			SpawnedActor->SetActorEnableCollision(false);
+
+    			// Get the location if needed
+    			tt = SpawnedActor->GetActorLocation();
+    			// Now you can use 'tt' as the location of the spawned actor
+    		}
+    	}
+    	
+        // Destroy me
+        //me->fsm->BatCatStop();
+        
+        // Get the player controller
+        APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+        if (PlayerController)
+        {
+            // Get the player's pawn (character or any actor controlled by the player)
+            APawn* PlayerPawn = PlayerController->GetPawn();
+            if (PlayerPawn)
+            {
+                // Calculate the direction vector from the player to tt
+                FVector Direction = tt - PlayerPawn->GetActorLocation();
+                Direction.Z = 0; // Keep the camera level, ignore the height difference
+                
+                // Calculate the new rotation for the camera to look at tt
+                FRotator NewControlRotation = Direction.Rotation();
+                
+                // Adjust the Pitch to make the camera look slightly upwards (e.g., +15 degrees)
+                NewControlRotation.Pitch += 23.0f;
+
+                // Set the player's control rotation to the new rotation
+                PlayerController->SetControlRotation(NewControlRotation);
+ 
+                // Disable the player's ability to control the camera
+                PlayerController->SetIgnoreLookInput(true);
+
+                // Disable the player's ability to move
+                PlayerController->SetIgnoreMoveInput(true);
+
+                // Find all actors with the tag "FcatAttack"
+                TArray<AActor*> FoundActors;
+                UGameplayStatics::GetAllActorsWithTag(GetWorld(), FName("FcatAttack"), FoundActors);
+
+                for (AActor* Actor : FoundActors)
+                {
+                    // Calculate the position 1 cm in front of the player's eyes
+                    FVector EyeLocation;
+                    FRotator EyeRotation;
+                    PlayerPawn->GetActorEyesViewPoint(EyeLocation, EyeRotation);
+                    FVector NewLocation = EyeLocation + EyeRotation.Vector() * 1.0f;
+
+                    // Set the actor's location
+                    Actor->SetActorLocation(NewLocation);
+
+                    // Calculate the new rotation to look in the opposite direction of the player's view
+                    FRotator OppositeRotation = EyeRotation;
+                    OppositeRotation.Yaw += 180.0f; // Rotate 180 degrees around the Z axis (Yaw)
+
+                    // Set the actor's rotation
+                    Actor->SetActorRotation(OppositeRotation);
+
+                    AJSH_Cat* atcat = Cast<AJSH_Cat>(Actor);
+
+                	
+                    atcat->PlayAttackAnimation = true;  // --->> cat tick
+                }
+            }
+            //me->PlayAttackAnimation = true;
+        }
     }
 }

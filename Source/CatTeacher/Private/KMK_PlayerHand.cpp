@@ -20,6 +20,7 @@
 #include "../../../../Plugins/FX/Niagara/Source/Niagara/Public/NiagaraFunctionLibrary.h"
 #include "../../../../Plugins/FX/Niagara/Source/Niagara/Public/NiagaraComponent.h"
 #include <LeverComponent.h>
+#include "KMK_FinalSwitch.h"
 // Sets default values
 AKMK_PlayerHand::AKMK_PlayerHand()
 {
@@ -77,6 +78,7 @@ void AKMK_PlayerHand::Tick(float DeltaTime)
 			return;
 		}
 	}
+	
 #pragma region isPick
 	// 문고리 잡는 경우에 위치 고정
 	if (isPick)
@@ -259,8 +261,7 @@ void AKMK_PlayerHand::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 	SwitchName = *OtherActor->GetName();
 	// BeginOverlap된 액터를 저장하는 변수 ( 스위치도 이걸로 바꾸면 될 듯)
 	overActor = OtherActor;
-	
-	GEngine->AddOnScreenDebugMessage(9, 1, FColor::Emerald, FString::Printf(TEXT("%s"), *SwitchName));
+
 	// 배터리가 손에 닿은 경우
 	if (OtherActor->ActorHasTag("Battery"))
 	{
@@ -347,6 +348,12 @@ void AKMK_PlayerHand::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 		myMatDynamic->SetScalarParameterValue("charge_light", 4);
 		VFXComp->SetVisibility(true);
 		isHold = true;
+		// 이곳에 마지막 애니메이션 스타트 부분 넣으시면 됩니다.
+		if (OtherActor->FindComponentByClass<UKMK_FinalSwitch>())
+		{
+
+			GEngine->AddOnScreenDebugMessage(9, 1, FColor::Emerald, FString::Printf(TEXT("complete")));
+		}
 	}
 
 }

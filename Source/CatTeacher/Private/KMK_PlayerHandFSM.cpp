@@ -65,6 +65,7 @@ void UKMK_PlayerHandFSM::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 #pragma region Normal
 void UKMK_PlayerHandFSM::NormalHand()
 {
+
 	GEngine->AddOnScreenDebugMessage(4, 1, FColor::Blue, FString::Printf(TEXT("remove")));
 }
 #pragma endregion
@@ -72,6 +73,7 @@ void UKMK_PlayerHandFSM::NormalHand()
 // 일정 트리거가 발견되면 점프력을 2배로
 void UKMK_PlayerHandFSM::JumpHand()
 {
+
 	if(isJump)
 	{
 		if(movementComp->JumpZVelocity != JumpPower * 2)
@@ -90,6 +92,7 @@ void UKMK_PlayerHandFSM::JumpHand()
 #pragma region Gun
 void UKMK_PlayerHandFSM::GunHand()
 {
+
 	if (isFire && cnt < 1)
 	{
 		// 총알 효과 재생

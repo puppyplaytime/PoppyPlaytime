@@ -1,0 +1,169 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
+
+#include "JSH_EleButton.h"
+
+#include "JSH_Movebox.h"
+#include "KMK_PlayerHand.h"
+#include "Kismet/GameplayStatics.h"
+
+// Sets default values
+AJSH_EleButton::AJSH_EleButton()
+{
+ 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	PrimaryActorTick.bCanEverTick = true;
+
+}
+
+// Called when the game starts or when spawned
+void AJSH_EleButton::BeginPlay()
+{
+	Super::BeginPlay();
+	
+
+	TArray<AActor*> FoundActors;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AJSH_Movebox::StaticClass(), FoundActors);
+
+	for (AActor* Actor : FoundActors)
+	{
+		if (Actor->ActorHasTag("ele"))
+		{
+			Elevator = Cast<AJSH_Movebox>(Actor);
+		}
+		else if (Actor->ActorHasTag("cage"))
+		{
+			cage = Cast<AJSH_Movebox>(Actor);
+		}
+	}
+	
+
+}
+
+// Called every frame
+void AJSH_EleButton::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+	
+
+	if (Ofen)
+	{
+		CageOfen();
+	}
+	
+	
+	if (close)
+	{
+		CageClose();
+	}
+	
+	
+	if (closeAndUp && upOn)
+	{
+		EleUp();
+	}
+	
+}
+
+
+
+void AJSH_EleButton::NotifyActorBeginOverlap(AActor* OtherActor)
+{
+	Super::NotifyActorBeginOverlap(OtherActor);
+	
+
+	AKMK_PlayerHand* Hand = Cast<AKMK_PlayerHand>(OtherActor);
+
+
+	if (Hand->overActor->ActorHasTag(FName("Button1")))
+	{
+		Ofen = true;
+	}
+
+	
+	if (Hand->overActor->ActorHasTag(FName("Button2")))
+	{
+		upOn = true;
+		close = true;
+	}
+
+
+	
+}
+
+
+void AJSH_EleButton::EleUp()
+{
+	if (Elevator) // Ensure ElevatorActor is valid
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Green, TEXT("22"));
+		// Get the current location of the elevator
+		FVector CurrentLocation = Elevator->GetActorLocation();
+
+		// Increase the Z component to move the elevator up
+		CurrentLocation.Z += 1.0f; // Adjust the value as needed for speed
+
+		// Set the new location
+		Elevator->SetActorLocation(CurrentLocation);
+	}
+}
+
+void AJSH_EleButton::CageOfen()
+{
+	GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Green, TEXT("CageOfen"));
+
+	if (cage) // Ensure ElevatorActor is valid
+	{
+		static float TargetZ = cage->GetActorLocation().Z + distance;
+		
+		FVector CurrentLocation = cage->GetActorLocation();
+
+		// 엘리베이터가 목표 Z 위치에 도달했는지 확인
+		if (CurrentLocation.Z <= TargetZ)
+		{
+			// Z 축을 증가시켜 엘리베이터를 위로 이동
+			CurrentLocation.Z += 1.0f; 
+			
+			cage->SetActorLocation(CurrentLocation);
+		}
+		else
+		{
+			// 엘리베이터가 목표 위치에 도달했으므로 멈춤
+			Ofen = false;
+			// cageOpenEnd = true;
+			GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, TEXT("Elevator reached the target height."));
+		}
+	}
+}
+
+
+void AJSH_EleButton::CageClose()
+{
+	if (cage) // Ensure ElevatorActor is valid
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Green, TEXT("22"));
+
+		// 목표 Z 위치를 설정 (예: 초기 위치 + 200)
+		static float TargetZ = cage->GetActorLocation().Z - distance;
+
+		// 현재 엘리베이터의 위치를 가져옴
+		FVector CurrentLocation = cage->GetActorLocation();
+
+		// 엘리베이터가 목표 Z 위치에 도달했는지 확인
+		if (CurrentLocation.Z >= TargetZ)
+		{
+			// Z 축을 증가시켜 엘리베이터를 위로 이동
+			CurrentLocation.Z -= 1.0f; // 속도는 필요에 따라 조정
+
+			// 새로운 위치를 설정
+			cage->SetActorLocation(CurrentLocation);
+		}
+		else
+		{
+			// 엘리베이터가 목표 위치에 도달했으므로 멈춤
+			close = false;
+			// cageOpenEnd = false;
+			closeAndUp = true;
+			GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, TEXT("Elevator reached the target height."));
+		}
+	}
+}

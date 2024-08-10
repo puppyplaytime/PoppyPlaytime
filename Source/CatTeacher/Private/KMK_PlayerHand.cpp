@@ -254,7 +254,12 @@ void AKMK_PlayerHand::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 //         isGo = false;
 //         isReverse = true;
 //     }
+
+	// BeginOverlap된 액터의 이름을 저장하는 변수 (스위치 용)
 	SwitchName = *OtherActor->GetName();
+	// BeginOverlap된 액터를 저장하는 변수 ( 스위치도 이걸로 바꾸면 될 듯)
+	overActor = OtherActor;
+	
 	GEngine->AddOnScreenDebugMessage(9, 1, FColor::Emerald, FString::Printf(TEXT("%s"), *SwitchName));
 	// 배터리가 손에 닿은 경우
 	if (OtherActor->ActorHasTag("Battery"))

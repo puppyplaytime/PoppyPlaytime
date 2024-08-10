@@ -5,6 +5,7 @@
 #include "KMK_Player.h"
 #include "LeverAnimInstance.h"
 #include "KHH_Enemy.h"
+#include "KHH_BossOpendoor.h"
 
 // Sets default values for this component's properties
 ULeverComponent::ULeverComponent()
@@ -70,6 +71,20 @@ void ULeverComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
         {
             GetOwner()->SetActorRotation(TargetRotation);
             LeverMove = false;
+        }
+        if (Targetshutter != nullptr)SetTargetShutter(Targetshutter);
+
+    }
+}
+
+void ULeverComponent::SetTargetShutter(AActor* NewTargetDoor)
+{
+    if (NewTargetDoor != nullptr)
+    {	
+        BossOpendoorComponent= NewTargetDoor->FindComponentByClass<UKHH_BossOpendoor>();
+        if (BossOpendoorComponent)
+        {
+            BossOpendoorComponent->ShouldMove = true;
         }
     }
 }

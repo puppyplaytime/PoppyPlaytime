@@ -63,7 +63,7 @@ public:
 	TSubclassOf<class AKMK_PlayerHand> RHandFact;
 	UPROPERTY(EditAnywhere, Category = "Hand")
 	TSubclassOf<class AKMK_Battery> batteryFact;
-
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<class AKMK_PlayerHand*> Hands;
 
 	TArray<class AKMK_Battery*> Bats;

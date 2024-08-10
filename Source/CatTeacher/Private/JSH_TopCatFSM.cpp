@@ -135,6 +135,9 @@ void UJSH_TopCatFSM::TopOpenState(float DeltaTime)
 {
     if (topStart)
     {
+        static USoundWave* AttackSound = LoadObject<USoundWave>(nullptr, TEXT("/Script/Engine.SoundWave'/Game/Project/JSH/Audio/TopOpen.TopOpen'"));
+        UGameplayStatics::PlaySoundAtLocation(GetWorld(), AttackSound, CatDoor->GetActorLocation());
+        
         CatDoor->fsm->isOpen = true;
         topStart = false;
     }

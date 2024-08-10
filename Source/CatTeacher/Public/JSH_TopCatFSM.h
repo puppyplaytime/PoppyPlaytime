@@ -66,7 +66,7 @@ public:
 	float currtime = 0;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float toptime = 5.0f;
+	float toptime = 3.0f;
 
 
 	// attack bool
@@ -82,7 +82,7 @@ public:
 
 	TArray<class AJSH_Light*> DoorLights;
 	float lighttime = 0;
-	float opentime = 10;
+	float opentime = 5;
 
 
 	class AKMK_PlayerHand* PlayerHand;

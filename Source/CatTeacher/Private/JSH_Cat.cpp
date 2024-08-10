@@ -7,6 +7,7 @@
 #include "Components/BoxComponent.h"
 #include "Animation/AnimSequence.h"
 #include "Animation/AnimInstance.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AJSH_Cat::AJSH_Cat()
@@ -56,6 +57,15 @@ void AJSH_Cat::Tick(float DeltaTime)
 		currtime += DeltaTime;
 		if (currtime >= aniendtime)
 		{
+			APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+
+			// Check if PlayerController is valid
+			if (PlayerController)
+			{
+				// Exit the game
+				UKismetSystemLibrary::QuitGame(GetWorld(), PlayerController, EQuitPreference::Quit, true);
+			}
+
 			GEngine->AddOnScreenDebugMessage(28, 3, FColor::Green, FString::Printf(TEXT("game end")));
 			timestart = false;
 			currtime = 0;

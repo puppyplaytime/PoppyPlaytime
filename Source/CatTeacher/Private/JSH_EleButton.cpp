@@ -50,14 +50,12 @@ void AJSH_EleButton::Tick(float DeltaTime)
 		CageOfen();
 	}
 	
-	
 	if (close)
 	{
 		CageClose();
 	}
 	
-	
-	if (closeAndUp && upOn)
+	if (upOn)
 	{
 		EleUp();
 	}
@@ -82,7 +80,6 @@ void AJSH_EleButton::NotifyActorBeginOverlap(AActor* OtherActor)
 	
 	if (Hand->overActor->ActorHasTag(FName("Button2")))
 	{
-		upOn = true;
 		close = true;
 	}
 
@@ -111,6 +108,8 @@ void AJSH_EleButton::CageOfen()
 {
 	GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Green, TEXT("CageOfen"));
 
+
+	
 	if (cage) // Ensure ElevatorActor is valid
 	{
 		static float TargetZ = cage->GetActorLocation().Z + distance;
@@ -129,7 +128,7 @@ void AJSH_EleButton::CageOfen()
 		{
 			// 엘리베이터가 목표 위치에 도달했으므로 멈춤
 			Ofen = false;
-			// cageOpenEnd = true;
+			click02 = true;
 			GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, TEXT("Elevator reached the target height."));
 		}
 	}
@@ -161,8 +160,7 @@ void AJSH_EleButton::CageClose()
 		{
 			// 엘리베이터가 목표 위치에 도달했으므로 멈춤
 			close = false;
-			// cageOpenEnd = false;
-			closeAndUp = true;
+			upOn = true;
 			GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, TEXT("Elevator reached the target height."));
 		}
 	}

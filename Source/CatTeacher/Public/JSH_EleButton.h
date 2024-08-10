@@ -31,24 +31,24 @@ public:
 	class AJSH_Movebox* Elevator;
 	class AJSH_Movebox* cage;
 
-
-
-	bool upOn = false;
-	virtual void EleUp();
-
 	bool Ofen = false;
 	virtual void CageOfen();
+
 	
 	bool close = false;
 	virtual void CageClose();
 
+	
+	bool upOn = false;
+	virtual void EleUp();
+
+	
+
+
 	UPROPERTY(EditAnywhere)
 	float distance = 400.0f;
-
-	bool cageOpenEnd = false;
-	bool closeAndUp = false;
-
-
+	
+	bool click02 = false;
 };
 
 

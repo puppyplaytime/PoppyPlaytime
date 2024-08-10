@@ -82,5 +82,8 @@ public:
 
 	TArray<class AJSH_Light*> DoorLights;
 	float lighttime = 0;
-	float opentime = 5;
+	float opentime = 10;
+
+
+	class AKMK_PlayerHand* PlayerHand;
 };

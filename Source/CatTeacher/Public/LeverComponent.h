@@ -42,6 +42,5 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	class AKHH_Enemy* me;
-
 		
 };

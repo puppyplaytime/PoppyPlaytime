@@ -120,7 +120,9 @@ public:
 	FRotator rot;
 
 	UPROPERTY(EditAnywhere)
-	TArray<bool> isClosed ={false, false};
+	bool isClosed = false;
+	UPROPERTY(EditAnywhere)
+	bool isDie = false;
 	UFUNCTION()
 	void MakeBattery(int32 num);
 
@@ -128,4 +130,8 @@ public:
     class UMaterialInstance* matFact;
 
 	UMaterialInstanceDynamic* myMatDynamic;
+
+	class ULeverComponent* lever;
+	bool isLever = false;
+	FRotator leverRot;
 };

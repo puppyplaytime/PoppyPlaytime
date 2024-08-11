@@ -165,6 +165,7 @@ void UJSH_TopCatFSM::TopOpenState(float DeltaTime)
         UGameplayStatics::PlaySoundAtLocation(GetWorld(), AttackSound, CatDoor->GetActorLocation());
         
         CatDoor->fsm->isOpen = true;
+        CatDoor->fsm->cnt++;
         topStart = false;
     }
 

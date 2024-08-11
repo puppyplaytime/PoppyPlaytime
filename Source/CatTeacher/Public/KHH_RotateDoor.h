@@ -55,5 +55,7 @@ public:
 	
 	bool isRight = false;
 	bool isLeft = false;
+
+	int cnt = 0;
 		
 };

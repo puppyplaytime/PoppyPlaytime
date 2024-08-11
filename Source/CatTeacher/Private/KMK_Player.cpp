@@ -315,7 +315,7 @@ void AKMK_Player::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 		playerInput->BindAction(IA_ClickL, ETriggerEvent::Completed, this, &AKMK_Player::InputMLComp);
 #pragma region cheat
 		// 이스터에그
-		playerInput->BindAction(IA_ClickE, ETriggerEvent::Started, this, &AKMK_Player::InputE);
+		//playerInput->BindAction(IA_ClickE, ETriggerEvent::Started, this, &AKMK_Player::InputE);
 		// 딜라이트
 		// playerInput->BindAction(IA_Cheat1, ETriggerEvent::Started, this, &AKMK_Player::Cheat1);
 		// 캣냅

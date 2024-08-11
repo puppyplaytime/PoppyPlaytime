@@ -82,10 +82,18 @@ public:
 
 	TArray<class AJSH_Light*> DoorLights;
 	float lighttime = 0;
-	float opentime = 5;
+	float opentime = 3;
 
 
-	class AKMK_PlayerHand* PlayerHand;
+	// class AKMK_PlayerHand* PlayerHand;
 
 	bool start = false;
+
+
+
+	UPROPERTY(EditAnywhere)
+	class AJSH_Cat* Cat;
+
+	// 태그 부여 시간
+	float addtag = 20.0f;
 };

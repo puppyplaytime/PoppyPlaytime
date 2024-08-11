@@ -75,7 +75,7 @@ void AJSH_Switch::NotifyActorBeginOverlap(AActor* OtherActor)
             FSM->isCharge = false;
         	FSM->PState = PlayerHandFSM::Normal;
 
-            if (Hand->SwitchName == "BP_Switch_C_4")
+            if (Hand->overActor->ActorHasTag(FName("Switch1")))
             {
                 // 1번 통로 연기 -> cat01 destroy
                 GEngine->AddOnScreenDebugMessage(31, 3, FColor::Red, FString::Printf(TEXT("C1")));
@@ -96,7 +96,7 @@ void AJSH_Switch::NotifyActorBeginOverlap(AActor* OtherActor)
                 }
             	Steam01->SteamON = true;
             }
-            else if (Hand->SwitchName == "BP_Switch_C_5")
+            else if (Hand->overActor->ActorHasTag(FName("Switch2")))
             {
                 // 2번 통로 연기 -> cat01 destroy
                 GEngine->AddOnScreenDebugMessage(31, 3, FColor::Yellow, FString::Printf(TEXT("C2")));
@@ -119,7 +119,7 @@ void AJSH_Switch::NotifyActorBeginOverlap(AActor* OtherActor)
                 Steam02->SteamON = true; // Only set Steam02 to true for BP_Switch_C_0
             }
             // 3번 통로
-            else if (Hand->SwitchName == "BP_Switch_C_6")
+            else if (Hand->overActor->ActorHasTag(FName("Switch3")))
             {
                 // 3번 통로 연기 -> cat01 destroy
                 GEngine->AddOnScreenDebugMessage(31, 3, FColor::Yellow, FString::Printf(TEXT("C3")));
@@ -142,7 +142,7 @@ void AJSH_Switch::NotifyActorBeginOverlap(AActor* OtherActor)
                 Steam03->SteamON = true; // Only set Steam03 to true for BP_Switch_C_2
             }
             // 4번 통로
-            else if (Hand->SwitchName == "BP_Switch_C_7")
+            else if (Hand->overActor->ActorHasTag(FName("Switch4")))
             {
                 // 4번 통로 연기 -> cat01 destroy
                 GEngine->AddOnScreenDebugMessage(31, 3, FColor::Yellow, FString::Printf(TEXT("C4")));

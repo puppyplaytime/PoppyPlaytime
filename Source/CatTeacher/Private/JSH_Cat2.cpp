@@ -9,9 +9,6 @@ AJSH_Cat2::AJSH_Cat2()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
-	// EnemyFSM 컴포넌트 추가
-	fsm2 = CreateDefaultSubobject<UJSH_CatFSM2>(TEXT("FSM2"));
 }
 
 // Called when the game starts or when spawned

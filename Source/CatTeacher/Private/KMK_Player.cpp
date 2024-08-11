@@ -421,6 +421,11 @@ void AKMK_Player::InputNum1(const struct FInputActionValue& value)
 // 총쏘기
 void AKMK_Player::InputNum2(const struct FInputActionValue& value)
 {
+	if (FSM->isFire)
+	{
+		FSM->isFire = false;
+		FSM->cnt = 0;
+	}
 	isClick[1] = true;
 	FSM->PState = PlayerHandFSM::GunPack;
 	anim->PlayChangeMontage();

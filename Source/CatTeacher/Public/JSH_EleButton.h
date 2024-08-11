@@ -49,6 +49,17 @@ public:
 	float distance = 400.0f;
 	
 	bool click02 = false;
+
+	// 속도 조절
+	UPROPERTY(EditAnywhere)
+	float eleSpeed = 1.0f;
+
+
+	UPROPERTY(EditAnywhere)
+	float cageOftenSpeed = 1.0f;
+
+	UPROPERTY(EditAnywhere)
+	float cageCloseSpeed = 1.0f;
 };
 
 

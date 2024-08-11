@@ -101,12 +101,14 @@ void AKMK_PlayerHand::Tick(float DeltaTime)
 #pragma endregion
 
 	// hatch열리고 닫게 하는 부분
-	if (isDoor && isPick)
+	if (isDoor)
 	{
 		// 문 닫기
 		if (isPick)
 		{
 			rotDoor->isOpen = false;
+			if (GetName().Contains("R")) rotDoor->isRight = true;
+			else rotDoor->isLeft = true;
 			rot = FRotator(-50, 0, 0);
 			rotDoor->RotateDoor1(DeltaTime, rot, rotDoor->MoveTime);
 			// 문이 다 닫힌 경우, 들어가는 조건문
@@ -125,6 +127,8 @@ void AKMK_PlayerHand::Tick(float DeltaTime)
 		// 문열기
 		else
 		{
+			if (GetName().Contains("R")) rotDoor->isRight = false;
+			else rotDoor->isLeft = false;
 			rotDoor->isOpen = true;
 			// 해치부분 공격이 시작됨을 알려줌
 			isClosed = true;

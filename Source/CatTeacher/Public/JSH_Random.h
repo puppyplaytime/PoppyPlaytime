@@ -33,5 +33,5 @@ private:
 
 public:
 	UPROPERTY(EditAnywhere, Category = "Control")
-	float TrueRandomeTime = 20.0f;
+	float TrueRandomeTime = 15.0f;
 };

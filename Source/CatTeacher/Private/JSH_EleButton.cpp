@@ -97,7 +97,7 @@ void AJSH_EleButton::EleUp()
 		FVector CurrentLocation = Elevator->GetActorLocation();
 
 		// Increase the Z component to move the elevator up
-		CurrentLocation.Z += 1.0f; // Adjust the value as needed for speed
+		CurrentLocation.Z += eleSpeed; // Adjust the value as needed for speed
 
 		// Set the new location
 		Elevator->SetActorLocation(CurrentLocation);
@@ -120,7 +120,7 @@ void AJSH_EleButton::CageOfen()
 		if (CurrentLocation.Z <= TargetZ)
 		{
 			// Z 축을 증가시켜 엘리베이터를 위로 이동
-			CurrentLocation.Z += 1.0f; 
+			CurrentLocation.Z += cageOftenSpeed; 
 			
 			cage->SetActorLocation(CurrentLocation);
 		}
@@ -151,7 +151,7 @@ void AJSH_EleButton::CageClose()
 		if (CurrentLocation.Z >= TargetZ)
 		{
 			// Z 축을 증가시켜 엘리베이터를 위로 이동
-			CurrentLocation.Z -= 1.0f; // 속도는 필요에 따라 조정
+			CurrentLocation.Z -= cageCloseSpeed; // 속도는 필요에 따라 조정
 
 			// 새로운 위치를 설정
 			cage->SetActorLocation(CurrentLocation);

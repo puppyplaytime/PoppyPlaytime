@@ -27,24 +27,24 @@ AKMK_PlayerHand::AKMK_PlayerHand()
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 #pragma region Creaate
-	//// ¿Þ¼Õ
+	//// ï¿½Þ¼ï¿½
 	hand = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("HandComp"));
 	SetRootComponent(hand);
 	hand->SetRelativeRotation(FRotator(0, -90, 0));
 	hand->SetRelativeScale3D(FVector(2.f));
 	hand->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	// ¹ß»ç À§Ä¡¸¸µé±â
+	// ï¿½ß»ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	arrow = CreateDefaultSubobject<UArrowComponent>(TEXT("FirePos"));
 	arrow->SetupAttachment(hand);
 	arrow->SetRelativeLocationAndRotation(FVector(0, 10, 2.2f), FRotator(0, 90, 0));
 	arrow->SetRelativeScale3D(FVector(0.2f));
-	// ÄÝ¸®Àü
+	// ï¿½Ý¸ï¿½ï¿½ï¿½
 	box = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxComp"));
 	box->SetupAttachment(RootComponent);
 	box->SetCollisionProfileName("Hand");
 	box->SetRelativeLocation(FVector(0, 2, 2));
 	box->SetBoxExtent(FVector(0.5f, 0.375, 0.5f));
-	// ¹°°ÇÀ» Àâ±â À§ÇÑ handle
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ handle
 	handle = CreateDefaultSubobject<UPhysicsHandleComponent>(TEXT("Handle"));
 #pragma endregion
 
@@ -61,7 +61,7 @@ void AKMK_PlayerHand::BeginPlay()
 	box->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	VFXComp = FindComponentByClass< UNiagaraComponent>();
 	if(VFXComp) VFXComp->SetVisibility(false);
-	// ¸ÓÅ×¸®¾ó º¯°æ
+	// ï¿½ï¿½ï¿½×¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	myMatDynamic = UMaterialInstanceDynamic::Create(matFact, this);
 	if(matFact != nullptr) hand->SetMaterial(0, myMatDynamic);
 	myMatDynamic->SetScalarParameterValue("charge_light", 0);
@@ -78,9 +78,9 @@ void AKMK_PlayerHand::Tick(float DeltaTime)
 			return;
 		}
 	}
-	
+
 #pragma region isPick
-	// ¹®°í¸® Àâ´Â °æ¿ì¿¡ À§Ä¡ °íÁ¤
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ì¿¡ ï¿½ï¿½Ä¡ ï¿½ï¿½ï¿½ï¿½
 	if (isPick)
 	{
 		if(lever != nullptr && !lever->LeverMove) isPick = false;
@@ -88,7 +88,7 @@ void AKMK_PlayerHand::Tick(float DeltaTime)
 		box->SetCollisionProfileName("Hand");
 		hand->SetWorldLocation(pickTrans);
 	}
-	// ½ºÀ§Ä¡ Àâ´Â ½Ã°£
+	// ï¿½ï¿½ï¿½ï¿½Ä¡ ï¿½ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½
 	if (isHold)
 	{
 		holdTime += DeltaTime;
@@ -100,10 +100,10 @@ void AKMK_PlayerHand::Tick(float DeltaTime)
 	}
 #pragma endregion
 
-	// hatch¿­¸®°í ´Ý°Ô ÇÏ´Â ºÎºÐ
+	// hatchï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ý°ï¿½ ï¿½Ï´ï¿½ ï¿½Îºï¿½
 	if (isDoor)
 	{
-		// ¹® ´Ý±â
+		// ï¿½ï¿½ ï¿½Ý±ï¿½
 		if (isPick)
 		{
 			rotDoor->isOpen = false;
@@ -111,36 +111,36 @@ void AKMK_PlayerHand::Tick(float DeltaTime)
 			else rotDoor->isLeft = true;
 			rot = FRotator(-50, 0, 0);
 			rotDoor->RotateDoor1(DeltaTime, rot, rotDoor->MoveTime);
-			// ¹®ÀÌ ´Ù ´ÝÈù °æ¿ì, µé¾î°¡´Â Á¶°Ç¹®
+			// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½î°¡ï¿½ï¿½ ï¿½ï¿½ï¿½Ç¹ï¿½
 			if (rotDoor->GetOwner()->GetActorRotation().Pitch < 0)
 			{
-				// ¹Ø¿¡ µÎ º¯¼ö°¡ false ÀÌ¸é ÇØÄ¡ °ø°ÝÀÌ Á¾·á
+				// ï¿½Ø¿ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ false ï¿½Ì¸ï¿½ ï¿½ï¿½Ä¡ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 				isClosed = false;
 				isDie = false;
 
-				// ½Å°æ X
+				// ï¿½Å°ï¿½ X
 				isPick = false;
 				isDoor = false;
 				rotDoor->isOpen = false;
 				rotDoor->cnt = 0;
 			}
 		}
-		// ¹®¿­±â
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		else
 		{
 			if (GetName().Contains("R")) rotDoor->isRight = false;
 			else rotDoor->isLeft = false;
 			rotDoor->isOpen = true;
-			// ÇØÄ¡ºÎºÐ °ø°ÝÀÌ ½ÃÀÛµÊÀ» ¾Ë·ÁÁÜ
+			// ï¿½ï¿½Ä¡ï¿½Îºï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ûµï¿½ï¿½ï¿½ ï¿½Ë·ï¿½ï¿½ï¿½
 			isClosed = true;
-			// ¹®ÀÌ ´Ù ¿­¸° °æ¿ìÀÇ µé¾î°¡´Â Á¶°Ç¹®
+			// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½î°¡ï¿½ï¿½ ï¿½ï¿½ï¿½Ç¹ï¿½
 			if (rotDoor->GetOwner()->GetActorRotation().Pitch > 50)
 			{
-				// ÇØÄ¡ºÎºÐ °ø°ÝÀ» ¸¶¹«¸® ½ÃÅ´
+				// ï¿½ï¿½Ä¡ï¿½Îºï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Å´
 				isClosed = false;
-				// ÇÃ·¹ÀÌ¾î°¡ Á×¾î¾ßÇÏ´Â Å¸ÀÌ¹Ö boolº¯¼ö
+				// ï¿½Ã·ï¿½ï¿½Ì¾î°¡ ï¿½×¾ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ Å¸ï¿½Ì¹ï¿½ boolï¿½ï¿½ï¿½ï¿½
 				isDie = true;
-				// ½Å°æ¾²Áö¸¶¼¼¿ä
+				// ï¿½Å°æ¾²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 				isPick = false;
 				isDoor = false;
 				rotDoor->isOpen = false;
@@ -158,39 +158,39 @@ void AKMK_PlayerHand::Tick(float DeltaTime)
 	{
 		isReverse = false;
 	}
-	// ¼ÕÀÌ µ¹¾Æ¿À´Â ÄÚµå
+	// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Æ¿ï¿½ï¿½ï¿½ ï¿½Úµï¿½
 	if (isReverse && !isGo)
 	{
 		if(isHold) return;
 		player->anim->PlayHandInMontage();
-		// ¹æÇâ = ¸ñÀûÁö(¼ÕÀÇ ¿øÀ§Ä¡) - ¼ÕÀÇ À§Ä¡
+		// ï¿½ï¿½ï¿½ï¿½ = ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ä¡) - ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡
 		dir = startPos - GetActorLocation();
-		// °Å¸®ÃøÁ¤
+		// ï¿½Å¸ï¿½ï¿½ï¿½ï¿½ï¿½
 		float d = dir.Length();
 		// GEngine->AddOnScreenDebugMessage(10, 1, FColor::White, FString::Printf(TEXT("%f"), d));
 		dir.Normalize();
-		// ÀÌµ¿
+		// ï¿½Ìµï¿½
 		SetActorLocation(GetActorLocation() + dir * speed * DeltaTime);
-		// ray°Å¸®º¸´Ù Å©°Å³ª, ¸ñÀûÁö¿¡ ¾î´ÀÁ¤µµ µµÂøÇß´Ù¸é
+		// rayï¿½Å¸ï¿½ï¿½ï¿½ï¿½ï¿½ Å©ï¿½Å³ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ß´Ù¸ï¿½
 		if (d < 40.f)
 		{
-			// 1. ½Ã°£ ÃÊ±âÈ­
+			// 1. ï¿½Ã°ï¿½ ï¿½Ê±ï¿½È­
 			t = 0;
-			// 2. µ¹¾Æ¿À´Â ÄÚµå Á¤Áö
+			// 2. ï¿½ï¿½ï¿½Æ¿ï¿½ï¿½ï¿½ ï¿½Úµï¿½ ï¿½ï¿½ï¿½ï¿½
 			isReverse = false;
-			// 3. ·¹ÀÌ ¸ø½î°Ô ¸¸µé±â
+			// 3. ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 			isRay = false;
 			for (int i = 0; i < 2; i++)
 			{
 				player->CableComp[i]->SetRenderInMainPass(false);
 			}
-			// ¼ÕÀÇ ¿øÀ§Ä¡ ¹× ÄÝ¶óÀÌ´õ ²ô±â
+			// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ä¡ ï¿½ï¿½ ï¿½Ý¶ï¿½ï¿½Ì´ï¿½ ï¿½ï¿½ï¿½ï¿½
 			SetActorRelativeLocation(FVector(0));
 			box->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		}
 	}
 
-	// ¼ÕÀÌ ³ª°¡´Â ºÎºÐ
+	// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Îºï¿½
 	if (isGo && !isReverse)
 	{
 		for (int i = 0; i < 2; i++)
@@ -198,27 +198,27 @@ void AKMK_PlayerHand::Tick(float DeltaTime)
 			player->CableComp[i]->SetRenderInMainPass(true);
 		}
 		player->anim->PlayHandMontage();
-		// ¼Õ¿¡ ¹èÅÍ¸®°¡ ¾ø´Â °æ¿ì¿¡ ¼ÕÀ» »¸À¸¸ç ÄÝ¸®ÀüÀ» ÄÑÁÜ
+		// ï¿½Õ¿ï¿½ ï¿½ï¿½ï¿½Í¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ì¿¡ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ý¸ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 		if (!isGrab)box->SetCollisionProfileName("Hand");
-		// ÀÏÁ¤ ½Ã°£ÀÌ Áö³ª°Å³ª, ·¹ÀÌ¸¦ ½îÁö ¾Ê°Å³ª, ¹èÅÍ¸®°¡ ¾ø´Â °æ¿ì¿¡
+		// ï¿½ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Å³ï¿½, ï¿½ï¿½ï¿½Ì¸ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ê°Å³ï¿½, ï¿½ï¿½ï¿½Í¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ì¿¡
 		if (t > ShootTime && !isRay && !isGrab)
 		{
-			// ¼ÕÀÌ °¡´Â °ÍÀ» ¸ØÃß°í µ¹¾Æ¿À°Ô ¸¸µê
+			// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ß°ï¿½ ï¿½ï¿½ï¿½Æ¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 			isGo = false;
 			isReverse = true;
 		}
-		// ½Ã°£ Ãß°¡
+		// ï¿½Ã°ï¿½ ï¿½ß°ï¿½
 		t += DeltaTime;
-		// ³ª¾Æ°¡´Â ¹æÇâ = ¸ñÀûÁö(·¹ÀÌ À§Ä¡) - ³» À§Ä¡
+		// ï¿½ï¿½ï¿½Æ°ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ = ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡) - ï¿½ï¿½ ï¿½ï¿½Ä¡
 		dir = endPos - GetActorLocation();
-		// °Å¸® ÃøÁ¤ ¹× ÀÌµ¿
+		// ï¿½Å¸ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ìµï¿½
 		float distance = dir.Length();
 		dir.Normalize();
 		SetActorLocation(GetActorLocation() + dir * speed * DeltaTime);
-		// ·¹ÀÌ °Å¸®º¸´Ù ¸Ö°Ô ³ª°¡°Å³ª ¸ñÀûÁö¿¡ °ÅÀÇ µµÂøÇÏ¸é
+		// ï¿½ï¿½ï¿½ï¿½ ï¿½Å¸ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ö°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Å³ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¸ï¿½
 		if (distance > player->rayDis || distance < 40)
 		{
-			// µ¹¾Æ¿À°Ô ¸¸µé±â
+			// ï¿½ï¿½ï¿½Æ¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 			isGo = false;
 			isReverse = true;
 		}
@@ -227,16 +227,16 @@ void AKMK_PlayerHand::Tick(float DeltaTime)
 #pragma endregion
 	GEngine->AddOnScreenDebugMessage(3, 1, FColor::Orange, FString::Printf(TEXT("%d"), isCome));
 #pragma region Battery Grab
-	// 
-	// ¹èÅÍ¸®¸¦ Àâ´Â »óÅÂÀÎ °æ¿ì
+	//
+	// ï¿½ï¿½ï¿½Í¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	if (isGrab )
 	{
-		// ¼ÕÀÇ ÄÝ¶óÀÌ´õ¸¦ ²¨ÁÖ°í
+		// ï¿½ï¿½ï¿½ï¿½ ï¿½Ý¶ï¿½ï¿½Ì´ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ö°ï¿½
 		box->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-		// ¿À¸¥¼ÕÀÇ ÀÔ·Â°ªÀÌ µé¾î¿Â´Ù¸é(ÀçÅ¬¸¯)
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ô·Â°ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Â´Ù¸ï¿½(ï¿½ï¿½Å¬ï¿½ï¿½)
 		if (player->isDir[0])
 		{
-			// ¿À¸¥¼Õ¿¡ ¹èÅÍ¸®¸¦ µé°íÀÖÀ» °æ¿ì¿¡¸¸ ¹èÅÍ¸® »ý¼ºÇÏ±â À§ÇÔ
+			// ï¿½ï¿½ï¿½ï¿½ï¿½Õ¿ï¿½ ï¿½ï¿½ï¿½Í¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ì¿¡ï¿½ï¿½ ï¿½ï¿½ï¿½Í¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï±ï¿½ ï¿½ï¿½ï¿½ï¿½
 			if (player->isDir[1] || player->Hands[1]->isGrab)
 			{
 				return;
@@ -244,81 +244,81 @@ void AKMK_PlayerHand::Tick(float DeltaTime)
 			MakeBattery(0);
 
 		}
-		// ¿Þ¼ÕÀÎ °æ¿ì
+		// ï¿½Þ¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 		if (player->isDir[1])
 		{
-			// ¿Þ¼Õ¿¡ ¹èÅÍ¸®¸¦ µé°íÀÖÀ» °æ¿ì¿¡¸¸ ¹èÅÍ¸® »ý¼ºÇÏ±â À§ÇÔ
+			// ï¿½Þ¼Õ¿ï¿½ ï¿½ï¿½ï¿½Í¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ì¿¡ï¿½ï¿½ ï¿½ï¿½ï¿½Í¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï±ï¿½ ï¿½ï¿½ï¿½ï¿½
 			if (player->isDir[0] || player->Hands[0]->isGrab) return;
-			// À§¿Í °°Àº ·ÎÁ÷
+			// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 			MakeBattery(1);
 		}
 	}
-	
+
 #pragma endregion
 
 
 
 }
 
-// ¼ÕÀÌ ´Ù¸¥ ¹°Ã¼µé°ú ´ê´Â °æ¿ì
+// ï¿½ï¿½ï¿½ï¿½ ï¿½Ù¸ï¿½ ï¿½ï¿½Ã¼ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 void AKMK_PlayerHand::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	isGo = false;
 	isReverse = true;
-	// ¹°Ã¼°¡ ´êÀº °æ¿ì¿¡ ¼ÕÀÌ µ¹¾Æ¿À°Ô ¸¸µé±â À§ÇÔ
+	// ï¿½ï¿½Ã¼ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ì¿¡ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Æ¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
      if (bFromSweep)
      {
          isGo = false;
          isReverse = true;
      }
 
-	// BeginOverlapµÈ ¾×ÅÍÀÇ ÀÌ¸§À» ÀúÀåÇÏ´Â º¯¼ö (½ºÀ§Ä¡ ¿ë)
+	// BeginOverlapï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½ (ï¿½ï¿½ï¿½ï¿½Ä¡ ï¿½ï¿½)
 	SwitchName = *OtherActor->GetName();
-	// BeginOverlapµÈ ¾×ÅÍ¸¦ ÀúÀåÇÏ´Â º¯¼ö ( ½ºÀ§Ä¡µµ ÀÌ°É·Î ¹Ù²Ù¸é µÉ µí)
+	// BeginOverlapï¿½ï¿½ ï¿½ï¿½ï¿½Í¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½ ( ï¿½ï¿½ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½Ì°É·ï¿½ ï¿½Ù²Ù¸ï¿½ ï¿½ï¿½ ï¿½ï¿½)
 	overActor = OtherActor;
 
-	// ¹èÅÍ¸®°¡ ¼Õ¿¡ ´êÀº °æ¿ì
+	// ï¿½ï¿½ï¿½Í¸ï¿½ï¿½ï¿½ ï¿½Õ¿ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	if (OtherActor->ActorHasTag("Battery"))
 	{
-		// Æò¹üÇÑ ¼ÕÀÌ ¾Æ´Ï¸é ¹ÝÈ¯
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Æ´Ï¸ï¿½ ï¿½ï¿½È¯
 		if (player->RMeshComp->GetStaticMesh() != player->Hands[0]->HandMesh[0]) return;
-		// grabActor¿¡ ÇÒ´ç
+		// grabActorï¿½ï¿½ ï¿½Ò´ï¿½
 		grabActor = Cast<AKMK_Battery>(OtherActor);
-		// ÀÌ¹Ì ¹èÅÍ¸®¸¦ Àâ°í ÀÖ´Â °æ¿ì¿¡´Â ¹ÝÈ¯
+		// ï¿½Ì¹ï¿½ ï¿½ï¿½ï¿½Í¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½ì¿¡ï¿½ï¿½ ï¿½ï¿½È¯
 		if (isGrab) return;
-		// ÀâÀº »óÅÂ·Î º¯°æ
+		// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Â·ï¿½ ï¿½ï¿½ï¿½ï¿½
 		isGrab = true;
-		// ´êÀº ¹èÅÍ¸®´Â Á¦°Å
+		// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Í¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 		grabActor->Destroy();
-		// ¿À¸¥¼ÕÀÎ °æ¿ì¿¡
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ì¿¡
 		if (GetName().Contains("R"))
 		{
-			// ÃÑÀÌ ¾Æ´Ñ »óÅÂ
+			// ï¿½ï¿½ï¿½ï¿½ ï¿½Æ´ï¿½ ï¿½ï¿½ï¿½ï¿½
 			if (player->RMeshComp->GetStaticMesh() != player->Hands[0]->HandMesh[2])
 			{
-				// º¸ÀÌÁö ¾ÊÀº »óÅÂ¿¡ µé°íÀÖ´Â ¹èÅÍ¸®¸¦ º¸¿©ÁÖ°í ÄÝ¸®ÀüÀ» ÄÑÁÜ
+				// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Â¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½Í¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ö°ï¿½ ï¿½Ý¸ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 				player->Bats[0]->meshComp->SetRenderInMainPass(true);
 				player->Bats[0]->meshComp->SetCollisionProfileName("Bat");
 				isRight = true;
 			}
 		}
-		// ¿Þ¼ÕÀÎ °æ¿ì
+		// ï¿½Þ¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 		else
 		{
-			// À§¿Í °°Àº »óÅÂ, ´Ü ¿Þ¼ÕÀÇ °æ¿ì, º¯°æ»çÇ×ÀÌ ¾ø±â¿¡ ÇÑ¹ø¿¡ Ã³¸®ÇÔ
+			// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ ï¿½Þ¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½â¿¡ ï¿½Ñ¹ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½ï¿½ï¿½
 			isLeft = true;
 			player->Bats[1]->meshComp->SetRenderInMainPass(true);
 			player->Bats[1]->meshComp->SetCollisionProfileName("Bat");
 		}
 	}
-	// ÀâÀ» ¼ö ÀÖ´Â ¿ÀºêÁ§Æ®¿¡ ´êÀº °æ¿ì
+	// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	if (OtherComp->ComponentHasTag("Handle"))
 	{
-		// Æò¹üÇÑ ¼ÕÀÌ ¾Æ´Ï¸é ¹ÝÈ¯
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Æ´Ï¸ï¿½ ï¿½ï¿½È¯
 		if (player->RMeshComp->GetStaticMesh() != player->Hands[0]->HandMesh[0]) return;
-		// À§Ä¡°ªÀ» ¹Þ¾Æ¿Í À§Ä¡¿¡ ³Ö¾îÁÜ
+		// ï¿½ï¿½Ä¡ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¾Æ¿ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½Ö¾ï¿½ï¿½ï¿½
 		pickTrans = OtherComp->GetChildComponent(0)->GetComponentLocation();
-		
+
 		isPick = true;
 		if(OtherActor->FindComponentByClass<UKHH_BossOpendoor>() != nullptr)OtherActor->FindComponentByClass<UKHH_BossOpendoor>()->ShouldMove = true;
 		if (OtherActor->FindComponentByClass<UKHH_RotateDoor>() != nullptr)
@@ -335,14 +335,14 @@ void AKMK_PlayerHand::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 			isLever = true;
 		}
 	}
-	// ¿Þ¼ÕÀÎ »óÅÂ¸é ¹Ø¿¡ »óÈ²ÀÌ ÇÊ¿ä ¾øÀ½ => ¹ÝÈ¯
+	// ï¿½Þ¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Â¸ï¿½ ï¿½Ø¿ï¿½ ï¿½ï¿½È²ï¿½ï¿½ ï¿½Ê¿ï¿½ ï¿½ï¿½ï¿½ï¿½ => ï¿½ï¿½È¯
 	if (!GetName().Contains("R")) return;
-	// Á¡ÇÁ¼ÕÀÎ °æ¿ì¿¡, Á¡ÇÁ ÆÐµå°¡ ´ê´Â´Ù¸é
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ì¿¡, ï¿½ï¿½ï¿½ï¿½ ï¿½Ðµå°¡ ï¿½ï¿½ï¿½Â´Ù¸ï¿½
 	if (isJump)
 	{
 		if (OtherActor->ActorHasTag("Jump") && player->RMeshComp->GetStaticMesh() == player->Hands[0]->HandMesh[2])
 		{
-			// ÇÃ·¹ÀÌ¾îÀÇ »óÅÂ¸¦ º¯°æ
+			// ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Â¸ï¿½ ï¿½ï¿½ï¿½ï¿½
 			FSM->isJump = true;
 			isJump = false;
 			FSM->PState = PlayerHandFSM::JumpPack;
@@ -353,17 +353,17 @@ void AKMK_PlayerHand::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 			box->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	}
 
-	// Æò¹üÇÑ ¼ÕÀÌ°í, panel¿¡ ´ê´Â´Ù¸é
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ì°ï¿½, panelï¿½ï¿½ ï¿½ï¿½ï¿½Â´Ù¸ï¿½
 	if (player->RMeshComp->GetStaticMesh() == player->Hands[0]->HandMesh[0] && OtherActor->ActorHasTag("ElectricalPanel"))
 	{
-		// ÃæÀü »óÅÂ·Î º¯°æ
+		// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Â·ï¿½ ï¿½ï¿½ï¿½ï¿½
 		FSM->PState = PlayerHandFSM::Energy;
 		FSM->t = 0;
 		FSM->isCharge = true;
 		myMatDynamic->SetScalarParameterValue("charge_light", 4);
 		VFXComp->SetVisibility(true);
 		isHold = true;
-		// ÀÌ°÷¿¡ ¸¶Áö¸· ¾Ö´Ï¸ÞÀÌ¼Ç ½ºÅ¸Æ® ºÎºÐ ³ÖÀ¸½Ã¸é µË´Ï´Ù.
+		// ï¿½Ì°ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½ ï¿½ï¿½Å¸Æ® ï¿½Îºï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ã¸ï¿½ ï¿½Ë´Ï´ï¿½.
 		if (OtherActor->FindComponentByClass<UKMK_FinalSwitch>())
 		{
 
@@ -375,15 +375,14 @@ void AKMK_PlayerHand::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 
 void AKMK_PlayerHand::MakeBattery(int32 num)
 {
-	// ¿À¸¥¼Õ ¹èÅÍ¸®ÀÇ À§Ä¡¸¦ ÀúÀåÇÏ°í
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Í¸ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½
 	trans = player->Bats[num]->GetTransform();
-	// ¿À¸¥¼Õ ¹èÅÍ¸®°¡ ¾È º¸ÀÌ°Ô ¸¸µé¾îÁÜ
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Í¸ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½Ì°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	player->Bats[num]->SetVis(false);
 
-	// ¹èÅÍ¸®°¡ ½½·Ô¿¡ µé¾î°¡Áö ¾Ê¾Ò´Ù¸é, ¿ùµå¿¡ ¹èÅÍ¸®¸¦ »ý¼ºÇØÁÜ
+	// ï¿½ï¿½ï¿½Í¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ô¿ï¿½ ï¿½ï¿½ï¿½î°¡ï¿½ï¿½ ï¿½Ê¾Ò´Ù¸ï¿½, ï¿½ï¿½ï¿½å¿¡ ï¿½ï¿½ï¿½Í¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	if (!isCome && !isPick)
 	{
 		GetWorld()->SpawnActor<AKMK_Battery>(BatteryFact, trans);
 	}
 }
-

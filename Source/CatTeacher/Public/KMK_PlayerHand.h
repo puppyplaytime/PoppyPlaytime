@@ -134,4 +134,8 @@ public:
 	class ULeverComponent* lever;
 	bool isLever = false;
 	FRotator leverRot;
+
+
+	UPROPERTY()
+	class ULeverAnimInstance* Anim;
 };

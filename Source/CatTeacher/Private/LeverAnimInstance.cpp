@@ -4,12 +4,11 @@
 #include "LeverAnimInstance.h"
 #include "KHH_BatteryOpenDoor.h"
 
-//void ULeverAnimInstance::NativeInitializeAnimation()
-//{
-//	Super::NativeInitializeAnimation();
-//	enemy = Cast<AKHH_Enemy>(TryGetPawnOwner());
-//}
-//
+void ULeverAnimInstance::NativeInitializeAnimation()
+{
+	Super::NativeInitializeAnimation();
+}
+
 //void ULeverAnimInstance::AimNotify_MoveStart()
 //{
 //	if (enemy && enemy->fsm)

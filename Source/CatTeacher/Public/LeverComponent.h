@@ -37,8 +37,9 @@ public:
 	UPROPERTY(EditAnywhere)
 	float MoveTime = 1;
 
-	UPROPERTY(EditAnywhere)
-	bool LeverMove = false;
+	UPROPERTY()
+	class ULeverAnimInstance* Anim;
+
 
 
 	FRotator CurrentRotation;
@@ -50,4 +51,7 @@ public:
 	UPROPERTY(EditAnywhere)
 	class AKHH_Enemy* me;
 		
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool LeverMove = false;
 };

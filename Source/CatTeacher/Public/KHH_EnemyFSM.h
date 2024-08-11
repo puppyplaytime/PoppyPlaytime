@@ -4,12 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "GameFramework/Actor.h"
 #include "KHH_EnemyFSM.generated.h"
 
 UENUM(BlueprintType)
 enum class EEnemyState : uint8
 {
-	Idle,
+
 	Move,
 	MoveStop,
 	Destroy,
@@ -40,9 +41,8 @@ public:
 	bool isChange = false;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=FSM)
-	EEnemyState mState = EEnemyState::Idle;
+	EEnemyState mState = EEnemyState::Move;
 
-	void IdleState();
 	void MoveState();
 	void MoveStopState();
 	void DestroyState();
@@ -69,10 +69,24 @@ public:
 	float P_Speed;
 	float Speed;
 
-	//UPROPERTY()
-	//class ULeverAnimInstance* Anim;
+	UPROPERTY()
+	class ULeverAnimInstance* Anim;
 
 	//void OnMyStartMove();
-	void OnMyRunStart();
+	///void OnMyRunStart();
+
+	int32 count = 0;
+
+
+	class UKHH_EnemyFSM* destroycomponent;
+	class UKHH_EnemyFSM* destroycomponent1;
+    UPROPERTY(EditAnywhere)
+	TSubclassOf<class AKHH_Enemy> del;
+
+	UPROPERTY(EditAnywhere)
+	class ULeverComponent* lever;
+
+   UPROPERTY(EditAnywhere)
+	class AActor* Player;
 
 };

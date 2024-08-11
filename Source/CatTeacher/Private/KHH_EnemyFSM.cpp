@@ -11,6 +11,9 @@
 #include "TimerManager.h"
 #include "UObject/NoExportTypes.h"
 #include "Engine/World.h"
+#include "LeverAnimInstance.h"
+#include "LeverComponent.h"
+#include "GameFramework/Actor.h"
 
 
 // Sets default values for this component's properties
@@ -20,7 +23,10 @@ UKHH_EnemyFSM::UKHH_EnemyFSM()
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 
-	// ...
+	//lever = Player->FindComponentByClass<ULeverComponent>();
+	
+
+	// ...s
 }
 
 
@@ -39,6 +45,7 @@ void UKHH_EnemyFSM::BeginPlay()
 	{
 		me->OnDestroyed.AddDynamic(this, &UKHH_EnemyFSM::OnDestroyed);
 	}*/
+
 }
 
 
@@ -53,9 +60,6 @@ void UKHH_EnemyFSM::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 	GEngine->AddOnScreenDebugMessage(1, 1, FColor::Cyan, logMsg);
 
 	switch (mState) {
-	case EEnemyState::Idle:
-		IdleState();
-		break;
 
 	case EEnemyState::Move:
 		MoveState();
@@ -79,15 +83,6 @@ void UKHH_EnemyFSM::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 	}
 }
 
-void UKHH_EnemyFSM::IdleState()
-{
-	currentTime += GetWorld()->DeltaTimeSeconds;
-	if (currentTime > idleDelayTime)
-	{
-		mState = EEnemyState::Move;
-		currentTime = 0;
-	}
-}
 
 void UKHH_EnemyFSM::MoveState()
 {
@@ -96,7 +91,30 @@ void UKHH_EnemyFSM::MoveState()
 	FVector dir = destination - me->GetActorLocation();
 
 	ai->MoveToLocation(destination);
-}
+	// destroy되고 스폰된 상태
+	//배터리 오픈 도어에 스폰되어 있기는한데 옮길 수 있도록..
+	// 특정 부분에서
+	float distance = FVector::Distance(target->GetActorLocation(), me->GetActorLocation());
+	if (distance < 800 && lever->LeverMove == true)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("dfsefesdf"));
+		mState = EEnemyState::Die;
+		Anim->DelightState = mState;
+	}
+	else
+	{
+
+	}
+	//else if
+	//{
+	//// 공격 애니메이션 
+	//}
+	//// leveMove가 true이면 
+	//// die state로
+	//mState = EEnemyState::Die;
+	//// 그게 아니면 딜라이트 죽음 애니메이션 
+
+}	
 
 void UKHH_EnemyFSM::MoveStopState()
 {
@@ -104,45 +122,29 @@ void UKHH_EnemyFSM::MoveStopState()
 	//눈이 안마주치면 그대로 move, 따라가야함 
 	// player의 speed를 0으로 
 	P_Speed = 0;
+
 }
 
 void UKHH_EnemyFSM::DestroyState()
 {	
-	//me -> Destroy();
-	//mState = EEnemyState::Spawn;
 	if (me)
 	{
 		me->Destroy();
 	}
+	//mState = EEnemyState::Spawn;
+
 }
 void UKHH_EnemyFSM::SpawnState()
 {
-	// destroy되고 스폰된 상태
-	// 배터리 오픈 도어에 스폰되어 있기는한데 옮길 수 있도록..
-	// 특정 부분에서
-	// leveMove가 true이면 
-	// die state로
-	mState = EEnemyState::Die;
-	// 그게 아니면 딜라이트 죽음 애니메이션 
+
+	mState = EEnemyState::Move;
+	Anim->DelightState = mState;
 }
 
 void UKHH_EnemyFSM::DieState()
-{	
-	OnMyRunStart();
-	// 달려 오는 애니메이션 
-}
-
-//void UKHH_EnemyFSM::OnMyStartMove()
-//{
-//	
-//}
-//
-void UKHH_EnemyFSM::OnMyRunStart()
 {
-	if (->LeverMove = false)
-	{
-
-	}
-	// levermove 변수를 갖고 올 수 있어야함. 그래서 
+//	// 달려오는 애니메이션으로 전환
 }
+
+
 

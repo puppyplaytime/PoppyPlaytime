@@ -16,7 +16,7 @@ class CATTEACHER_API ULeverAnimInstance : public UAnimInstance
 	GENERATED_BODY()
 	
 public:
-	//virtual void NativeInitializeAnimation() override;
+	virtual void NativeInitializeAnimation() override;
 
 	//UPROPERTY()
 	//class AKHH_Enemy* enemy;
@@ -24,9 +24,9 @@ public:
 	//UPROPERTY(EditDefaultsOnly)
 	//class UAnimMontage* EnemyMontage;
 	//
-	//// 상태, 공격여부
-	//UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
-	//EEnemyState EnemyState;
+	// 상태, 공격여부
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	EEnemyState DelightState;
 
 	//UFUNCTION()
 	//void AimNotify_MoveStart();
@@ -40,7 +40,6 @@ public:
 	////UFUNCTION()
 	////void AimNotify_RunEnd();// die
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	bool LeverMove;
+
 
 };

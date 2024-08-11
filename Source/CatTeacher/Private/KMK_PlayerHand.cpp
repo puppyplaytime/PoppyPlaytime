@@ -20,6 +20,7 @@
 #include "../../../../Plugins/FX/Niagara/Source/Niagara/Public/NiagaraFunctionLibrary.h"
 #include "../../../../Plugins/FX/Niagara/Source/Niagara/Public/NiagaraComponent.h"
 #include <LeverComponent.h>
+#include "LeverAnimInstance.h"
 // Sets default values
 AKMK_PlayerHand::AKMK_PlayerHand()
 {

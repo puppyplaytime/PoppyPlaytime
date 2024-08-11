@@ -47,6 +47,7 @@ void UKHH_BatteryOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, F
         if (SwitchComponent->lastDoor == true && BatComponent->isHaveBat == true && BatComponent1->isHaveBat == true)
         {
             MoveDoor(DeltaTime);
+            SpawnEnemy();
 
             /*if (Player)
             {
@@ -82,12 +83,12 @@ void UKHH_BatteryOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, F
         }
     }
 
-    else {
-        if (ShouldMove) // 배터리가 들어갔을때 조건을 맞춰 넣어야함 // 
-        {
-            MoveDoor(DeltaTime);
-        }
-    }
+    //else {
+    //    if (ShouldMove) // 배터리가 들어갔을때 조건을 맞춰 넣어야함 // 
+    //    {
+    //        MoveDoor(DeltaTime);
+    //    }
+    //}
 }
 
 void UKHH_BatteryOpenDoor::MoveDoor(float DeltaTime)
@@ -106,10 +107,14 @@ void UKHH_BatteryOpenDoor::SpawnEnemy()
 
     if (count == 0)
     {
-        FTransform spawnLocation = FTransform(FVector(1091.563649, 394.258328, 68.000004));
+        FTransform spawnLocation = FTransform(FVector(2561.733490, 393.345482, 68.000018));
+
+
         //(1091.563649, 394.258328, 68.000004) 셔터 앞
        //(2561.733490, 393.345482, 68.000018) lever 앞
+
         enemy = GetWorld()->SpawnActor<AKHH_Enemy>(del, spawnLocation);
+
         auto* comp = lever->FindComponentByClass<ULeverComponent>();
 
         if (comp)

@@ -51,7 +51,7 @@ void UPlayerAnimInstance::AnimNotify_FireEnd()
 void UPlayerAnimInstance::AnimNotify_ChangeHand()
 {
     player->ChangeHandEnd();
-
+    if(!player->Hands[0]) return;
     if (player->FSM->PState == PlayerHandFSM::JumpPack)
     {
         player->Hands[0]->hand->SetMaterial(0, player->FSM->matArrays[0]);
@@ -65,7 +65,7 @@ void UPlayerAnimInstance::AnimNotify_ChangeHand()
     else
     {
         player->Hands[0]->hand->SetMaterial(0, player->Hands[0]->myMatDynamic);
-        player->RMeshComp->SetStaticMesh(player->Hands[0]->HandMesh[0]);
+        if(player->RMeshComp != nullptr && player->Hands[0] != nullptr && player->Hands[0]->HandMesh[0] != nullptr) player->RMeshComp->SetStaticMesh(player->Hands[0]->HandMesh[0]);
     }
 }
 

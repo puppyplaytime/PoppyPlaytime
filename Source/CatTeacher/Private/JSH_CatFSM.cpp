@@ -50,6 +50,8 @@ void UJSH_CatFSM::BeginPlay()
         FName DoorName = "Door";
         CatDoor->SetActorLabel(DoorName.ToString());
     }
+
+    DoorOpen = false;
 }
 
 void UJSH_CatFSM::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -175,6 +177,7 @@ void UJSH_CatFSM::UpdateState()
         {
             cState = ECatState::MoveWait;
             me->Tags.Remove("FCat1");
+            SelectedTag = "nullptr";
         }
     }
     else if (SelectedTag == "FCat2")
@@ -183,6 +186,7 @@ void UJSH_CatFSM::UpdateState()
         {
             cState = ECatState::MoveWait;
             me->Tags.Remove("FCat2");
+            SelectedTag = "nullptr";
         }
     }
     else if (SelectedTag == "FCat3")
@@ -191,6 +195,7 @@ void UJSH_CatFSM::UpdateState()
         {
             cState = ECatState::MoveWait;
             me->Tags.Remove("FCat3");
+            SelectedTag = "nullptr";
         }
     }
     else if (SelectedTag == "FCat4")
@@ -199,6 +204,7 @@ void UJSH_CatFSM::UpdateState()
         {
             cState = ECatState::MoveWait;
             me->Tags.Remove("FCat4");
+            SelectedTag = "nullptr";
         }
     }
 }
@@ -212,6 +218,7 @@ void UJSH_CatFSM::UpdateStateFalse()
         {
             cState = ECatState::FalseMoveWait;
             me->Tags.Remove("FCat1");
+            SelectedTagFalse = "nullptr";
         }
     }
     else if (SelectedTagFalse == "FCat2")
@@ -220,6 +227,7 @@ void UJSH_CatFSM::UpdateStateFalse()
         {
             cState = ECatState::FalseMoveWait;
             me->Tags.Remove("FCat2");
+            SelectedTagFalse = "nullptr";
         }
     }
     else if (SelectedTagFalse == "FCat3")
@@ -228,6 +236,7 @@ void UJSH_CatFSM::UpdateStateFalse()
         {
             cState = ECatState::FalseMoveWait;
             me->Tags.Remove("FCat3");
+            SelectedTagFalse = "nullptr";
         }
     }
     else if (SelectedTagFalse == "FCat4")
@@ -236,6 +245,7 @@ void UJSH_CatFSM::UpdateStateFalse()
         {
             cState = ECatState::FalseMoveWait;
             me->Tags.Remove("FCat4");
+            SelectedTagFalse = "nullptr";
         }
     }
 }
@@ -281,7 +291,8 @@ void UJSH_CatFSM::IdleState(float DeltaTime)
         else if (me && me->Tags.Contains("S3"))
         {
             me->Tags.Add("FCat3");
-        }        else if (me && me->Tags.Contains("S4"))
+        }
+        else if (me && me->Tags.Contains("S4"))
         {
             me->Tags.Add("FCat4");
         }

@@ -158,7 +158,7 @@ public:
 	bool IdleTeleport = false;
 	
 	UPROPERTY(EditAnywhere, Category = "Control")
-	float idletime = 15;
+	float idletime = 20;
 	
 	float idlecurrtime = 0;
 
@@ -196,6 +196,7 @@ public:
 	class AJSH_CatDoor* CatDoor;
 	bool DoorOpen = false;
 	bool topStart = false;
+	
 
 };
 

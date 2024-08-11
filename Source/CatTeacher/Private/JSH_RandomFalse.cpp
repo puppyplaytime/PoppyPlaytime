@@ -75,6 +75,7 @@ void AJSH_RandomFalse::FindAndSelectRandomTag()
 			if (CatFSM)
 			{
 				CatFSM->SelectedTagFalse = RandomTag;
+				GEngine->AddOnScreenDebugMessage(-1, 6.0f, FColor::Red, TEXT("False"));
 			}
 		}
 	}

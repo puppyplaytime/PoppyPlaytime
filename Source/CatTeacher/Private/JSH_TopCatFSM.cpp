@@ -1,6 +1,9 @@
 #include "JSH_TopCatFSM.h"
+
+#include "EngineUtils.h"
 #include "JSH_Cat.h"
 #include "JSH_CatDoor.h"
+#include "JSH_CatFSM.h"
 #include "JSH_Light.h"
 #include "KHH_RotateDoor.h"
 #include "KMK_Player.h"
@@ -23,7 +26,25 @@ void UJSH_TopCatFSM::BeginPlay()
 
     // CatDoor 액터 가져오기
     CatDoor = Cast<AJSH_CatDoor>(UGameplayStatics::GetActorOfClass(GetWorld(), AJSH_CatDoor::StaticClass()));
+    
+  
+    Cat = Cast<AJSH_Cat>(UGameplayStatics::GetActorOfClass(GetWorld(), AJSH_Cat::StaticClass()));
+    TArray<AActor*> FoundCats;
+    UGameplayStatics::GetAllActorsOfClass(GetWorld(), AJSH_Cat::StaticClass(), FoundCats);
+    for (AActor* Actor : FoundCats)
+    {
+        if (Actor->Tags.Contains("FCat5"))
+        {
+            Cat = Cast<AJSH_Cat>(Actor);
+            break;
+        }
+    }
+    if (!Cat)
+    {
+        UE_LOG(LogTemp, Warning, TEXT("No AJSH_Cat with tag 'FCat5' found!"));
+    }
 
+    
     // 레벨의 모든 AJSH_Light 액터를 배열에 저장
     TArray<AActor*> FoundLights;
     UGameplayStatics::GetAllActorsOfClass(GetWorld(), AJSH_Light::StaticClass(), FoundLights);
@@ -44,11 +65,6 @@ void UJSH_TopCatFSM::BeginPlay()
         FName DoorName = "Door";
         CatDoor->SetActorLabel(DoorName.ToString());
     }
-
-    if (AttackStart)
-    {
-        tState = TCatState::TopOpen;
-    }
     
     
     PlayerHand = Cast<AKMK_PlayerHand>(UGameplayStatics::GetActorOfClass(GetWorld(), AKMK_PlayerHand::StaticClass()));
@@ -57,6 +73,7 @@ void UJSH_TopCatFSM::BeginPlay()
     {
         UE_LOG(LogTemp, Warning, TEXT("KMK_PlayerHand not found in level!"));
     }
+    
 }
 
 // Called every frame
@@ -85,11 +102,19 @@ void UJSH_TopCatFSM::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 
     FString myState = UEnum::GetValueAsString(tState);
     DrawDebugString(GetWorld(), GetOwner()->GetActorLocation(), myState, nullptr, FColor::Blue, 0, true, 1);
+
+    if (Cat->fsm->DoorOpen)
+    {
+        tState = TCatState::Prepare;
+        currtime = 0;
+        Cat->fsm->DoorOpen = false;
+    }
 }
 
 void UJSH_TopCatFSM::IdleState(float DeltaTime)
 {
     currtime += DeltaTime;
+
 
     // 모든 DoorLight를 꺼줍니다.
     for (AJSH_Light* Light : DoorLights)
@@ -101,15 +126,17 @@ void UJSH_TopCatFSM::IdleState(float DeltaTime)
         }
     }
 
-    if (currtime >= 5)
+    // 일정 시간 후 태그 부여 , Tick에서 시간 초기화 해줌
+    if (currtime >= addtag)
     {
-        tState = TCatState::Prepare;
-        currtime = 0;
+        Cat->Tags.Add("FCat5");
     }
 }
 
 void UJSH_TopCatFSM::PrepareState(float DeltaTime)
 {
+    Cat->Tags.Empty();
+
     lighttime += DeltaTime;
 
     // 모든 DoorLight를 켭니다.

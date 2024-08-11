@@ -10,7 +10,7 @@
 UENUM(BlueprintType)
 enum class EEnemyState : uint8
 {
-
+	Idle,
 	Move,
 	MoveStop,
 	Destroy,
@@ -41,8 +41,9 @@ public:
 	bool isChange = false;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=FSM)
-	EEnemyState mState = EEnemyState::Move;
+	EEnemyState mState = EEnemyState::Idle;
 
+	void IdleState();
 	void MoveState();
 	void MoveStopState();
 	void DestroyState();
@@ -54,6 +55,7 @@ public:
 
 	UPROPERTY(EditAnywhere, Category=FSM)
 	float idleDelayTime = 2;
+
 	float currentTime = 0;
 
 	UPROPERTY(EditAnywhere, Category=FSM)
@@ -65,28 +67,40 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class AAIController* ai;
 
+
+	FVector destination;
+	FVector dir;
+
 	UPROPERTY(EditDefaultsOnly, Category=FSM)
 	float P_Speed;
 	float Speed;
 
-	UPROPERTY()
+	UPROPERTY(EditAnywhere)
 	class ULeverAnimInstance* Anim;
 
 	//void OnMyStartMove();
 	///void OnMyRunStart();
 
-	int32 count = 0;
+	//int32 count = 0;
 
 
 	class UKHH_EnemyFSM* destroycomponent;
 	class UKHH_EnemyFSM* destroycomponent1;
+
     UPROPERTY(EditAnywhere)
 	TSubclassOf<class AKHH_Enemy> del;
 
-	UPROPERTY(EditAnywhere)
-	class ULeverComponent* lever;
+	//UPROPERTY(EditAnywhere)
+	//class ULeverComponent* lever;
 
-   UPROPERTY(EditAnywhere)
-	class AActor* Player;
+ //  UPROPERTY(EditAnywhere)
+	//class AActor* Player;
+
+	
+    UPROPERTY(EditAnywhere)
+	class AKMK_PlayerHand* Hand;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = FSMComponent)
+	bool isRun = false;
 
 };

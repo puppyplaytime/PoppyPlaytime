@@ -24,7 +24,7 @@ void ULeverComponent::BeginPlay()
 	Super::BeginPlay();
 	InitialRotation = GetOwner()->GetActorRotation();
 	// ...
-	
+    //Anim = Cast<ULeverAnimInstance>(me->GetMesh()->GetAnimInstance());
 
 }
 

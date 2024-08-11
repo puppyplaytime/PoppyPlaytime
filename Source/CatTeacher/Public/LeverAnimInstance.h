@@ -40,6 +40,9 @@ public:
 	////UFUNCTION()
 	////void AimNotify_RunEnd();// die
 
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=FSMComponent)
+	//bool LeverMove = false ;
+
 
 
 };

@@ -132,9 +132,11 @@ public:
 	UMaterialInstanceDynamic* myMatDynamic;
 
 	class ULeverComponent* lever;
+	UPROPERTY(EditAnywhere)
 	bool isLever = false;
 	FRotator leverRot;
 
 	// BeginOverlap된 액터를 저장하는 변수
 	AActor* overActor;
+
 };

@@ -62,15 +62,15 @@ void AKHH_Switch::NotifyActorBeginOverlap(AActor* OtherActor)
 		{	
 			FSM->PState = PlayerHandFSM::Normal;
 			FSM->isCharge = false;
-			if (Hand->SwitchName == "BP_Switch1_C_1")
+			if (Hand->overActor->ActorHasTag("Switch1"))
 			{
 				Opendoor();
 			}
-			else if (Hand->SwitchName == "BP_Switch1_C_2")
+			else if (Hand->overActor->ActorHasTag("Switch2"))
 			{
 				Opendoor();
 			}
-			else if (Hand->SwitchName == "BP_Switch1_C_4")
+			else if (Hand->overActor->ActorHasTag("Switch3"))
 			{
 				lastDoor = true;
 			}

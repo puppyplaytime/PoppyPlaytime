@@ -33,7 +33,10 @@ void AKHH_Enemy::BeginPlay()
 void AKHH_Enemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	if (isRun == true)
+	{
+		fsm->isRun = true;
+	}
 }
 
 // Called to bind functionality to input

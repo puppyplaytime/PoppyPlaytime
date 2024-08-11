@@ -37,8 +37,8 @@ public:
 	UPROPERTY(EditAnywhere)
 	float MoveTime = 1;
 
-	UPROPERTY()
-	class ULeverAnimInstance* Anim;
+	/*UPROPERTY(EditAnywhere)
+	class ULeverAnimInstance* Anim;*/
 
 
 

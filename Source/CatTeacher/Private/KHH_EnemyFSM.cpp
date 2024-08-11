@@ -14,6 +14,7 @@
 #include "LeverAnimInstance.h"
 #include "LeverComponent.h"
 #include "GameFramework/Actor.h"
+#include "KMK_PlayerHand.h"
 
 
 // Sets default values for this component's properties
@@ -26,7 +27,7 @@ UKHH_EnemyFSM::UKHH_EnemyFSM()
 	//lever = Player->FindComponentByClass<ULeverComponent>();
 	
 
-	// ...s
+	// ...
 }
 
 
@@ -46,6 +47,8 @@ void UKHH_EnemyFSM::BeginPlay()
 		me->OnDestroyed.AddDynamic(this, &UKHH_EnemyFSM::OnDestroyed);
 	}*/
 
+	Anim = Cast<ULeverAnimInstance>(me->GetMesh()->GetAnimInstance());
+	Hand = Cast<AKMK_PlayerHand>(UGameplayStatics::GetActorOfClass(GetWorld(),AKMK_PlayerHand::StaticClass()));
 }
 
 
@@ -61,6 +64,9 @@ void UKHH_EnemyFSM::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 
 	switch (mState) {
 
+	case EEnemyState::Idle:
+		IdleState();
+		break;
 	case EEnemyState::Move:
 		MoveState();
 		break;
@@ -84,27 +90,66 @@ void UKHH_EnemyFSM::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 }
 
 
+void UKHH_EnemyFSM::IdleState()
+{
+	currentTime += GetWorld()->GetDeltaSeconds();
+	if (currentTime > idleDelayTime)
+	{
+		mState = EEnemyState::Move;
+		Anim->DelightState = mState;
+		currentTime = 0;
+	}
+}
+
+
 void UKHH_EnemyFSM::MoveState()
 {
+	
 	P_Speed = Speed;
-	FVector destination = target->GetTargetLocation();
-	FVector dir = destination - me->GetActorLocation();
-
+	destination = target->GetTargetLocation();
+	dir = destination - me->GetActorLocation();
+	dir.Normalize();
 	ai->MoveToLocation(destination);
-	// destroy되고 스폰된 상태
-	//배터리 오픈 도어에 스폰되어 있기는한데 옮길 수 있도록..
-	// 특정 부분에서
-	float distance = FVector::Distance(target->GetActorLocation(), me->GetActorLocation());
-	if (distance < 800 && lever->LeverMove == true)
+	
+}	
+
+void UKHH_EnemyFSM::MoveStopState()
+{
+	//player랑 눈이 마주치면 멈춰야함 
+	//눈이 안마주치면 그대로 move, 따라가야함 
+	// player의 speed를 0으로 
+	P_Speed = 0;
+}
+
+void UKHH_EnemyFSM::DestroyState()
+{	
+	if (me)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("dfsefesdf"));
+		me->SetActorHiddenInGame(true);
+		me->SetActorEnableCollision(false);
+		me->SetActorTickEnabled(false);
+	}
+}
+
+void UKHH_EnemyFSM::SpawnState()
+{
+	
+	Anim->DelightState=mState;
+	me->SetActorLocation(me->GetActorLocation() + me->GetActorForwardVector() * 100 * GetWorld()->GetDeltaSeconds());
+
+	float distance = FVector::Distance(target->GetActorLocation(), me->GetActorLocation());
+
+	if (isRun == true)
+	{
 		mState = EEnemyState::Die;
 		Anim->DelightState = mState;
 	}
-	else
-	{
+	//else
+	//{
+	//	UE_LOG(LogTemp, Warning, TEXT("else"));
+	//	
+	//}
 
-	}
 	//else if
 	//{
 	//// 공격 애니메이션 
@@ -114,36 +159,13 @@ void UKHH_EnemyFSM::MoveState()
 	//mState = EEnemyState::Die;
 	//// 그게 아니면 딜라이트 죽음 애니메이션 
 
-}	
-
-void UKHH_EnemyFSM::MoveStopState()
-{
-	//player랑 눈이 마주치면 멈춰야함 
-	//눈이 안마주치면 그대로 move, 따라가야함 
-	// player의 speed를 0으로 
-	P_Speed = 0;
-
-}
-
-void UKHH_EnemyFSM::DestroyState()
-{	
-	if (me)
-	{
-		me->Destroy();
-	}
-	//mState = EEnemyState::Spawn;
-
-}
-void UKHH_EnemyFSM::SpawnState()
-{
-
-	mState = EEnemyState::Move;
-	Anim->DelightState = mState;
 }
 
 void UKHH_EnemyFSM::DieState()
 {
-//	// 달려오는 애니메이션으로 전환
+	// 달려오는 애니메이션으로 전환
+
+
 }
 
 

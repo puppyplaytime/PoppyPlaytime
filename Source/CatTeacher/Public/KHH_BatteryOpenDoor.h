@@ -60,6 +60,8 @@ private:
    float Speed;
    FVector NewLocation;
 
+   float CurrentTime = 0;
+
    void MoveDoor(float DeltaTime);   
 
    UPROPERTY(EditAnywhere)
@@ -78,5 +80,9 @@ private:
 
    UFUNCTION(BlueprintCallable)
    void SpawnEnemy();
+
+   
+	UPROPERTY(EditAnywhere)
+	class ULeverAnimInstance* Anim;
 };
 

@@ -60,6 +60,15 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	float cageCloseSpeed = 1.0f;
+
+
+	float t = 0;
+	
+	UPROPERTY(EditAnywhere)
+	float UpTime = 3;
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<class UUserWidget>widfact;
 };
 
 

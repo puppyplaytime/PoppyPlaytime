@@ -6,6 +6,7 @@
 #include "JSH_Movebox.h"
 #include "KMK_PlayerHand.h"
 #include "Kismet/GameplayStatics.h"
+#include "Blueprint/UserWidget.h"
 
 // Sets default values
 AJSH_EleButton::AJSH_EleButton()
@@ -88,19 +89,39 @@ void AJSH_EleButton::NotifyActorBeginOverlap(AActor* OtherActor)
 }
 
 
+//void AJSH_EleButton::EleUp()
+//{
+//	if (Elevator) // Ensure ElevatorActor is valid
+//	{
+//		GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Green, TEXT("22"));
+//		
+//		FVector CurrentLocation = Elevator->GetActorLocation();
+//
+//		
+//		CurrentLocation.Z += eleSpeed; 
+//
+//		// Set the new location
+//		Elevator->SetActorLocation(CurrentLocation);
+//	}
+//}
+
 void AJSH_EleButton::EleUp()
 {
-	if (Elevator) // Ensure ElevatorActor is valid
+	if (Elevator) 
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Green, TEXT("22"));
-		
+		GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Green, TEXT("EleUp"));
+		t += GetWorld()->DeltaTimeSeconds;
+		static float TargetZ = Elevator->GetActorLocation().Z + distance;
 		FVector CurrentLocation = Elevator->GetActorLocation();
 
-		
-		CurrentLocation.Z += eleSpeed; 
-
-		// Set the new location
+		CurrentLocation.Z += eleSpeed;
 		Elevator->SetActorLocation(CurrentLocation);
+		if (t > UpTime)
+		{
+			auto* EleW = CreateWidget(GetWorld(), widfact);
+			EleW->AddToViewport(3);
+		}
+
 	}
 }
 
@@ -127,9 +148,10 @@ void AJSH_EleButton::CageOfen()
 		else
 		{
 			// 엘리베이터가 목표 위치에 도달했으므로 멈춤
-			Ofen = false;
-			click02 = true;
+			close = false;
+			upOn = true;
 			GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, TEXT("Elevator reached the target height."));
+
 		}
 	}
 }

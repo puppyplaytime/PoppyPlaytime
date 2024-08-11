@@ -225,4 +225,6 @@ public:
 	TArray<class UImage*> whiteHand;
 	TArray<bool>isOn = { false, false, false};
 	float disTime = 1;
+	UPROPERTY(EditAnywhere, Category = "Hand")
+	UStaticMesh* HandMesh;
 };

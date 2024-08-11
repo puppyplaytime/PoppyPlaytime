@@ -65,7 +65,8 @@ void UPlayerAnimInstance::AnimNotify_ChangeHand()
     else
     {
         player->Hands[0]->hand->SetMaterial(0, player->Hands[0]->myMatDynamic);
-        if(player->RMeshComp != nullptr && player->Hands[0] != nullptr && player->Hands[0]->HandMesh[0] != nullptr) player->Hands[0]->hand->SetStaticMesh(HandMesh[0]);
+        isNormal = true;
+        //if(player->RMeshComp != nullptr && player->Hands[0] != nullptr && player->Hands[0]->HandMesh[0] != nullptr) player->Hands[0]->hand->SetStaticMesh(HandMesh[0]);
     }
 }
 

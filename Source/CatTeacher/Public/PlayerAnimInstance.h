@@ -47,4 +47,6 @@ public :
 	TArray<class UStaticMesh*> HandMesh;
 	class UStaticMeshComponent* meshComp;
 
+	bool isNormal = false;
+
 };

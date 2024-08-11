@@ -206,7 +206,11 @@ void AKMK_Player::BeginPlay()
 void AKMK_Player::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	if (anim->isNormal)
+	{
+		Hands[0]->hand->SetStaticMesh(HandMesh);
+		anim->isNormal = false;
+	}
 	for (int i = 0; i < 3; i++)
 	{
 		if (isOn[i])
@@ -410,6 +414,7 @@ void AKMK_Player::Cheat2(const struct FInputActionValue& value)
 // 기본 손
 void AKMK_Player::InputNum1(const struct FInputActionValue& value)
 {
+
 	isClick[0] = true;
 	FSM->cnt = 0;
 	anim->PlayChangeMontage();
@@ -426,6 +431,7 @@ void AKMK_Player::InputNum2(const struct FInputActionValue& value)
 		FSM->isFire = false;
 		FSM->cnt = 0;
 	}
+	FSM->cnt = 0;
 	isClick[1] = true;
 	FSM->PState = PlayerHandFSM::GunPack;
 	anim->PlayChangeMontage();

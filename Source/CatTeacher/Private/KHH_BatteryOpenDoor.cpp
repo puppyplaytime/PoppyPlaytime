@@ -102,13 +102,13 @@ void UKHH_BatteryOpenDoor::MoveDoor(float DeltaTime)
 
 void UKHH_BatteryOpenDoor::SpawnEnemy()
 {
-    destroycomponent = Player->FindComponentByClass<UKHH_EnemyFSM>();
-    destroycomponent->mState = EEnemyState::Destroy;
+	destroycomponent = Player->FindComponentByClass<UKHH_EnemyFSM>();
+	destroycomponent->mState = EEnemyState::Destroy;
 
     if (count == 0)
     {   
     
-        FTransform spawnLocation = FTransform(FVector(221.731950, 416.215528, 67.999995));
+        FTransform spawnLocation = FTransform(FVector(1091.563649, 394.258328, 68.000004));
 
 
         //(1091.563649, 394.258328, 68.000004) ╪еем ╬у

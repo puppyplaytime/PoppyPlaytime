@@ -103,4 +103,5 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = FSMComponent)
 	bool isRun = false;
 
+
 };

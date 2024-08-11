@@ -84,7 +84,7 @@ void UKHH_EnemyFSM::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 		break;	
 
 	case EEnemyState::Die:
-		SpawnState();
+		DieState();
 		break;
 	}
 }
@@ -135,12 +135,13 @@ void UKHH_EnemyFSM::SpawnState()
 {
 	
 	Anim->DelightState=mState;
-	me->SetActorLocation(me->GetActorLocation() + me->GetActorForwardVector() * 100 * GetWorld()->GetDeltaSeconds());
+	GetOwner()->SetActorLocation(GetOwner()->GetActorLocation() + GetOwner()->GetActorForwardVector() * 100 * GetWorld()->GetDeltaSeconds());
 
-	float distance = FVector::Distance(target->GetActorLocation(), me->GetActorLocation());
+	float distance = FVector::Distance(target->GetActorLocation(), GetOwner()->GetActorLocation());
 
 	if (isRun == true)
 	{
+		
 		mState = EEnemyState::Die;
 		Anim->DelightState = mState;
 	}
@@ -165,7 +166,8 @@ void UKHH_EnemyFSM::DieState()
 {
 	// 달려오는 애니메이션으로 전환
 
-
+	GetOwner()->SetActorLocation(FVector(2582.989926, 394.258331,69.763294));
+	
 }
 
 

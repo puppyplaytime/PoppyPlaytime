@@ -59,6 +59,7 @@ void ULeverComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
     {
         CurrentRotation = GetOwner()->GetActorRotation();
         TargetRotation = InitialRotation + OpenAngle;
+        me->isRun = true;
         Speed = FRotator::NormalizeAxis((TargetRotation - InitialRotation).Roll) / MoveTime;
         if (Speed < 0)
         {

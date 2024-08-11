@@ -28,18 +28,33 @@ void UKHH_RotateDoor::BeginPlay()
 void UKHH_RotateDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
+	if (isRight || isLeft)
+	{
+		isOpen = false;
+	}
+	if (!isRight && !isLeft)
+	{
+		isOpen = true;
+		if (GetOwner()->GetActorRotation().Pitch > 50)
+		{
+			isOpen = false;
+			isRight = false;
+			isLeft = false;
+		}
+	}
 	if (isOpen)
 	{
 		RotateDoor1(DeltaTime, FRotator(50, 0, 0), OpenTime);
 		if (GetOwner()->GetActorRotation().Pitch > 50)
 		{
 			isOpen = false;
+			isRight = false;
+			isLeft = false;
 		}
 	}
 	Target = Cast<AKMK_Player>(GetWorld()->GetFirstPlayerController()->GetCharacter());
 
-	if (!Target) return;
+	if (!Target || isOpen) return;
 
 	// 플레이어와 문의 거리 계산
 	FVector DistanceVector = Target->GetActorLocation() - GetOwner()->GetActorLocation();

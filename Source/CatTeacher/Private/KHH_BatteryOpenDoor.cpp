@@ -88,6 +88,15 @@ void UKHH_BatteryOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, F
             MoveDoor(DeltaTime);
         }
     }
+   
+    if(lever != nullptr)
+    { 
+        auto* LComp = lever->FindComponentByClass<ULeverComponent>();
+        if (LComp && LComp->LeverMove)
+        {
+            enemy->isRun = true;
+        }
+    }
 }
 
 void UKHH_BatteryOpenDoor::MoveDoor(float DeltaTime)

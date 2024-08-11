@@ -37,7 +37,7 @@ public:
 	UPROPERTY(EditAnywhere)
 	float MoveTime = 1;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool LeverMove = false;
 
 

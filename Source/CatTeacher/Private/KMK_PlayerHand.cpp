@@ -83,6 +83,7 @@ void AKMK_PlayerHand::Tick(float DeltaTime)
 	// 문고리 잡는 경우에 위치 고정
 	if (isPick)
 	{
+		if(lever != nullptr && !lever->LeverMove) isPick = false;
 		GEngine->AddOnScreenDebugMessage(11, 5, FColor::Purple, FString::Printf(TEXT("%s"), *pickTrans.ToString()));
 		box->SetCollisionProfileName("Hand");
 		hand->SetWorldLocation(pickTrans);

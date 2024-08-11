@@ -206,7 +206,11 @@ void AKMK_Player::BeginPlay()
 void AKMK_Player::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	if (anim->isNormal)
+	{
+		Hands[0]->hand->SetStaticMesh(HandMesh);
+		anim->isNormal = false;
+	}
 	for (int i = 0; i < 3; i++)
 	{
 		if (isOn[i])
@@ -311,7 +315,7 @@ void AKMK_Player::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 		playerInput->BindAction(IA_ClickL, ETriggerEvent::Completed, this, &AKMK_Player::InputMLComp);
 #pragma region cheat
 		// 이스터에그
-		playerInput->BindAction(IA_ClickE, ETriggerEvent::Started, this, &AKMK_Player::InputE);
+		//playerInput->BindAction(IA_ClickE, ETriggerEvent::Started, this, &AKMK_Player::InputE);
 		// 딜라이트
 		// playerInput->BindAction(IA_Cheat1, ETriggerEvent::Started, this, &AKMK_Player::Cheat1);
 		// 캣냅
@@ -410,6 +414,7 @@ void AKMK_Player::Cheat2(const struct FInputActionValue& value)
 // 기본 손
 void AKMK_Player::InputNum1(const struct FInputActionValue& value)
 {
+
 	isClick[0] = true;
 	FSM->cnt = 0;
 	anim->PlayChangeMontage();
@@ -426,6 +431,7 @@ void AKMK_Player::InputNum2(const struct FInputActionValue& value)
 		FSM->isFire = false;
 		FSM->cnt = 0;
 	}
+	FSM->cnt = 0;
 	isClick[1] = true;
 	FSM->PState = PlayerHandFSM::GunPack;
 	anim->PlayChangeMontage();

@@ -55,6 +55,12 @@ void UKHH_RotateDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 			cnt = 0;
 		}
 	}
+	else if (!isOpen && cnt > 0)
+	{
+		cnt = 0;
+		isRight = false;
+		isLeft = false;
+	}
 	Target = Cast<AKMK_Player>(GetWorld()->GetFirstPlayerController()->GetCharacter());
 
 	if (!Target || isOpen) return;

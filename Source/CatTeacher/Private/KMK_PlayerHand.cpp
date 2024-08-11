@@ -122,8 +122,7 @@ void AKMK_PlayerHand::Tick(float DeltaTime)
 				isPick = false;
 				isDoor = false;
 				rotDoor->isOpen = false;
-				rotDoor->cnt = 0;
-			}
+            }
 		}
 		// ������
 		else
@@ -144,6 +143,8 @@ void AKMK_PlayerHand::Tick(float DeltaTime)
 				isPick = false;
 				isDoor = false;
 				rotDoor->isOpen = false;
+				rotDoor->isRight = false;
+				rotDoor->isLeft = false;
 				rotDoor->cnt = 0;
 			}
 		}
@@ -187,6 +188,7 @@ void AKMK_PlayerHand::Tick(float DeltaTime)
 			// ���� ����ġ �� �ݶ��̴� ����
 			SetActorRelativeLocation(FVector(0));
 			box->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+			if (GetName().Contains("L") && player->FSM->cnt > 0) player->FSM->cnt = 0;
 		}
 	}
 
@@ -222,7 +224,6 @@ void AKMK_PlayerHand::Tick(float DeltaTime)
 			isGo = false;
 			isReverse = true;
 		}
-
 	}
 #pragma endregion
 	GEngine->AddOnScreenDebugMessage(3, 1, FColor::Orange, FString::Printf(TEXT("%d"), isCome));
@@ -281,7 +282,7 @@ void AKMK_PlayerHand::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 	if (OtherActor->ActorHasTag("Battery"))
 	{
 		// ������ ���� �ƴϸ� ��ȯ
-		if (player->RMeshComp->GetStaticMesh() != player->Hands[0]->HandMesh[0]) return;
+		if (GetName().Contains("R") && player->RMeshComp->GetStaticMesh() != player->Hands[0]->HandMesh[0]) return;
 		// grabActor�� �Ҵ�
 		grabActor = Cast<AKMK_Battery>(OtherActor);
 		// �̹� ���͸��� ���� �ִ� ���쿡�� ��ȯ
@@ -315,7 +316,7 @@ void AKMK_PlayerHand::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 	if (OtherComp->ComponentHasTag("Handle"))
 	{
 		// ������ ���� �ƴϸ� ��ȯ
-		if (player->RMeshComp->GetStaticMesh() != player->Hands[0]->HandMesh[0]) return;
+		if (player->RMeshComp->GetStaticMesh() != player->Hands[0]->HandMesh[0] && GetName().Contains("R")) return;
 		// ��ġ���� �޾ƿ� ��ġ�� �־���
 		pickTrans = OtherComp->GetChildComponent(0)->GetComponentLocation();
 
@@ -336,9 +337,9 @@ void AKMK_PlayerHand::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 		}
 	}
 	// �޼��� ���¸� �ؿ� ��Ȳ�� �ʿ� ���� => ��ȯ
-	if (!GetName().Contains("R")) return;
 	// �������� ���쿡, ���� �е尡 ���´ٸ�
-	if (isJump)
+	if(!GetName().Contains("R")) return;
+	if (isJump && GetName().Contains("R"))
 	{
 		if (OtherActor->ActorHasTag("Jump") && player->RMeshComp->GetStaticMesh() == player->Hands[0]->HandMesh[2])
 		{
@@ -354,7 +355,7 @@ void AKMK_PlayerHand::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 	}
 
 	// ������ ���̰�, panel�� ���´ٸ�
-	if (player->RMeshComp->GetStaticMesh() == player->Hands[0]->HandMesh[0] && OtherActor->ActorHasTag("ElectricalPanel"))
+	if (player->RMeshComp->GetStaticMesh() == player->Hands[0]->HandMesh[0] && OtherActor->ActorHasTag("ElectricalPanel") && GetName().Contains("R"))
 	{
 		// ���� ���·� ����
 		FSM->PState = PlayerHandFSM::Energy;

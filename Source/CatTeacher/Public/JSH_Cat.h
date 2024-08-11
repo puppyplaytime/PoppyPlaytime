@@ -43,4 +43,9 @@ public:
 	bool timestart = false;
 	float currtime = 0;
 	float aniendtime = 1.7;
+
+
+	// widget 실행을 위한 변수
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool WidgetPlay = false;
 };

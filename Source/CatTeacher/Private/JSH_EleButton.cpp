@@ -93,11 +93,11 @@ void AJSH_EleButton::EleUp()
 	if (Elevator) // Ensure ElevatorActor is valid
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Green, TEXT("22"));
-		// Get the current location of the elevator
+		
 		FVector CurrentLocation = Elevator->GetActorLocation();
 
-		// Increase the Z component to move the elevator up
-		CurrentLocation.Z += eleSpeed; // Adjust the value as needed for speed
+		
+		CurrentLocation.Z += eleSpeed; 
 
 		// Set the new location
 		Elevator->SetActorLocation(CurrentLocation);
@@ -110,7 +110,7 @@ void AJSH_EleButton::CageOfen()
 
 
 	
-	if (cage) // Ensure ElevatorActor is valid
+	if (cage) 
 	{
 		static float TargetZ = cage->GetActorLocation().Z + distance;
 		
@@ -137,7 +137,7 @@ void AJSH_EleButton::CageOfen()
 
 void AJSH_EleButton::CageClose()
 {
-	if (cage) // Ensure ElevatorActor is valid
+	if (cage) 
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Green, TEXT("22"));
 

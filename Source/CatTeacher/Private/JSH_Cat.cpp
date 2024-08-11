@@ -59,15 +59,15 @@ void AJSH_Cat::Tick(float DeltaTime)
 		currtime += DeltaTime;
 		if (currtime >= aniendtime)
 		{
-			APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
-
-			// Check if PlayerController is valid
-			if (PlayerController)
-			{
-				// Exit the game
-				UKismetSystemLibrary::QuitGame(GetWorld(), PlayerController, EQuitPreference::Quit, true);
-			}
-
+			// APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+			//
+			// // Check if PlayerController is valid
+			// if (PlayerController)
+			// {
+			// 	// Exit the game
+			// 	UKismetSystemLibrary::QuitGame(GetWorld(), PlayerController, EQuitPreference::Quit, true);
+			// }
+			WidgetPlay = true;
 			GEngine->AddOnScreenDebugMessage(28, 3, FColor::Green, FString::Printf(TEXT("game end")));
 			timestart = false;
 			currtime = 0;

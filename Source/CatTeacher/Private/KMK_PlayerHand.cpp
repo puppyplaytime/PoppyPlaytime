@@ -121,7 +121,8 @@ void AKMK_PlayerHand::Tick(float DeltaTime)
 				// 신경 X
 				isPick = false;
 				isDoor = false;
-				
+				rotDoor->isOpen = false;
+				rotDoor->cnt = 0;
 			}
 		}
 		// 문열기
@@ -143,6 +144,7 @@ void AKMK_PlayerHand::Tick(float DeltaTime)
 				isPick = false;
 				isDoor = false;
 				rotDoor->isOpen = false;
+				rotDoor->cnt = 0;
 			}
 		}
 	}

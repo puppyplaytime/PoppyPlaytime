@@ -32,7 +32,7 @@ void UKHH_RotateDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 	{
 		isOpen = false;
 	}
-	if (!isRight && !isLeft)
+	if (!isRight && !isLeft && cnt > 0)
 	{
 		isOpen = true;
 		if (GetOwner()->GetActorRotation().Pitch > 50)
@@ -45,11 +45,13 @@ void UKHH_RotateDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 	if (isOpen)
 	{
 		RotateDoor1(DeltaTime, FRotator(50, 0, 0), OpenTime);
+		cnt++;
 		if (GetOwner()->GetActorRotation().Pitch > 50)
 		{
 			isOpen = false;
 			isRight = false;
 			isLeft = false;
+			cnt = 0;
 		}
 	}
 	Target = Cast<AKMK_Player>(GetWorld()->GetFirstPlayerController()->GetCharacter());

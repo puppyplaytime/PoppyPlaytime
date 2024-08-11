@@ -101,7 +101,7 @@ void AKMK_PlayerHand::Tick(float DeltaTime)
 #pragma endregion
 
 	// hatch열리고 닫게 하는 부분
-	if (isDoor && isPick)
+	if (isDoor)
 	{
 		// 문 닫기
 		if (isPick)

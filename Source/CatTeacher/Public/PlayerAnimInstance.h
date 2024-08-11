@@ -43,4 +43,8 @@ public :
 	UFUNCTION()
 	void AnimNotify_ChangeHand();
 	int clickCount = 0;
+	UPROPERTY(EditAnywhere, Category = "Hand")
+	TArray<class UStaticMesh*> HandMesh;
+	class UStaticMeshComponent* meshComp;
+
 };

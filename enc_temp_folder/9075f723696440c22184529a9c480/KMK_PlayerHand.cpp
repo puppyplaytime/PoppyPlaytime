@@ -285,7 +285,7 @@ void AKMK_PlayerHand::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 	if (OtherActor->ActorHasTag("Battery"))
 	{
 		// ������ ���� �ƴϸ� ��ȯ
-		if (GetName().Contains("R") && player->RMeshComp->GetStaticMesh() != player->Hands[0]->HandMesh[0]) return;
+		if (player->RMeshComp->GetStaticMesh() != player->Hands[0]->HandMesh[0]) return;
 		// grabActor�� �Ҵ�
 		grabActor = Cast<AKMK_Battery>(OtherActor);
 		// �̹� ���͸��� ���� �ִ� ���쿡�� ��ȯ

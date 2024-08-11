@@ -135,7 +135,6 @@ public:
 	bool isLever = false;
 	FRotator leverRot;
 
-
-	UPROPERTY()
-	class ULeverAnimInstance* Anim;
+	// BeginOverlap된 액터를 저장하는 변수
+	AActor* overActor;
 };

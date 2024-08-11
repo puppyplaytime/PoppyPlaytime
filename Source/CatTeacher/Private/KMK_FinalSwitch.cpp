@@ -3,6 +3,7 @@
 
 #include "KMK_FinalSwitch.h"
 #include "KMK_Bat.h"
+#include "KMK_Player.h"
 
 // Sets default values for this component's properties
 UKMK_FinalSwitch::UKMK_FinalSwitch()
@@ -32,9 +33,10 @@ void UKMK_FinalSwitch::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
+	auto* player = Cast<AKMK_Player>(GetWorld()->GetFirstPlayerController()->GetPawn());
 	GEngine->AddOnScreenDebugMessage(5, 1, FColor::White, FString::Printf(TEXT("%f"), allCharge));
 	GEngine->AddOnScreenDebugMessage(6, 1, FColor::Yellow, FString::Printf(TEXT("%d"), count));
-	if (allCharge > 400)
+	if (allCharge > 400 || (player != nullptr && player->isCheat2))
 	{
 		allCharge = 400;
 		GetOwner()->SetActorEnableCollision(true);

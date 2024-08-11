@@ -20,7 +20,7 @@
 #include "../../../../Plugins/FX/Niagara/Source/Niagara/Public/NiagaraFunctionLibrary.h"
 #include "../../../../Plugins/FX/Niagara/Source/Niagara/Public/NiagaraComponent.h"
 #include <LeverComponent.h>
-#include "LeverAnimInstance.h"
+#include "KMK_FinalSwitch.h"
 // Sets default values
 AKMK_PlayerHand::AKMK_PlayerHand()
 {
@@ -78,10 +78,12 @@ void AKMK_PlayerHand::Tick(float DeltaTime)
 			return;
 		}
 	}
+	
 #pragma region isPick
 	// 문고리 잡는 경우에 위치 고정
 	if (isPick)
 	{
+		if(lever != nullptr && !lever->LeverMove) isPick = false;
 		GEngine->AddOnScreenDebugMessage(11, 5, FColor::Purple, FString::Printf(TEXT("%s"), *pickTrans.ToString()));
 		box->SetCollisionProfileName("Hand");
 		hand->SetWorldLocation(pickTrans);
@@ -99,7 +101,7 @@ void AKMK_PlayerHand::Tick(float DeltaTime)
 #pragma endregion
 
 	// hatch열리고 닫게 하는 부분
-	if (isDoor)
+	if (isDoor && isPick)
 	{
 		// 문 닫기
 		if (isPick)
@@ -142,8 +144,16 @@ void AKMK_PlayerHand::Tick(float DeltaTime)
 	}
 
 #pragma region HandMove
-	// 손이 돌아오는 코드
 	if (isReverse)
+	{
+		isGo = false;
+	}
+	if (isGo)
+	{
+		isReverse = false;
+	}
+	// 손이 돌아오는 코드
+	if (isReverse && !isGo)
 	{
 		if(isHold) return;
 		player->anim->PlayHandInMontage();
@@ -156,7 +166,7 @@ void AKMK_PlayerHand::Tick(float DeltaTime)
 		// 이동
 		SetActorLocation(GetActorLocation() + dir * speed * DeltaTime);
 		// ray거리보다 크거나, 목적지에 어느정도 도착했다면
-		if (d < 40.f || d  > player->rayDis)
+		if (d < 40.f)
 		{
 			// 1. 시간 초기화
 			t = 0;
@@ -175,7 +185,7 @@ void AKMK_PlayerHand::Tick(float DeltaTime)
 	}
 
 	// 손이 나가는 부분
-	if (isGo)
+	if (isGo && !isReverse)
 	{
 		for (int i = 0; i < 2; i++)
 		{
@@ -250,13 +260,17 @@ void AKMK_PlayerHand::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 	isGo = false;
 	isReverse = true;
 	// 물체가 닿은 경우에 손이 돌아오게 만들기 위함
-//     if (bFromSweep)
-//     {
-//         isGo = false;
-//         isReverse = true;
-//     }
+     if (bFromSweep)
+     {
+         isGo = false;
+         isReverse = true;
+     }
+
+	// BeginOverlap된 액터의 이름을 저장하는 변수 (스위치 용)
 	SwitchName = *OtherActor->GetName();
-	GEngine->AddOnScreenDebugMessage(9, 1, FColor::Emerald, FString::Printf(TEXT("%s"), *SwitchName));
+	// BeginOverlap된 액터를 저장하는 변수 ( 스위치도 이걸로 바꾸면 될 듯)
+	overActor = OtherActor;
+
 	// 배터리가 손에 닿은 경우
 	if (OtherActor->ActorHasTag("Battery"))
 	{
@@ -343,6 +357,12 @@ void AKMK_PlayerHand::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 		myMatDynamic->SetScalarParameterValue("charge_light", 4);
 		VFXComp->SetVisibility(true);
 		isHold = true;
+		// 이곳에 마지막 애니메이션 스타트 부분 넣으시면 됩니다.
+		if (OtherActor->FindComponentByClass<UKMK_FinalSwitch>())
+		{
+
+			GEngine->AddOnScreenDebugMessage(9, 1, FColor::Emerald, FString::Printf(TEXT("complete")));
+		}
 	}
 
 }

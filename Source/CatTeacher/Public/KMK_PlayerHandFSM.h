@@ -66,4 +66,8 @@ public:
 // 케이블 머티리얼
 	UPROPERTY(EditDefaultsOnly)
 	TArray<class UMaterialInterface*> cableMat;
+	
+	UPROPERTY(EditAnywhere)
+	TArray<class UMaterial*> matArrays;
+
 };

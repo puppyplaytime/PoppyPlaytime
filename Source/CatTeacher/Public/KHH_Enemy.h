@@ -29,5 +29,7 @@ public:
 public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category=FSMComponent)
 	class UKHH_EnemyFSM* fsm;
-
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=FSMComponent)
+	bool isRun = false;
 };

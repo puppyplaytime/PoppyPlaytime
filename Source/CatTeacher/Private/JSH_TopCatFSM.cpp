@@ -6,8 +6,6 @@
 #include "JSH_CatFSM.h"
 #include "JSH_Light.h"
 #include "KHH_RotateDoor.h"
-#include "KMK_Player.h"
-#include "KMK_PlayerHand.h"
 #include "Kismet/GameplayStatics.h"
 
 // Sets default values for this component's properties
@@ -67,12 +65,12 @@ void UJSH_TopCatFSM::BeginPlay()
     }
     
     
-    PlayerHand = Cast<AKMK_PlayerHand>(UGameplayStatics::GetActorOfClass(GetWorld(), AKMK_PlayerHand::StaticClass()));
-
-    if (!PlayerHand)
-    {
-        UE_LOG(LogTemp, Warning, TEXT("KMK_PlayerHand not found in level!"));
-    }
+    // PlayerHand = Cast<AKMK_PlayerHand>(UGameplayStatics::GetActorOfClass(GetWorld(), AKMK_PlayerHand::StaticClass()));
+    //
+    // if (!PlayerHand)
+    // {
+    //     UE_LOG(LogTemp, Warning, TEXT("KMK_PlayerHand not found in level!"));
+    // }
     
 }
 
@@ -100,8 +98,9 @@ void UJSH_TopCatFSM::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
         break;
     }
 
-    FString myState = UEnum::GetValueAsString(tState);
-    DrawDebugString(GetWorld(), GetOwner()->GetActorLocation(), myState, nullptr, FColor::Blue, 0, true, 1);
+    // 화면에 상태 표시
+    // FString myState = UEnum::GetValueAsString(tState);
+    // DrawDebugString(GetWorld(), GetOwner()->GetActorLocation(), myState, nullptr, FColor::Blue, 0, true, 1);
 
     if (Cat->fsm->DoorOpen)
     {

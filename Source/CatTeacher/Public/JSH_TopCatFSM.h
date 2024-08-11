@@ -85,7 +85,7 @@ public:
 	float opentime = 3;
 
 
-	class AKMK_PlayerHand* PlayerHand;
+	// class AKMK_PlayerHand* PlayerHand;
 
 	bool start = false;
 

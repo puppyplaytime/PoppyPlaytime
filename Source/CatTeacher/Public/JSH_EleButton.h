@@ -46,7 +46,7 @@ public:
 
 
 	UPROPERTY(EditAnywhere)
-	float distance = 400.0f;
+	float distance = 600.0f;
 	
 	bool click02 = false;
 

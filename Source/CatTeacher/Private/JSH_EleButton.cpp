@@ -86,6 +86,7 @@ void AJSH_EleButton::NotifyActorBeginOverlap(AActor* OtherActor)
 	if (Hand->overActor->ActorHasTag(FName("Button2")))
 	{
 		close = true;
+		Ofen = false;
 	}
 
 
@@ -114,7 +115,7 @@ void AJSH_EleButton::EleUp()
 {
 	if (Elevator) 
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Green, TEXT("EleUp"));
+		// GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Green, TEXT("EleUp"));
 		FVector CurrentLocation = Elevator->GetActorLocation();
 		CurrentLocation.Z += eleSpeed;
 		Elevator->SetActorLocation(CurrentLocation);
@@ -134,13 +135,12 @@ void AJSH_EleButton::EleUp()
 
 void AJSH_EleButton::CageOfen()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Green, TEXT("CageOfen"));
-
-
-
+	
 	if (cage)
 	{
-		static float TargetZ = cage->GetActorLocation().Z + distance;
+		GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Green, TEXT("CageOfen"));
+
+		float TargetZ = distance;
 
 		FVector CurrentLocation = cage->GetActorLocation();
 
@@ -167,10 +167,11 @@ void AJSH_EleButton::CageClose()
 {
 	if (cage)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Green, TEXT("22"));
+		Ofen = false;
+		GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Green, TEXT("c1"));
 
 		// 목표 Z 위치를 설정 (예: 초기 위치 + 200)
-		static float TargetZ = cage->GetActorLocation().Z - distance;
+		float TargetZ = distance;
 
 		// 현재 엘리베이터의 위치를 가져옴
 		FVector CurrentLocation = cage->GetActorLocation();
@@ -178,6 +179,7 @@ void AJSH_EleButton::CageClose()
 		// 엘리베이터가 목표 Z 위치에 도달했는지 확인
 		if (CurrentLocation.Z >= TargetZ)
 		{
+			GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Green, TEXT("c2"));
 			// Z 축을 증가시켜 엘리베이터를 위로 이동
 			CurrentLocation.Z -= cageCloseSpeed; // 속도는 필요에 따라 조정
 

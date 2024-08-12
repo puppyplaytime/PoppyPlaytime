@@ -28,4 +28,7 @@ public:
 	UPROPERTY(EditAnywhere)
 	class UBoxComponent* FalseBox;
 
+
+	class AJSH_CatDoor* CatDoor;
+
 };

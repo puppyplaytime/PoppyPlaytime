@@ -3,8 +3,11 @@
 
 #include "JSH_Ending.h"
 
+#include "JSH_CatDoor.h"
+#include "KHH_RotateDoor.h"
 #include "KMK_PlayerHand.h"
 #include "Components/BoxComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 class AKMK_PlayerHand;
 // Sets default values
@@ -26,6 +29,17 @@ AJSH_Ending::AJSH_Ending()
 void AJSH_Ending::BeginPlay()
 {
 	Super::BeginPlay();
+
+
+	// CatDoor 액터 가져오기
+	CatDoor = Cast<AJSH_CatDoor>(UGameplayStatics::GetActorOfClass(GetWorld(), AJSH_CatDoor::StaticClass()));
+
+	if (CatDoor)
+	{
+		// 'Door'라는 이름으로 액터의 참조를 저장합니다.
+		FName DoorName = "Door";
+		CatDoor->SetActorLabel(DoorName.ToString());
+	}
 	
 }
 
@@ -47,6 +61,8 @@ void AJSH_Ending::NotifyActorBeginOverlap(AActor* OtherActor)
 
 	if (Hand && OtherActor->ActorHasTag("Green"))
 	{
+		CatDoor->fsm->cnt++;
+		CatDoor->fsm->isOpen = true;
 		// Cat의 애니메이션 실행 되도록
 	}
 

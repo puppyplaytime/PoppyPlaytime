@@ -22,6 +22,7 @@ enum class ECatState : uint8
 	Discovery,
 	top,
 	Die,
+	ending,
 };
 
 
@@ -85,6 +86,8 @@ public:
 
 	// Á×À½ »óÅÂ
 	void DieState();
+
+	void EndingState();
 	//-----------------------------------------------------------------
 
 
@@ -104,6 +107,9 @@ public:
 	// player
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = FSM)
 	class AJSH_Target* targetPlayer;
+
+
+	
 	
 	
 
@@ -197,7 +203,7 @@ public:
 	bool DoorOpen = false;
 	bool topStart = false;
 	
-
+	bool ending = false;
 };
 
 

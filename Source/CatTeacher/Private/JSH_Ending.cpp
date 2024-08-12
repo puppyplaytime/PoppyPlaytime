@@ -3,7 +3,9 @@
 
 #include "JSH_Ending.h"
 
+#include "JSH_Cat.h"
 #include "JSH_CatDoor.h"
+#include "JSH_CatFSM.h"
 #include "JSH_EndingCat.h"
 #include "KHH_RotateDoor.h"
 #include "KMK_PlayerHand.h"
@@ -43,6 +45,40 @@ void AJSH_Ending::BeginPlay()
 	}
 
 	me = Cast<AJSH_EndingCat>(GetOwner());
+
+
+	// Retrieve all AJSH_Cat actors in the world
+	TArray<AActor*> FoundCats;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AJSH_Cat::StaticClass(), FoundCats);
+
+	// Iterate through the found actors and assign them based on their tags
+	for (AActor* Actor : FoundCats)
+	{
+		AJSH_Cat* FoundCat = Cast<AJSH_Cat>(Actor);
+		if (FoundCat)
+		{
+			if (FoundCat->ActorHasTag("S1"))
+			{
+				cat1 = FoundCat;
+			}
+			else if (FoundCat->ActorHasTag("S2"))
+			{
+				cat2 = FoundCat;
+			}
+			else if (FoundCat->ActorHasTag("S3"))
+			{
+				cat3 = FoundCat;
+			}
+			else if (FoundCat->ActorHasTag("S4"))
+			{
+				cat4 = FoundCat;
+			}
+			else if (FoundCat->ActorHasTag("S5"))
+			{
+				cat5 = FoundCat;
+			}
+		}
+	}
 	
 }
 
@@ -66,9 +102,35 @@ void AJSH_Ending::NotifyActorBeginOverlap(AActor* OtherActor)
 	{
 		CatDoor->fsm->cnt++;
 		CatDoor->fsm->isOpen = true;
+		
+		if (cat1 && cat1->ActorHasTag("S1"))
+		{
+			cat1->fsm->cState = ECatState::ending;
+			cat1->fsm->ending = true;
+		}
+		if (cat2 && cat2->ActorHasTag("S2"))
+		{
+			cat2->fsm->cState = ECatState::ending;
+			cat2->fsm->ending = true;
+
+		}
+		if (cat3 && cat3->ActorHasTag("S3"))
+		{
+			cat3->fsm->cState = ECatState::ending;
+			cat3->fsm->ending = true;
+
+		}
+		if (cat4 && cat4->ActorHasTag("S4"))
+		{
+			cat4->fsm->cState = ECatState::ending;
+			cat4->fsm->ending = true;
+
+		}
+		if (cat5 && cat5->ActorHasTag("S5"))
+		{
+			//cat5->Destroy();
+		}
 		// Cat의 애니메이션 실행 되도록
 	}
-
-	
 }
 

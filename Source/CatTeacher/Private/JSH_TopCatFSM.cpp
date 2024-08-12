@@ -19,6 +19,8 @@ void UJSH_TopCatFSM::BeginPlay()
 {
     Super::BeginPlay();
 
+    
+
     // 상태 초기화
     tState = TCatState::Idle;
 
@@ -71,6 +73,21 @@ void UJSH_TopCatFSM::BeginPlay()
     // {
     //     UE_LOG(LogTemp, Warning, TEXT("KMK_PlayerHand not found in level!"));
     // }
+
+
+    TArray<AActor*> FoundActors;
+    UGameplayStatics::GetAllActorsWithTag(GetWorld(), FName("S5"), FoundActors);
+
+    // 찾은 액터들 중에서 AJSH_Cat 타입의 액터를 CatS5에 저장합니다.
+    for (AActor* Actor : FoundActors)
+    {
+        AJSH_Cat* FoundCat = Cast<AJSH_Cat>(Actor);
+        if (FoundCat)
+        {
+            CatS5 = FoundCat;
+            break;  // 첫 번째로 찾은 AJSH_Cat을 저장한 후 루프 종료
+        }
+    }
     
 }
 
@@ -220,8 +237,11 @@ void UJSH_TopCatFSM::AttackState()
     			// Get the location if needed
     			tt = SpawnedActor->GetActorLocation();
     			// Now you can use 'tt' as the location of the spawned actor
+
+    		    CatS5->Destroy();
     		}
     	}
+        
     	
         // Destroy me
         //me->fsm->BatCatStop();

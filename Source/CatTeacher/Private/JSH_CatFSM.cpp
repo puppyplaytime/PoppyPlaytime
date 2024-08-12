@@ -103,6 +103,10 @@ void UJSH_CatFSM::TickComponent(float DeltaTime, ELevelTick TickType, FActorComp
     case ECatState::Die:
         DieState();
         break;
+
+    case ECatState::ending:
+        EndingState();
+        break;
     }
 
     //FString logMsg = UEnum::GetValueAsString(cState);
@@ -118,8 +122,8 @@ void UJSH_CatFSM::TickComponent(float DeltaTime, ELevelTick TickType, FActorComp
     GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Cyan, logMsg2);*/
 
     // CatNab 상태 표시
-    // FString myState = UEnum::GetValueAsString(cState);
-    // DrawDebugString(GetWorld() , GetOwner()->GetActorLocation(), myState , nullptr , FColor::Yellow , 0, true, 1);
+    FString myState = UEnum::GetValueAsString(cState);
+    DrawDebugString(GetWorld() , GetOwner()->GetActorLocation(), myState , nullptr , FColor::Yellow , 0, true, 1);
 
     UpdateState();
     UpdateStateFalse();
@@ -263,6 +267,8 @@ void UJSH_CatFSM::batoff()
 {
     cState = ECatState::Idle;
 }
+
+
 
 
 void UJSH_CatFSM::IdleState(float DeltaTime)
@@ -590,5 +596,34 @@ void UJSH_CatFSM::DieState()
     if (me && me->Tags.Contains("S4"))
     {
         me->Tags.Remove("FCat4");
+    }
+}
+
+
+void UJSH_CatFSM::EndingState()
+{
+    if (ending)
+    {
+        //FVector TargetLocation = target01->GetActorLocation();
+        //me->SetActorLocation(TargetLocation);
+        me->Destroy();
+
+        if (me && me->Tags.Contains("S1"))
+        {
+            me->Destroy();
+        }
+        if (me && me->Tags.Contains("S2"))
+        {
+            me->Destroy();
+        }
+        if (me && me->Tags.Contains("S3"))
+        {
+            me->Destroy();
+        }
+        if (me && me->Tags.Contains("S4"))
+        {
+            me->Destroy();
+        }
+        ending = false;
     }
 }

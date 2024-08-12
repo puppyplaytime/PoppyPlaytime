@@ -35,4 +35,15 @@ public:
 	UPROPERTY()
 	class AJSH_EndingCat* me;
 
+
+
+	class AJSH_Cat* cat1;
+	
+	class AJSH_Cat* cat2;
+
+	class AJSH_Cat* cat3;
+	
+	class AJSH_Cat* cat4;
+
+	class AJSH_Cat* cat5;
 };

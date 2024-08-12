@@ -55,6 +55,7 @@ void UKHH_RotateDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 			cnt = 0;
 		}
 	}
+
 	if (!isOpen && cnt > 0)
 	{
         cnt = 0;

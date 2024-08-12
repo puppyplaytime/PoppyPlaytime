@@ -114,8 +114,6 @@ void UJSH_TopCatFSM::IdleState(float DeltaTime)
 {
     currtime += DeltaTime;
 
-    CatDoor->fsm->isComp = false;
-
     // 모든 DoorLight를 꺼줍니다.
     for (AJSH_Light* Light : DoorLights)
     {
@@ -167,6 +165,7 @@ void UJSH_TopCatFSM::TopOpenState(float DeltaTime)
         
         CatDoor->fsm->isOpen = true;
         CatDoor->fsm->cnt++;
+        CatDoor->fsm->isComp = false;
         topStart = false;
     }
 

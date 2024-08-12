@@ -112,7 +112,7 @@ void AKMK_PlayerHand::Tick(float DeltaTime)
 			rot = FRotator(-50, 0, 0);
 			rotDoor->RotateDoor1(DeltaTime, rot, rotDoor->MoveTime);
 			// ���� �� ���� ����, ����� ���ǹ�
-			if (rotDoor->GetOwner()->GetActorRotation().Pitch < 0)
+			if (rotDoor->GetOwner()->GetActorRotation().Pitch <= 0)
 			{
 				// �ؿ� �� ������ false �̸� ��ġ ������ ����
 				isClosed = false;
@@ -127,11 +127,11 @@ void AKMK_PlayerHand::Tick(float DeltaTime)
             }
 		}
 		// ������
-		else
+		else if(!isPick && !rotDoor->isComp)
 		{
 			if (GetName().Contains("R")) rotDoor->isRight = false;
 			else rotDoor->isLeft = false;
-			if(rotDoor->isComp) return;
+
 			rotDoor->isOpen = true;
 			// ��ġ�κ� ������ ���۵��� �˷���
 			isClosed = true;

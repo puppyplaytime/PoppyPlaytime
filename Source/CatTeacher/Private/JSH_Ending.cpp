@@ -4,6 +4,7 @@
 #include "JSH_Ending.h"
 
 #include "JSH_CatDoor.h"
+#include "JSH_EndingCat.h"
 #include "KHH_RotateDoor.h"
 #include "KMK_PlayerHand.h"
 #include "Components/BoxComponent.h"
@@ -40,6 +41,8 @@ void AJSH_Ending::BeginPlay()
 		FName DoorName = "Door";
 		CatDoor->SetActorLabel(DoorName.ToString());
 	}
+
+	me = Cast<AJSH_EndingCat>(GetOwner());
 	
 }
 

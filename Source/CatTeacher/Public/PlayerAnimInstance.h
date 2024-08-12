@@ -49,4 +49,5 @@ public :
 
 	bool isNormal = false;
 
+	bool isF = false;
 };

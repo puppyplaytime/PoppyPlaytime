@@ -209,6 +209,7 @@ void AKMK_Player::Tick(float DeltaTime)
 	if (anim->isNormal)
 	{
 		Hands[0]->hand->SetStaticMesh(HandMesh);
+		Hands[0]->hand->SetMaterial(0, Hands[0]->myMatDynamic);
 		anim->isNormal = false;
 	}
 	for (int i = 0; i < 3; i++)

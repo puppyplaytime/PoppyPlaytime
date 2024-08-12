@@ -22,6 +22,7 @@ void UPlayerAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 void UPlayerAnimInstance::PlayFireMontage()
 {
     Montage_Play(Monts[0]);
+    isF = true;
 }
 
 void UPlayerAnimInstance::PlayHandMontage()
@@ -46,10 +47,12 @@ void UPlayerAnimInstance::AnimNotify_FireEnd()
     fsm->isFire = false;
     fsm->cnt = 0;
     clickCount++;
+    isF = false;
 }
 
 void UPlayerAnimInstance::AnimNotify_ChangeHand()
 {
+    if(isF) return;
     player->ChangeHandEnd();
     if(!player->Hands[0]) return;
     if (player->FSM->PState == PlayerHandFSM::JumpPack)
@@ -64,7 +67,7 @@ void UPlayerAnimInstance::AnimNotify_ChangeHand()
     }
     else
     {
-        player->Hands[0]->hand->SetMaterial(0, player->Hands[0]->myMatDynamic);
+        
         isNormal = true;
         //if(player->RMeshComp != nullptr && player->Hands[0] != nullptr && player->Hands[0]->HandMesh[0] != nullptr) player->Hands[0]->hand->SetStaticMesh(HandMesh[0]);
     }

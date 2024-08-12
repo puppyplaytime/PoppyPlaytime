@@ -52,6 +52,8 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	bool isOpen = false;
+
+	bool isComp = false;
 	
 	bool isRight = false;
 	bool isLeft = false;

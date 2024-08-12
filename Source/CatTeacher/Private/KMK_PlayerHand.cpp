@@ -117,10 +117,12 @@ void AKMK_PlayerHand::Tick(float DeltaTime)
 				// �ؿ� �� ������ false �̸� ��ġ ������ ����
 				isClosed = false;
 				isDie = false;
-
+				rotDoor->isRight = false;
+				rotDoor->isLeft = false;
 				// �Ű� X
 				isPick = false;
 				isDoor = false;
+				rotDoor->isComp = true;
 				rotDoor->isOpen = false;
             }
 		}
@@ -129,6 +131,7 @@ void AKMK_PlayerHand::Tick(float DeltaTime)
 		{
 			if (GetName().Contains("R")) rotDoor->isRight = false;
 			else rotDoor->isLeft = false;
+			if(rotDoor->isComp) return;
 			rotDoor->isOpen = true;
 			// ��ġ�κ� ������ ���۵��� �˷���
 			isClosed = true;

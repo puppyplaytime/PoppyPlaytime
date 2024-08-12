@@ -204,6 +204,9 @@ public:
 	bool topStart = false;
 	
 	bool ending = false;
+
+
+	void End();
 };
 
 

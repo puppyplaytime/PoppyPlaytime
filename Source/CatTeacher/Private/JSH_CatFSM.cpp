@@ -269,6 +269,8 @@ void UJSH_CatFSM::batoff()
 }
 
 
+
+
 void UJSH_CatFSM::IdleState(float DeltaTime)
 {
     me->GetCharacterMovement()->MaxWalkSpeed = 200.0f;
@@ -622,8 +624,6 @@ void UJSH_CatFSM::EndingState()
         {
             me->Destroy();
         }
-
-        
         ending = false;
     }
 }

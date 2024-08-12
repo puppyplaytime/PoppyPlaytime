@@ -96,4 +96,8 @@ public:
 
 	// 태그 부여 시간
 	float addtag = 20.0f;
+
+
+	UPROPERTY(EditAnywhere)
+	class AJSH_Cat* CatS5;
 };

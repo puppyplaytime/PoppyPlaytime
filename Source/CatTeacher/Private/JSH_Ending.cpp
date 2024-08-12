@@ -128,7 +128,7 @@ void AJSH_Ending::NotifyActorBeginOverlap(AActor* OtherActor)
 		}
 		if (cat5 && cat5->ActorHasTag("S5"))
 		{
-			//cat5->Destroy();
+			cat5->Destroy();
 		}
 		// Cat의 애니메이션 실행 되도록
 	}

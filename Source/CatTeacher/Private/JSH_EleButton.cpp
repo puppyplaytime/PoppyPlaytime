@@ -138,7 +138,7 @@ void AJSH_EleButton::CageOfen()
 	
 	if (cage)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Green, TEXT("CageOfen"));
+		//GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Green, TEXT("CageOfen"));
 
 		float TargetZ = distance;
 
@@ -157,7 +157,7 @@ void AJSH_EleButton::CageOfen()
 			// 엘리베이터가 목표 위치에 도달했으므로 멈춤
 			Ofen = false;
 			click02 = true;
-			GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, TEXT("Elevator reached the target height."));
+			//GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, TEXT("Elevator reached the target height."));
 		}
 	}
 }
@@ -168,7 +168,7 @@ void AJSH_EleButton::CageClose()
 	if (cage)
 	{
 		Ofen = false;
-		GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Green, TEXT("c1"));
+		//GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Green, TEXT("c1"));
 
 		// 목표 Z 위치를 설정 (예: 초기 위치 + 200)
 		float TargetZ = distance;
@@ -179,7 +179,7 @@ void AJSH_EleButton::CageClose()
 		// 엘리베이터가 목표 Z 위치에 도달했는지 확인
 		if (CurrentLocation.Z >= TargetZ)
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Green, TEXT("c2"));
+			//GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Green, TEXT("c2"));
 			// Z 축을 증가시켜 엘리베이터를 위로 이동
 			CurrentLocation.Z -= cageCloseSpeed; // 속도는 필요에 따라 조정
 
@@ -191,7 +191,7 @@ void AJSH_EleButton::CageClose()
 			// 엘리베이터가 목표 위치에 도달했으므로 멈춤
 			close = false;
 			upOn = true;
-			GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, TEXT("Elevator reached the target height."));
+			//GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, TEXT("Elevator reached the target height."));
 		}
 	}
 }

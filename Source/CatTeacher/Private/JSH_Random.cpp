@@ -58,7 +58,7 @@ void AJSH_Random::FindAndSelectRandomTag()
         int32 RandomIndex = FMath::RandRange(0, TagsInLevel.Num() - 1);
         FName RandomTag = TagsInLevel[RandomIndex];
 
-        UE_LOG(LogTemp, Warning, TEXT("Tag: %s"), *RandomTag.ToString());  // 랜덤으로 선택된 태그를 로그로 출력
+        //UE_LOG(LogTemp, Warning, TEXT("Tag: %s"), *RandomTag.ToString());  // 랜덤으로 선택된 태그를 로그로 출력
         
         // FSM 컴포넌트에 랜덤 태그 전달
         for (TActorIterator<AJSH_Cat> ActorItr(GetWorld()); ActorItr; ++ActorItr)

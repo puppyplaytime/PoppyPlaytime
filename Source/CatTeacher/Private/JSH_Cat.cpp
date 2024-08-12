@@ -30,6 +30,8 @@ AJSH_Cat::AJSH_Cat()
 void AJSH_Cat::BeginPlay()
 {
 	Super::BeginPlay();
+
+	WidgetPlay = false;
 	
 }
 

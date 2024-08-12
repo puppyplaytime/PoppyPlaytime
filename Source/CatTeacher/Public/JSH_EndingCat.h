@@ -4,16 +4,16 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "JSH_Ending.generated.h"
+#include "JSH_EndingCat.generated.h"
 
 UCLASS()
-class CATTEACHER_API AJSH_Ending : public AActor
+class CATTEACHER_API AJSH_EndingCat : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	AJSH_Ending();
+	AJSH_EndingCat();
 
 protected:
 	// Called when the game starts or when spawned
@@ -23,16 +23,8 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Mesh")
+	USkeletalMeshComponent* SkeletalMeshComponent;
 
-	UPROPERTY(EditAnywhere)
-	class UBoxComponent* FalseBox;
-
-
-	class AJSH_CatDoor* CatDoor;
-
-	
-	UPROPERTY()
-	class AJSH_EndingCat* me;
 
 };

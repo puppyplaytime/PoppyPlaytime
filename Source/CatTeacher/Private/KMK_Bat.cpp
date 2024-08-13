@@ -48,14 +48,18 @@ void UKMK_Bat::BeginPlay()
 void UKMK_Bat::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+
 	// 배터리 여부에 따라 on/off
 	meshBat->SetVisibility(isHaveBat);
-
+	
 	if (isHaveBat == true)
 	{
+		// 딜라이트 맵용 단자들
 		if(TargetDoor != nullptr)SetTargetDoor(TargetDoor);
+		// 캣냅용 단자들 => 컴퓨터 근처에 있는 단자용
 		if (batProgress != nullptr)
 		{
+			if (!isStart) return;
 			spd += ChargeSpeed;
 			ChargeGage(spd);
 			if (spd > 100)

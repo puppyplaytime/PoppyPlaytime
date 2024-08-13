@@ -41,21 +41,33 @@ void UKMK_FinalSwitch::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 	auto* player = Cast<AKMK_Player>(GetWorld()->GetFirstPlayerController()->GetPawn());
 	float d = FVector::Distance(player->GetActorLocation(), GetOwner()->GetTargetLocation());
 	GEngine->AddOnScreenDebugMessage(5, 1, FColor::White, FString::Printf(TEXT("%f"), d));
+	// 캣냅 시작 전, 모니터 안내 문구 관련 if 문
+	// isTrue = true인 경우 캣냅 fsm이 시작되어야함
 	if (!isTrue && d < playerDist)
 	{
+		// 일정시간이 지나면
 		t += DeltaTime;
 		if (t > 1)
 		{
+			// 스크린 페이지가 변경되고
 			myMatDynamic->SetScalarParameterValue("Page", 1);
 			if (t > 3.f)
 			{
+				// 스크린의 게이지가 0으로 초기화됨
 				t = 0;
 				isTrue = true;
 				myMatDynamic->SetScalarParameterValue("Gage", 0);
 			}
 		}
 	}
-
+	// 마지막 스위치랑 연결된 단자들이 캣냅 기믹이 시작될때 시작하기 위해 넣은 변수임
+	if (isTrue)
+	{
+		for (int i = 0; i < bats.Num(); i++)
+		{
+			batsComps[i]->isStart = true;
+		}
+	}
 	if(!isTrue) return;
 	
 	GEngine->AddOnScreenDebugMessage(5, 1, FColor::White, FString::Printf(TEXT("%f"), allCharge));
@@ -84,7 +96,11 @@ void UKMK_FinalSwitch::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 			
 		}
 
-		if(count != 0) allCharge += batsComps[0]->ChargeSpeed / 4 * count;
+		if (count != 0)
+		{
+			allCharge += batsComps[0]->ChargeSpeed * count;
+			allCharge /= 4;
+		}
 	}
 }
 

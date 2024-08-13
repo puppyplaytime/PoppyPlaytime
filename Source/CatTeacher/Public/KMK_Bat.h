@@ -52,4 +52,6 @@ public:
 	class UMaterialInstanceDynamic* myMatDynamic;
 
 	void ChargeGage(float DeltaTime);
+
+	bool isStart = false;
 };

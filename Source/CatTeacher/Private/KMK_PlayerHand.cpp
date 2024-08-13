@@ -142,7 +142,6 @@ void AKMK_PlayerHand::Tick(float DeltaTime)
 				isClosed = false;
 				// �÷��̾ �׾����ϴ� Ÿ�̹� bool����
 				isDie = true;
-				// �Ű澲��������
 				isPick = false;
 				isDoor = false;
 				rotDoor->isOpen = false;

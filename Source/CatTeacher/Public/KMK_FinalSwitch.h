@@ -32,5 +32,19 @@ public:
 	TArray<bool> isHave = {false, false, false, false};
 	int count = 0;
 	float allCharge = 0;
-		
+
+	UPROPERTY(EditAnywhere)
+	float playerDist = 800;
+	
+	UPROPERTY(EditAnywhere)
+    class UMaterialInstance* matFact;
+
+	UMaterialInstanceDynamic* myMatDynamic;
+
+	class UStaticMeshComponent* meshComp;
+
+	float t = 0;
+	bool isTrue = false;
+	float gage = 100;
+	float page = 0;
 };

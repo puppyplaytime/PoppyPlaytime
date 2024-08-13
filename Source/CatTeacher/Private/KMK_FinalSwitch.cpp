@@ -50,7 +50,7 @@ void UKMK_FinalSwitch::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 	auto* player = Cast<AKMK_Player>(GetWorld()->GetFirstPlayerController()->GetPawn());
 	float d = FVector::Distance(player->GetActorLocation(), GetOwner()->GetTargetLocation());
 	GEngine->AddOnScreenDebugMessage(5, 1, FColor::White, FString::Printf(TEXT("%f"), d));
-	// 캣냅 시작 전, 모니터 안내 문구 관련 if 문
+	// 캣냅 시작 전, 모니터 안내 문구 관련 if 문 => PlayerDist를 통해 모니터와 플레이어의 간격 설정 가능함 
 	// isTrue = true인 경우 캣냅 fsm이 시작되어야함
 	if (!isTrue && d < playerDist)
 	{

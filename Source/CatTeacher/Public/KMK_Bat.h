@@ -51,7 +51,7 @@ public:
 	UPROPERTY(VisibleAnywhere)
 	class UMaterialInstanceDynamic* myMatDynamic;
 
-	void ChargeGage(float DeltaTime);
+	void ChargeGage(float DeltaTime, int count);
 
 	bool isStart = false;
 };

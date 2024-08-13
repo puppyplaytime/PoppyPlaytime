@@ -36,6 +36,7 @@ void UKMK_Bat::BeginPlay()
 	
 }
 
+// 이건 화현이랑 하던 부분이여서 신경  X
 // 배터리가 들어간 상태일때 문이 열리도록 하고 싶다. 
 // IsPUsh 일때 shouldMove가 ture로 바꾸고 싶다. 
 // 1. 문의 컴포넌트랑 bat를 연결 => 1-2 사용
@@ -43,15 +44,17 @@ void UKMK_Bat::BeginPlay()
 // 방법 1-2. 직접할당을 하겠다 :
 // 필요요소 : TargetDoor, ispush
 // 2. ISPUSH, shouldMove를 연동
-// 
-// Called every frame
+
+// 캣냅방 관련 프로그래스바 관련 이야기
+// isHaveBat를 통해 전반적인 단자의 배터리 상태 관리중입니다.
+// ChargeSpeed를 통해 프로그래스바 속도 조절 가능합니다.
 void UKMK_Bat::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	// 배터리 여부에 따라 on/off
 	meshBat->SetVisibility(isHaveBat);
-	
+	// 배터리가 들어와있으면
 	if (isHaveBat == true)
 	{
 		// 딜라이트 맵용 단자들
@@ -59,13 +62,11 @@ void UKMK_Bat::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 		// 캣냅용 단자들 => 컴퓨터 근처에 있는 단자용
 		if (batProgress != nullptr)
 		{
+			// 캣냅 기믹 시작전에는 프로그래스 바가 충전되지 않게 만들기 위함
 			if (!isStart) return;
-			spd += ChargeSpeed;
-			ChargeGage(spd);
-			if (spd > 100)
-			{
-				spd = 100;
-			}
+
+			// Material 프로그래스바 채워지는 것 관련 함수
+			ChargeGage(ChargeSpeed, 1);
 		}
 	}
 
@@ -84,8 +85,14 @@ void UKMK_Bat::SetTargetDoor(AActor* NewTargetDoor)
 	}
 }
 
-void UKMK_Bat::ChargeGage(float DeltaTime)
+void UKMK_Bat::ChargeGage(float speed, int count)
 {
-	myMatDynamic->SetScalarParameterValue("Gage", DeltaTime);
+	// 시작되고 배터리가 있다면 천천히 충전되기 시작
+	spd += speed * count;
+	myMatDynamic->SetScalarParameterValue("Gage", spd );
+	if (spd >= 100)
+	{
+		spd = 100;
+	}
 }
 

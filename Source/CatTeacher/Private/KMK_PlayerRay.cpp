@@ -266,7 +266,7 @@ void UKMK_PlayerRay::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 		}
 	}
 }
-
+// 레이 위치 생성
 void UKMK_PlayerRay::SetRayPos(FVector start, FVector end)
 {
 	startPos = start;

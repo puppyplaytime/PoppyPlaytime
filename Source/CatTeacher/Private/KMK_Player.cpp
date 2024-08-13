@@ -165,7 +165,10 @@ void AKMK_Player::BeginPlay()
 		Bats[i]->SetActorScale3D(FVector(0.7f));
 		Bats[i]->meshComp->SetRenderInMainPass(false);
 		Bats[i]->meshComp->SetRenderInDepthPass(false);
+		auto* b = Bats[i]->FindComponentByClass<UBoxComponent>();
+		b->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		Bats[i]->meshComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		
 		playerRay->Bats.Add(Bats[i]);
 	}
 	

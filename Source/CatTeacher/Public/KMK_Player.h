@@ -66,8 +66,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<class AKMK_PlayerHand*> Hands;
 
+	UPROPERTY()
 	TArray<class AKMK_Battery*> Bats;
-
+	UPROPERTY()
 	class UStaticMeshComponent* RMeshComp;
 #pragma endregion
 #pragma region InputVaribles

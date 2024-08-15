@@ -4,6 +4,7 @@
 #include "JSH_Cat.h"
 #include "JSH_CatDoor.h"
 #include "JSH_CatFSM.h"
+#include "JSH_Ending.h"
 #include "JSH_Light.h"
 #include "KHH_RotateDoor.h"
 #include "Kismet/GameplayStatics.h"
@@ -88,6 +89,9 @@ void UJSH_TopCatFSM::BeginPlay()
             break;  // 첫 번째로 찾은 AJSH_Cat을 저장한 후 루프 종료
         }
     }
+
+
+    EndingHelper = Cast<AJSH_Ending>(UGameplayStatics::GetActorOfClass(GetWorld(), AJSH_Ending::StaticClass()));
     
 }
 
@@ -218,6 +222,10 @@ void UJSH_TopCatFSM::TopOpenState(float DeltaTime)
 
 void UJSH_TopCatFSM::AttackState()
 {
+
+    //EndingHelper->JumpScareEnding = true;
+
+
     if (bHasAttacked)
     {
     	bHasAttacked = false;

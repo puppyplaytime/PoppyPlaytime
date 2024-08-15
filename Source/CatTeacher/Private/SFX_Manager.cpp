@@ -29,7 +29,7 @@ void ASFX_Manager::Tick(float DeltaTime)
 	}
 	if (BGMCount <= 0)
 	{
-		UAudioComponent* audio = UGameplayStatics::SpawnSound2D(GetWorld(), BGM, 0.45f, 1.0f, 0.f, nullptr, true, false);
+		audio = UGameplayStatics::SpawnSound2D(GetWorld(), BGM, 0.45f, 1.0f, 0.f, nullptr, true, false);
 		audio->Play();
 		BGMCount++;
 	}

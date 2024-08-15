@@ -7,6 +7,8 @@
 #include "KMK_PlayerHand.h"
 #include "Kismet/GameplayStatics.h"
 #include "Blueprint/UserWidget.h"
+#include "SFX_Manager.h"
+#include "Components/AudioComponent.h"
 
 
 
@@ -127,6 +129,8 @@ void AJSH_EleButton::EleUp()
 		{
 			auto* EleW = CreateWidget(GetWorld(), widfact);
 			EleW->AddToViewport(3);
+			auto* a = Cast<ASFX_Manager>(audioManager);
+			if(a) a->audio->Stop();
 		}
 
 	}

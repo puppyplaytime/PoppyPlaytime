@@ -72,6 +72,9 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<class UUserWidget>widfact;
+
+	UPROPERTY(EditAnywhere)
+	class AActor* audioManager;
 };
 
 

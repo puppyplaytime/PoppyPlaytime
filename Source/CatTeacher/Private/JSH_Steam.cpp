@@ -4,6 +4,7 @@
 #include "JSH_Steam.h"
 #include "NiagaraComponent.h"
 #include "NiagaraSystem.h"
+#include "Kismet/GameplayStatics.h"
 #include "UObject/ConstructorHelpers.h"
 
 
@@ -45,6 +46,14 @@ void AJSH_Steam::Tick(float DeltaTime)
 	{
 		NSteam->SetVisibility(true);
 		currtime += DeltaTime;
+
+		if (soundstart)
+		{
+			static USoundWave* SteamSound = LoadObject<USoundWave>(nullptr, TEXT("/Script/Engine.SoundWave'/Game/Project/JSH/Audio/CatSteam2.CatSteam2'"));
+			UGameplayStatics::PlaySoundAtLocation(GetWorld(), SteamSound, GetActorLocation());
+			soundstart = false;
+		}
+		
 		if (currtime >= offtime)
 		{
 			NSteam->SetVisibility(false);

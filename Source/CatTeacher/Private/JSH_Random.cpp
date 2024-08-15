@@ -7,6 +7,7 @@
 #include "GameFramework/Actor.h"
 #include "KMK_Player.h" 
 #include "JSH_CatFSM.h" 
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AJSH_Random::AJSH_Random()
@@ -18,7 +19,11 @@ AJSH_Random::AJSH_Random()
 void AJSH_Random::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+    // 기본 soundplay
+    static USoundWave* SteamSound = LoadObject<USoundWave>(nullptr, TEXT("/Script/Engine.SoundWave'/Game/Project/JSH/Audio/BGM/CatBGM01.CatBGM01'"));
+    UGameplayStatics::PlaySoundAtLocation(GetWorld(), SteamSound, GetActorLocation());
+    
 	// Set timer to call FindAndSelectRandomTag every 10 seconds
 	//GetWorldTimerManager().SetTimer(TimerHandle, this, &AJSH_Random::FindAndSelectRandomTag, TrueRandomeTime, true);
 	// test
@@ -196,6 +201,11 @@ void AJSH_Random::ss()
     
     GetWorldTimerManager().SetTimer(TimerHandle, this, &AJSH_Random::FindAndSelectRandomTag, TrueRandomeTime, true);
     GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Green, TEXT("timer set"));
+
+    // Danger Sound 재생
+    static USoundWave* SteamSound = LoadObject<USoundWave>(nullptr, TEXT("/Script/Engine.SoundWave'/Game/Project/JSH/Audio/BGM/DangerSound.DangerSound'"));
+    UGameplayStatics::PlaySoundAtLocation(GetWorld(), SteamSound, GetActorLocation());
+    
     start = false; // 위에서 막았지만, 한번 더 확실하게 막는
 }
 

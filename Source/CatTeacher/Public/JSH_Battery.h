@@ -39,10 +39,13 @@ public:
 
 	UPROPERTY()
 	AActor* Cat03;
+	
 	UPROPERTY()
 	AActor* Cat04;
+	
 	UPROPERTY()
 	class UJSH_CatFSM* Cat03Component;
+	
 	UPROPERTY()
 	class UJSH_CatFSM* Cat04Component;
 

@@ -186,7 +186,6 @@ void UKMK_PlayerRay::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 						Hands[0]->isPick = false;
 					}
 					else Hands[0]->isGo = true;
-
 				}
 			}
 			// 물체가 맞지 않은 경우

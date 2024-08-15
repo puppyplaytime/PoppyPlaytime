@@ -26,6 +26,8 @@
 #include "Blueprint/UserWidget.h"
 #include "PlayerWidget.h"
 #include "Components/Image.h"
+#include "Sound/SoundCue.h"
+#include "Components/AudioComponent.h"
 
 // Sets default values
 AKMK_Player::AKMK_Player()
@@ -203,6 +205,22 @@ void AKMK_Player::BeginPlay()
 	{
 		whiteHand[i]->SetColorAndOpacity(FLinearColor(1, 1, 1, 0));
 	}
+
+	for (int i = 0; i < soundCue.Num(); i++)
+	{
+		UAudioComponent* newAudioComp = NewObject<UAudioComponent>(this);
+		audioComps.Add(newAudioComp);
+		audioComps[i]->bAutoActivate = false;
+		audioComps[i]->SetupAttachment(RootComponent);
+		audioComps[i]->RegisterComponent();
+
+		if (audioComps[i] != nullptr)
+		{
+			audioComps[i]->SetSound(soundCue[i]);
+		}
+	}
+    audioComps[0]->SetPitchMultiplier(walkSpeed);
+    audioComps[1]->SetPitchMultiplier(RunSpeed);
 }
 
 // Called every frame
@@ -259,6 +277,32 @@ void AKMK_Player::Tick(float DeltaTime)
 	endPos = startPos + camera->GetForwardVector() * rayDis;
 	endPos1 = startPos + camera->GetForwardVector() * rayDis1;
 
+
+	// 사운드 재생
+
+	float SFXSpd = GetVeloFunc();
+	if (SFXSpd > 0 && SFXSpd < 800)
+	{
+		isSFX[0] = true;
+		isSFX[1] = false;
+	}
+	else if (SFXSpd >= 800)
+	{
+		isSFX[0] = false;
+		isSFX[1] = true;
+	}
+	else
+	{
+		isSFX[0] = false;
+		isSFX[1] = false;
+	}
+
+	if (movementComp->IsFalling())
+	{
+		isSFX[0] = false;
+		isSFX[1] = false;
+
+	}
 	// 게이지바 변경
 	for (int i = 0; i < 2; i++)
 	{
@@ -277,10 +321,59 @@ void AKMK_Player::Tick(float DeltaTime)
 			if (gauzeSpd > 1) gauzeSpd = 1;
 			myMatDynamic->SetScalarParameterValue("Gauge", gauzeSpd);
 		}
+		if (isSFX[i])
+		{
+			if (!audioComps[i]->IsPlaying())
+			{
+				PlayPlayerSound(i);
+			}
+		}
+		else
+		{
+			if (audioComps[i]->IsPlaying())
+			{
+				StopPlayerSound(i);
+			}
+		}
+	}
 
+
+}
+
+#pragma region Audio
+void AKMK_Player::PlayPlayerSound(int index)
+{
+	if (audioComps[index] && !audioComps[index]->IsPlaying())
+	{
+		audioComps[index]->Play();
 	}
 }
 
+void AKMK_Player::StopPlayerSound(int index)
+{
+	if (audioComps[index] && audioComps[index]->IsPlaying())
+	{
+		audioComps[index]->Stop();
+	}
+}
+
+float AKMK_Player::GetVeloFunc()
+{
+	return GetVelocity().Size();
+}
+
+
+void AKMK_Player::Landed(const FHitResult& Hit)
+{
+	Super::Landed(Hit);
+	isSFX[0] = false;
+	isSFX[1] = false;
+
+	// 착지 확인
+	UGameplayStatics::PlaySoundAtLocation(this, soundCue[2], GetActorLocation());
+}
+
+#pragma endregion
 // Called to bind functionality to input
 void AKMK_Player::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
@@ -349,6 +442,8 @@ void AKMK_Player::InputMove(const struct FInputActionValue& value)
 
 	dir.Normalize();
 }
+
+
 #pragma endregion
 #pragma region Jump
 // 점프

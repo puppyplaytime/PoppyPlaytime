@@ -155,4 +155,6 @@ public:
 	UPROPERTY()
 	class AJSH_Ending* EndingHelper;
 
+	int gCount = 0;
+	int rCount = 0;
 };

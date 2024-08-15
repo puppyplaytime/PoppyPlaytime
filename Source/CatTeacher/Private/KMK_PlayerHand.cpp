@@ -20,6 +20,8 @@
 #include "../../../../Plugins/FX/Niagara/Source/Niagara/Public/NiagaraFunctionLibrary.h"
 #include "../../../../Plugins/FX/Niagara/Source/Niagara/Public/NiagaraComponent.h"
 #include <LeverComponent.h>
+#include "Components/AudioComponent.h"
+#include "Sound/SoundCue.h"
 
 #include "JSH_Ending.h"
 #include "JSH_EndingCat.h"
@@ -177,11 +179,23 @@ void AKMK_PlayerHand::Tick(float DeltaTime)
 	if (isReverse)
 	{
 		isGo = false;
+		if (!player->audioComps[4]->IsPlaying() && rCount <= 0)
+		{
+			rCount++;
+			gCount = 0;
+			UGameplayStatics::PlaySoundAtLocation(this, player->soundCue[4], GetActorLocation());
+		}
 	}
 	// 나가는 상태일 때, 돌아오지 못하게 막음
 	if (isGo)
 	{
 		isReverse = false;
+        if (!player->audioComps[3]->IsPlaying() && gCount <= 0)
+        {
+			gCount++;
+			rCount = 0;
+			UGameplayStatics::PlaySoundAtLocation(this, player->soundCue[3], GetActorLocation());
+        }
 	}
 	// 손이 돌아오는 곳
 	if (isReverse && !isGo)
@@ -397,6 +411,7 @@ void AKMK_PlayerHand::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 		myMatDynamic->SetScalarParameterValue("charge_light", 4);
 		VFXComp->SetVisibility(true);
 		isHold = true;
+		UGameplayStatics::PlaySoundAtLocation(this, player->soundCue[5], GetActorLocation());
 		// Final 스위치인 경우
 		if (OtherActor->FindComponentByClass<UKMK_FinalSwitch>())
 		{

@@ -65,5 +65,5 @@ public:
 
 	int startPoint = -1;
 #pragma endregion
-		
+
 };

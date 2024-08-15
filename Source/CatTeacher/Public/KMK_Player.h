@@ -210,10 +210,6 @@ public:
 	FORCEINLINE void ChangeHandEnd() {bChangeHand = true;}
 	FORCEINLINE void FireBulletEnd() { bFireBullet = true;}
 
-	// 소리관련
-	UPROPERTY(EditAnywhere, Category = "Sound")
-	TArray<class USoundBase*> sounds;
-
 	void ChangeLevel();
 
 
@@ -228,4 +224,23 @@ public:
 	float disTime = 1;
 	UPROPERTY(EditAnywhere, Category = "Hand")
 	UStaticMesh* HandMesh;
+
+	// Sound 관련
+	UPROPERTY(VisibleAnywhere)
+	TArray<class UAudioComponent*> audioComps;
+	UPROPERTY(EditDefaultsOnly, Category = "Sound")
+	TArray<class USoundCue*> soundCue;
+	UPROPERTY()
+	TArray<bool> isSFX = {false, false, false};
+	UPROPERTY(EditDefaultsOnly, Category = "Sound")
+	float walkSpeed = 0.5f;
+	UPROPERTY(EditDefaultsOnly, Category = "Sound")
+	float RunSpeed = 1;
+
+	void PlayPlayerSound(int index);
+    void StopPlayerSound(int index);
+
+	float GetVeloFunc();
+
+	virtual void Landed(const FHitResult& Hit) override;
 };

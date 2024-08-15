@@ -100,4 +100,8 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	class AJSH_Cat* CatS5;
+
+
+	UPROPERTY()
+	class AJSH_Ending* EndingHelper;
 };

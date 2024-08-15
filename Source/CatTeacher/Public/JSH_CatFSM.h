@@ -184,6 +184,7 @@ public:
 
 
 	// 03, 04 배터리 관련
+	UPROPERTY()
 	class UKMK_Bat* BatComponent;
 
 	// 처음 03, 04 배터리 일떄 , 03, 04 고양이 없는 상태
@@ -199,7 +200,9 @@ public:
 	FVector tt;
 
 	// 천장 문
+	UPROPERTY()
 	class AJSH_CatDoor* CatDoor;
+	
 	bool DoorOpen = false;
 	bool topStart = false;
 	
@@ -207,6 +210,13 @@ public:
 
 
 	void End();
+
+
+	// 공격할때 다른 공격 막기
+	// bool AttackCatDestroy = true;
+
+	UPROPERTY()
+	class AJSH_Ending* EndingHelper;
 };
 
 

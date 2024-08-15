@@ -26,18 +26,24 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	TArray<class AActor*> Steam;
-	
+
+	UPROPERTY()
 	class UKMK_Bat* BatComponent03;
+	UPROPERTY()
 	class UKMK_Bat* BatComponent04;
 	
-
+	UPROPERTY()
 	AActor* batsave03;
+	UPROPERTY()
 	AActor* batsave04;
 
+	UPROPERTY()
 	AActor* Cat03;
+	UPROPERTY()
 	AActor* Cat04;
-
+	UPROPERTY()
 	class UJSH_CatFSM* Cat03Component;
+	UPROPERTY()
 	class UJSH_CatFSM* Cat04Component;
 
 	bool FSMOnOff03 = true;

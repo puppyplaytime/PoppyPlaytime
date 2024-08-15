@@ -121,6 +121,13 @@ void AJSH_EleButton::EleUp()
 		FVector CurrentLocation = Elevator->GetActorLocation();
 		CurrentLocation.Z += eleSpeed;
 		Elevator->SetActorLocation(CurrentLocation);
+
+		if (MoveElv)
+		{
+			MoveElv = false;
+			static USoundWave* ElvSound = LoadObject<USoundWave>(nullptr, TEXT("/Script/Engine.SoundWave'/Game/Project/KHH/Sound/BatteryOpendoor/poppy-playtime-opening-gate-sound-effect.poppy-playtime-opening-gate-sound-effect'"));
+			UGameplayStatics::PlaySoundAtLocation(GetWorld(), ElvSound, GetActorLocation());
+		}
 		
 		t += GetWorld()->DeltaTimeSeconds;
 		//static float TargetZ = Elevator->GetActorLocation().Z + distance;
@@ -162,6 +169,13 @@ void AJSH_EleButton::CageOfen()
 			Ofen = false;
 			click02 = true;
 			//GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, TEXT("Elevator reached the target height."));
+		}
+
+		if (MoveElv2)
+		{
+			MoveElv2 = false;
+			static USoundWave* ElvSound = LoadObject<USoundWave>(nullptr, TEXT("/Script/Engine.SoundWave'/Game/Project/KHH/Sound/BatteryOpendoor/poppy-playtime-opening-gate-sound-effect.poppy-playtime-opening-gate-sound-effect'"));
+			UGameplayStatics::PlaySoundAtLocation(GetWorld(), ElvSound, GetActorLocation());
 		}
 	}
 }

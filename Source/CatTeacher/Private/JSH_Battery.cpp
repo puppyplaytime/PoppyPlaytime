@@ -29,7 +29,12 @@ void UJSH_Battery::BeginPlay()
 
 	Cat03Component = Cat03->FindComponentByClass<UJSH_CatFSM>();
 	Cat04Component = Cat04->FindComponentByClass<UJSH_CatFSM>();
-	
+
+	BatComponent03 = batsave03->FindComponentByClass<UKMK_Bat>();
+	FSMOnOff03 = BatComponent03->isHaveBat;
+
+	BatComponent04 = batsave04->FindComponentByClass<UKMK_Bat>();
+	FSMOnOff04 = BatComponent04->isHaveBat;
 }
 
 
@@ -43,8 +48,7 @@ void UJSH_Battery::TickComponent(float DeltaTime, ELevelTick TickType, FActorCom
 	// 민경 배터리 isHaveBat == true 됬을떄
 	// niagara 꺼지고 , 3번 문 fsm 활성화
 
-	BatComponent03 = batsave03->FindComponentByClass<UKMK_Bat>();
-	FSMOnOff03 = BatComponent03->isHaveBat;
+
 	if (BatComponent03->isHaveBat == false)
 	{
 		if (repeat03)
@@ -61,8 +65,7 @@ void UJSH_Battery::TickComponent(float DeltaTime, ELevelTick TickType, FActorCom
 		repeat03 = true;
 	}
 
-	BatComponent04 = batsave04->FindComponentByClass<UKMK_Bat>();
-	FSMOnOff04 = BatComponent04->isHaveBat;
+
 	if (BatComponent04->isHaveBat == false)
 	{
 		if (repeat04)
@@ -72,6 +75,7 @@ void UJSH_Battery::TickComponent(float DeltaTime, ELevelTick TickType, FActorCom
 			repeat04 = false;
 		}
 	}
+	
 	if (BatComponent04->isHaveBat == true)
 	{
 		FSMOnOff04 = true;

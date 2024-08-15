@@ -56,7 +56,9 @@ public:
 	bool AttackStart = false;
 	
 	// √µ¿Â πÆ
+	UPROPERTY()
 	class AJSH_CatDoor* CatDoor;
+	
 	bool DoorOpen = false;
 	bool topStart = false;
 
@@ -80,7 +82,10 @@ public:
 	// Light
 	//class AJSH_Light* DoorLight;
 
+	UPROPERTY()
 	TArray<class AJSH_Light*> DoorLights;
+
+	
 	float lighttime = 0;
 	float opentime = 3;
 

@@ -32,8 +32,9 @@ void UJSH_CatFSM::BeginPlay()
     
     me = Cast<AJSH_Cat>(GetOwner());
 
+    //cState = ECatState::RoundMove;
     cState = ECatState::RoundMove;
-    
+
     
     
     // CatNab 초기 이동 속도 조절

@@ -43,6 +43,13 @@ void AJSH_Cat::Tick(float DeltaTime)
 
 	if (PlayAttackAnimation)
 	{
+		HandDel = true;
+		
+		if(ccamera)
+		{
+			GetWorld()->GetFirstPlayerController()->PlayerCameraManager->StartCameraShake(ccamera);
+		}
+		
 		EndingHelper->JumpScareEnding = true;
 		// Load the animation sequence
 		static USoundWave* AttackSound = LoadObject<USoundWave>(nullptr, TEXT("/Game/Project/JSH/Audio/Sw_catnap_jumpscare.Sw_catnap_jumpscare"));

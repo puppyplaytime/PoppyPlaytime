@@ -516,10 +516,10 @@ void UJSH_CatFSM::AttackState()
 
     //EndingHelper->JumpScareEnding = true;
 
-    if(ccamera)
-    {
-        GetWorld()->GetFirstPlayerController()->PlayerCameraManager->StartCameraShake(ccamera);
-    }
+    // if(ccamera)
+    // {
+    //     GetWorld()->GetFirstPlayerController()->PlayerCameraManager->StartCameraShake(ccamera);
+    // }
     
     if (bHasAttacked)
     {

@@ -164,7 +164,7 @@ public:
 	bool IdleTeleport = false;
 	
 	UPROPERTY(EditAnywhere, Category = "Control")
-	float idletime = 20;
+	float idletime = 15;
 	
 	float idlecurrtime = 0;
 

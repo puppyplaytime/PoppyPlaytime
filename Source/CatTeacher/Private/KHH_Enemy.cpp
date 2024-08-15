@@ -37,23 +37,6 @@ void AKHH_Enemy::Tick(float DeltaTime)
 	{
 		fsm->isRun = true;
 	}
-
-	//float SFXSpd = GetVeloFunc();
-	//if (SFXSpd > 0 && SFXSpd < 800)
-	//{
-	//	isSFX[0] = true;
-	//	isSFX[1] = false;
-	//}
-	//else if (SFXSpd >= 800)
-	//{
-	//	isSFX[0] = false;
-	//	isSFX[1] = true;
-	//}
-	//else
-	//{
-	//	isSFX[0] = false;
-	//	isSFX[1] = false;
-	//}
 }
 
 // Called to bind functionality to input
@@ -63,24 +46,5 @@ void AKHH_Enemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
 
 }
 
-//void AKHH_Enemy::PlayEnemySound(int index)
-//{
-//	if (audioComps[index] && !audioComps[index]->IsPlaying())
-//	{
-//		audioComps[index]->Play();
-//	}
-//}
-//
-//void AKHH_Enemy::StopEnemySound(int index)
-//{
-//	if (audioComps[index] && audioComps[index]->IsPlaying())
-//	{
-//		audioComps[index]->Stop();
-//	}
-//}
-//
-//float AKHH_Enemy::GetVeloFunc()
-//{
-//	return GetVelocity().Size();
-//}
+
 

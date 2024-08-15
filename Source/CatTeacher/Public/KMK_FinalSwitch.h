@@ -26,6 +26,7 @@ public:
 
 	UPROPERTY(EditAnyWhere)
 	TArray<AActor*> bats;
+
 	UPROPERTY(VisibleAnywhere)
 	TArray<class UKMK_Bat*> batsComps;
 
@@ -39,12 +40,19 @@ public:
 	UPROPERTY(EditAnywhere)
     class UMaterialInstance* matFact;
 
+	UPROPERTY()
 	UMaterialInstanceDynamic* myMatDynamic;
 
+	UPROPERTY()
 	class UStaticMeshComponent* meshComp;
 
 	float t = 0;
 	bool isTrue = false;
 	float gage = 100;
 	float page = 0;
+
+
+	// CatNab
+	UPROPERTY()
+	class AJSH_Random* RandomTag;
 };

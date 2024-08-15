@@ -116,8 +116,8 @@ void UJSH_TopCatFSM::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
     }
 
     // 화면에 상태 표시
-    // FString myState = UEnum::GetValueAsString(tState);
-    // DrawDebugString(GetWorld(), GetOwner()->GetActorLocation(), myState, nullptr, FColor::Blue, 0, true, 1);
+    FString myState = UEnum::GetValueAsString(tState);
+    DrawDebugString(GetWorld(), GetOwner()->GetActorLocation(), myState, nullptr, FColor::Blue, 0, true, 1);
 
     if (Cat->fsm->DoorOpen)
     {

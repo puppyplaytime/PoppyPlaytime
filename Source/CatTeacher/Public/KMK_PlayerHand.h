@@ -148,4 +148,11 @@ public:
 	UPROPERTY()
 	AActor* overActor;
 
+	// Ending¿ª ¿ß«— 
+	UPROPERTY()
+	class AJSH_EndingCat* EndingCat;
+
+	UPROPERTY()
+	class AJSH_Ending* EndingHelper;
+
 };

@@ -29,17 +29,22 @@ public:
 	//UKMK_PlayerHandFSM* FSM;
 
 	bool interaction = false;
-
+	
+	UPROPERTY()
 	class UKMK_PlayerHandFSM* FSM;
 
 	FString SwitchName;
-
+	
+	UPROPERTY()
 	class UJSH_CatFSM* CatFsm;
 
-
+	UPROPERTY()
 	class AJSH_Steam* Steam01;
+	UPROPERTY()
 	class AJSH_Steam* Steam02;
+	UPROPERTY()
 	class AJSH_Steam* Steam03;
+	UPROPERTY()
 	class AJSH_Steam* Steam04;
 
 	bool steam01 = false;

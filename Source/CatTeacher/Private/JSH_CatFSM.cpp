@@ -10,6 +10,8 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "JSH_Battery.h"
 #include "JSH_CatDoor.h"
+#include "JSH_Ending.h"
+#include "JSH_Random.h"
 #include "KHH_RotateDoor.h"
 #include "GameFramework/PlayerController.h"
 #include "Camera/CameraActor.h"
@@ -52,6 +54,10 @@ void UJSH_CatFSM::BeginPlay()
     }
 
     DoorOpen = false;
+
+
+
+    EndingHelper = Cast<AJSH_Ending>(UGameplayStatics::GetActorOfClass(GetWorld(), AJSH_Ending::StaticClass()));
 }
 
 void UJSH_CatFSM::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -507,6 +513,13 @@ void UJSH_CatFSM::AttackState()
 {
     me->FalseBox->SetCollisionProfileName(TEXT("NoCollision"));
 
+    //EndingHelper->JumpScareEnding = true;
+
+    if(ccamera)
+    {
+        GetWorld()->GetFirstPlayerController()->PlayerCameraManager->StartCameraShake(ccamera);
+    }
+    
     if (bHasAttacked)
     {
         // Get me's location and store it in tt
@@ -572,6 +585,31 @@ void UJSH_CatFSM::AttackState()
             //me->PlayAttackAnimation = true;
         }
     }
+
+    // if (AttackCatDestroy)
+    // {
+    //     me->Destroy();
+    //
+    //     if (me && me->Tags.Contains("S1"))
+    //     {
+    //         me->Destroy();
+    //     }
+    //     if (me && me->Tags.Contains("S2"))
+    //     {
+    //         me->Destroy();
+    //     }
+    //     if (me && me->Tags.Contains("S3"))
+    //     {
+    //         me->Destroy();
+    //     }
+    //     if (me && me->Tags.Contains("S4"))
+    //     {
+    //         me->Destroy();
+    //     }
+    //
+    //     Random->Stop = true;
+    //     AttackCatDestroy = false;
+    // }
 }
 
 
@@ -624,6 +662,7 @@ void UJSH_CatFSM::EndingState()
         {
             me->Destroy();
         }
+        
         ending = false;
     }
 }

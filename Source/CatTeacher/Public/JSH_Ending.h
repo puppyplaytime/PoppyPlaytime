@@ -24,6 +24,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
+	
 
 	UPROPERTY(EditAnywhere)
 	class UBoxComponent* FalseBox;
@@ -52,4 +53,5 @@ public:
 	
 
 	bool EndingStart = false;
+	bool JumpScareEnding = false;
 };

@@ -210,6 +210,13 @@ public:
 
 
 	void End();
+
+
+	// 공격할때 다른 공격 막기
+	// bool AttackCatDestroy = true;
+
+	UPROPERTY()
+	class AJSH_Ending* EndingHelper;
 };
 
 

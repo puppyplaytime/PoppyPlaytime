@@ -3,6 +3,7 @@
 
 #include "JSH_Cat.h"
 #include "JSH_CatFSM.h"
+#include "JSH_Ending.h"
 #include "KMK_Bullet.h"
 #include "Components/BoxComponent.h"
 #include "Animation/AnimSequence.h"
@@ -32,7 +33,8 @@ void AJSH_Cat::BeginPlay()
 	Super::BeginPlay();
 
 	WidgetPlay = false;
-	
+
+	EndingHelper = Cast<AJSH_Ending>(UGameplayStatics::GetActorOfClass(GetWorld(), AJSH_Ending::StaticClass()));
 }
 
 void AJSH_Cat::Tick(float DeltaTime)
@@ -41,6 +43,7 @@ void AJSH_Cat::Tick(float DeltaTime)
 
 	if (PlayAttackAnimation)
 	{
+		EndingHelper->JumpScareEnding = true;
 		// Load the animation sequence
 		static USoundWave* AttackSound = LoadObject<USoundWave>(nullptr, TEXT("/Game/Project/JSH/Audio/Sw_catnap_jumpscare.Sw_catnap_jumpscare"));
 		static UAnimSequence* AttackAnim = LoadObject<UAnimSequence>(nullptr, TEXT("/Game/Project/JSH/Asset/4/source/Armature_A_NappyCat_Jumpscare_Normal.Armature_A_NappyCat_Jumpscare_Normal"));

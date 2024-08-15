@@ -139,6 +139,37 @@ void AJSH_Ending::Tick(float DeltaTime)
 		
 		EndingStart = false;
 	}
+
+
+	if (JumpScareEnding)
+	{
+		if (cat1 && cat1->ActorHasTag("S1"))
+		{
+			cat1->fsm->cState = ECatState::ending;
+			cat1->fsm->ending = true;
+		}
+		if (cat2 && cat2->ActorHasTag("S2"))
+		{
+			cat2->fsm->cState = ECatState::ending;
+			cat2->fsm->ending = true;
+
+		}
+		if (cat3 && cat3->ActorHasTag("S3"))
+		{
+			cat3->fsm->cState = ECatState::ending;
+			cat3->fsm->ending = true;
+
+		}
+		if (cat4 && cat4->ActorHasTag("S4"))
+		{
+			cat4->fsm->cState = ECatState::ending;
+			cat4->fsm->ending = true;
+
+		}
+		CatS5->Destroy();
+		
+		JumpScareEnding = false;
+	}
 }
 
 void AJSH_Ending::NotifyActorBeginOverlap(AActor* OtherActor)

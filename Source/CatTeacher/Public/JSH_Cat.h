@@ -48,4 +48,7 @@ public:
 	// widget 실행을 위한 변수
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool WidgetPlay = false;
+
+	UPROPERTY()
+	class AJSH_Ending* EndingHelper;
 };

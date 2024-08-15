@@ -84,5 +84,10 @@ private:
    
 	UPROPERTY(EditAnywhere)
 	class ULeverAnimInstance* Anim;
+
+	UPROPERTY(EditAnywhere)
+	class USoundCue* BatOpenDoor;
+
+	bool BOD = false;
 };
 

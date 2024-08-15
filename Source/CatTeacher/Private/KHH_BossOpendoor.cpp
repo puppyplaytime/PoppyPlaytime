@@ -3,6 +3,8 @@
 
 #include "KHH_BossOpendoor.h"
 #include "KMK_Player.h"
+#include "Kismet/GameplayStatics.h"
+#include "Sound/SoundCue.h"
 
 // Sets default values for this component's properties
 UKHH_BossOpendoor::UKHH_BossOpendoor()
@@ -36,6 +38,11 @@ void UKHH_BossOpendoor::TickComponent(float DeltaTime, ELevelTick TickType, FAct
 		Speed = FVector::Distance(OriginalLocation, TargetLocation) / MoveTime;
 		NewLocation = FMath::VInterpConstantTo(CurrentLocation, TargetLocation, DeltaTime, Speed);
 		GetOwner()->SetActorLocation(NewLocation);
+
+		if (!BOD) {
+			BOD = true;
+			UGameplayStatics::PlaySoundAtLocation(GetWorld(), BossDoorSound, GetOwner()->GetActorLocation());
+		}
 
 	} else return;
 }

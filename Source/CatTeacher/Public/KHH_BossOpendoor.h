@@ -42,4 +42,11 @@ public:
 	FVector TargetLocation;
 	float Speed;
 	FVector NewLocation;
+
+
+	UPROPERTY(EditAnywhere)
+	class USoundCue* BossDoorSound;
+
+	bool BOD = false;
+
 };

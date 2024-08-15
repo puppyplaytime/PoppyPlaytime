@@ -8,6 +8,8 @@
 #include "KHH_EnemyFSM.h"
 #include "LeverComponent.h"
 #include "LeverAnimInstance.h"
+#include "Kismet/GameplayStatics.h"
+#include "Sound/SoundCue.h"
 
 // Sets default values for this component's properties
 UKHH_BatteryOpenDoor::UKHH_BatteryOpenDoor()
@@ -47,13 +49,22 @@ void UKHH_BatteryOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, F
         if (SwitchComponent->lastDoor == true && BatComponent->isHaveBat == true && BatComponent1->isHaveBat == true)
         {
             MoveDoor(DeltaTime);
+            if (!BOD) {
+                BOD = true;
+                UGameplayStatics::PlaySoundAtLocation(GetWorld(), BatOpenDoor, GetOwner()->GetActorLocation());
+
+            }
         }
     }
 
     else {
         if (ShouldMove) // 배터리가 들어갔을때 조건을 맞춰 넣어야함 // 
-        {
+        {   
             MoveDoor(DeltaTime);
+            if (!BOD){
+                BOD = true;
+                UGameplayStatics::PlaySoundAtLocation(GetWorld(), BatOpenDoor, GetOwner()->GetActorLocation());
+            }
         }
     }
 }

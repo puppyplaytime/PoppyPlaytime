@@ -59,5 +59,10 @@ public:
 	bool isLeft = false;
 
 	int cnt = 0;
+
+	UPROPERTY(EditAnywhere)
+	class USoundCue* RotateDoorSound;
+
+	bool RDS = false;
 		
 };

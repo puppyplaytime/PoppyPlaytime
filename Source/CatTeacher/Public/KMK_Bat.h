@@ -40,12 +40,16 @@ public:
 	UFUNCTION()
     void SetTargetDoor(AActor* NewTargetDoor);
 
+	UPROPERTY()
 	class UKHH_BatteryOpenDoor* BatteryOpendoorComponent;
+
 	UPROPERTY(EditAnywhere)
-	class AStaticMeshActor* batProgress; 
+	class AStaticMeshActor* batProgress;
+	
 	UPROPERTY(EditAnywhere, Category = "Progress")
 	float ChargeSpeed  = 0.02f;
 	float spd =0;
+	
 	UPROPERTY(EditAnywhere)
     class UMaterialInstance* matFact;
 	UPROPERTY(VisibleAnywhere)

@@ -31,6 +31,8 @@ public:
 	UPROPERTY(EditAnywhere)
 	AActor* Targetshutter;
 	void SetTargetShutter(AActor* NewTargetShutter);
+
+	UPROPERTY()
 	class UKHH_BossOpendoor* BossOpendoorComponent;
 
 

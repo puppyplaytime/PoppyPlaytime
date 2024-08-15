@@ -14,6 +14,7 @@ class CATTEACHER_API UPlayerAnimInstance : public UAnimInstance
 {
 	GENERATED_BODY()
 public :
+	UPROPERTY()
 	class AKMK_Player* player;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	float Speed;
@@ -45,6 +46,7 @@ public :
 	int clickCount = 0;
 	UPROPERTY(EditAnywhere, Category = "Hand")
 	TArray<class UStaticMesh*> HandMesh;
+	UPROPERTY()
 	class UStaticMeshComponent* meshComp;
 
 	bool isNormal = false;

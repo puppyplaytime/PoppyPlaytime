@@ -63,7 +63,7 @@ void UKMK_FinalSwitch::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 	{
 		// 일정시간이 지나면
 		t += DeltaTime;
-		if (t > 10)
+		if (t > 5)
 		{
 			// 스크린 페이지가 변경되고
 			myMatDynamic->SetScalarParameterValue("Page", 1);

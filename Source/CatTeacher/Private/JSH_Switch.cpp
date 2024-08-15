@@ -46,6 +46,8 @@
 				Steam04 = Cast<AJSH_Steam>(FoundActors[3]);
 			}
 		}
+
+		
 	}
 
 	// Called every frame
@@ -94,7 +96,10 @@ void AJSH_Switch::NotifyActorBeginOverlap(AActor* OtherActor)
                         Cat->Tags.Remove("FCat1");
                     }
                 }
+            	// static USoundWave* SteamSound = LoadObject<USoundWave>(nullptr, TEXT("/Script/Engine.SoundWave'/Game/Project/JSH/Audio/CatSteam2.CatSteam2'"));
+            	// UGameplayStatics::PlaySoundAtLocation(GetWorld(), SteamSound, GetActorLocation());
             	Steam01->SteamON = true;
+            	Steam01->soundstart = true;
             }
             else if (Hand->overActor->ActorHasTag(FName("Switch2")))
             {
@@ -115,8 +120,9 @@ void AJSH_Switch::NotifyActorBeginOverlap(AActor* OtherActor)
             			Cat->Tags.Remove("2");
             		}
             	}
-            	
+
                 Steam02->SteamON = true; // Only set Steam02 to true for BP_Switch_C_0
+            	Steam02->soundstart = true;
             }
             // 3번 통로
             else if (Hand->overActor->ActorHasTag(FName("Switch3")))
@@ -138,8 +144,9 @@ void AJSH_Switch::NotifyActorBeginOverlap(AActor* OtherActor)
             			Cat->Tags.Remove("FCat3");
             		}
             	}
-            	
+
                 Steam03->SteamON = true; // Only set Steam03 to true for BP_Switch_C_2
+            	Steam03->soundstart = true;
             }
             // 4번 통로
             else if (Hand->overActor->ActorHasTag(FName("Switch4")))
@@ -149,6 +156,8 @@ void AJSH_Switch::NotifyActorBeginOverlap(AActor* OtherActor)
             	
             	TArray<AActor*> FoundActors;
             	UGameplayStatics::GetAllActorsWithTag(GetWorld(), FName("S4"), FoundActors);
+
+
 
             	// 찾은 액터들 순회
             	for (AActor* Actor : FoundActors)
@@ -162,6 +171,7 @@ void AJSH_Switch::NotifyActorBeginOverlap(AActor* OtherActor)
             		}
             	}
                 Steam04->SteamON = true; // Only set Steam04 to true for BP_Switch_C_3
+            	Steam04->soundstart = true;
             }
         }
     }

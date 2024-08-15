@@ -72,6 +72,12 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<class UUserWidget>widfact;
+
+	UPROPERTY(EditAnywhere)
+	class AActor* audioManager;
+
+	bool MoveElv = true;
+	bool MoveElv2=true;
 };
 
 

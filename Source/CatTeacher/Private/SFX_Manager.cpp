@@ -17,8 +17,6 @@ ASFX_Manager::ASFX_Manager()
 void ASFX_Manager::BeginPlay()
 {
 	Super::BeginPlay();
-	UAudioComponent* audio = UGameplayStatics::SpawnSound2D(GetWorld(), BGM, 0.45f, 1.0f, 0.f, nullptr, true, false);
-	audio->Play();
 }
 
 // Called every frame
@@ -26,5 +24,14 @@ void ASFX_Manager::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if (!BGMmanager) {
+		return;
+	}
+	if (BGMCount <= 0)
+	{
+		audio = UGameplayStatics::SpawnSound2D(GetWorld(), BGM, 0.45f, 1.0f, 0.f, nullptr, true, false);
+		audio->Play();
+		BGMCount++;
+	}
 }
 

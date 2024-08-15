@@ -23,7 +23,7 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = "Camera", BlueprintReadWrite)
 	class UCameraComponent* camera = nullptr;
-
+	
 	UPROPERTY(EditAnywhere, Category = "Component")
 	class UKMK_PlayerHandFSM* FSM = nullptr;
 
@@ -202,6 +202,8 @@ public:
 	UPROPERTY(EditAnywhere)
 	UMaterialInstanceDynamic* myMatDynamic;
 	float gauzeSpd = 1;
+
+	UPROPERTY()
 	class UImage* image;
 
 	bool bChangeHand;
@@ -219,9 +221,13 @@ public:
 	float loadTime = 3;
 	UPROPERTY(EditAnywhere)
 	float disSpeed = 1;
+
+	UPROPERTY()
 	TArray<class UImage*> whiteHand;
+
 	TArray<bool>isOn = { false, false, false};
 	float disTime = 1;
+
 	UPROPERTY(EditAnywhere, Category = "Hand")
 	UStaticMesh* HandMesh;
 

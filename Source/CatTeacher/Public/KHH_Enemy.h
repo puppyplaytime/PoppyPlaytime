@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "Components/AudioComponent.h"
 #include "KHH_Enemy.generated.h"
 
 UCLASS()
@@ -32,4 +33,5 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = FSMComponent)
 	bool isRun = false;
+
 };

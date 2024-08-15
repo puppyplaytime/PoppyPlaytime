@@ -26,4 +26,11 @@ public:
 	// BGM - 레벨마다 세팅
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BGM")
 	USoundBase* BGM;
+	UPROPERTY()
+	UAudioComponent* audio;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BGM")
+	
+	bool BGMmanager = false;
+	int BGMCount = 0;
 };

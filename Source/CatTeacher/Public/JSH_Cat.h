@@ -42,7 +42,7 @@ public:
 
 	bool timestart = false;
 	float currtime = 0;
-	float aniendtime = 1.4;
+	float aniendtime = 1.2;
 
 
 	// widget 실행을 위한 변수

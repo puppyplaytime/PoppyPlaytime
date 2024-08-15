@@ -38,5 +38,9 @@ public:
 
 	// 시간
 	float currtime = 0;
-	float offtime = 10;
+	float offtime = 3;
+
+	// sound 끄는 시간
+	bool soundstart = true;
+	float SoundOfftime = 10;
 };

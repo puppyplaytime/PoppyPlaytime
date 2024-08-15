@@ -20,7 +20,7 @@ void AJSH_Random::BeginPlay()
 	Super::BeginPlay();
 	
 	// Set timer to call FindAndSelectRandomTag every 10 seconds
-	GetWorldTimerManager().SetTimer(TimerHandle, this, &AJSH_Random::FindAndSelectRandomTag, TrueRandomeTime, true);
+	//GetWorldTimerManager().SetTimer(TimerHandle, this, &AJSH_Random::FindAndSelectRandomTag, TrueRandomeTime, true);
 	// test
 }
 
@@ -28,6 +28,19 @@ void AJSH_Random::BeginPlay()
 void AJSH_Random::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+    if (start)
+    {
+        ss();
+        start = false;
+        GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Green, TEXT("Start"));
+    }
+
+    if (Stop)
+    {
+        StopRandomTagSelection();
+        Stop = false;
+    }
 }
 
 void AJSH_Random::FindAndSelectRandomTag()
@@ -176,4 +189,20 @@ void AJSH_Random::FindAndSelectRandomTag()
     {
         UE_LOG(LogTemp, Warning, TEXT("No True Tags Found in Level"));
     }
+}
+
+void AJSH_Random::ss()
+{
+    
+    GetWorldTimerManager().SetTimer(TimerHandle, this, &AJSH_Random::FindAndSelectRandomTag, TrueRandomeTime, true);
+    GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Green, TEXT("timer set"));
+    start = false; // 위에서 막았지만, 한번 더 확실하게 막는
+}
+
+
+void AJSH_Random::StopRandomTagSelection()
+{
+    // 타이머를 멈추기 위해 ClearTimer 사용
+    GetWorldTimerManager().ClearTimer(TimerHandle);
+    GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, TEXT("Timer stopped"));
 }

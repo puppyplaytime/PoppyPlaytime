@@ -122,8 +122,8 @@ void UJSH_CatFSM::TickComponent(float DeltaTime, ELevelTick TickType, FActorComp
     GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Cyan, logMsg2);*/
 
     // CatNab 상태 표시
-    //FString myState = UEnum::GetValueAsString(cState);
-    //DrawDebugString(GetWorld() , GetOwner()->GetActorLocation(), myState , nullptr , FColor::Yellow , 0, true, 1);
+    FString myState = UEnum::GetValueAsString(cState);
+    DrawDebugString(GetWorld() , GetOwner()->GetActorLocation(), myState , nullptr , FColor::Yellow , 0, true, 1);
 
     UpdateState();
     UpdateStateFalse();

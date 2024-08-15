@@ -20,7 +20,11 @@
 #include "../../../../Plugins/FX/Niagara/Source/Niagara/Public/NiagaraFunctionLibrary.h"
 #include "../../../../Plugins/FX/Niagara/Source/Niagara/Public/NiagaraComponent.h"
 #include <LeverComponent.h>
+
+#include "JSH_Ending.h"
+#include "JSH_EndingCat.h"
 #include "KMK_FinalSwitch.h"
+#include "Kismet/GameplayStatics.h"
 // Sets default values
 AKMK_PlayerHand::AKMK_PlayerHand()
 {
@@ -69,6 +73,11 @@ void AKMK_PlayerHand::BeginPlay()
 	if(matFact != nullptr) hand->SetMaterial(0, myMatDynamic);
 	// 동적 material 내부에 있는 변수 조절 => 빛나지 X
 	myMatDynamic->SetScalarParameterValue("charge_light", 0);
+
+
+	// Ending을 위한
+	EndingCat = Cast<AJSH_EndingCat>(UGameplayStatics::GetActorOfClass(GetWorld(), AJSH_EndingCat::StaticClass()));
+	EndingHelper = Cast<AJSH_Ending>(UGameplayStatics::GetActorOfClass(GetWorld(), AJSH_Ending::StaticClass()));
 }
 
 // Called every frame
@@ -395,6 +404,13 @@ void AKMK_PlayerHand::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 			GEngine->AddOnScreenDebugMessage(9, 1, FColor::Emerald, FString::Printf(TEXT("complete")));
 		}
 	}
+
+	if(OtherActor->ActorHasTag("EndingSwitch"))
+	{
+		EndingCat->EndingVisible = true;
+		EndingHelper->EndingStart = true;
+	}
+	
 
 }
 

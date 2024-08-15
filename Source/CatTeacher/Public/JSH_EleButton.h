@@ -25,10 +25,13 @@ public:
 
 	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
 
+	UPROPERTY()
 	class UKMK_PlayerHandFSM* FSM;
 
-
+	UPROPERTY()
 	class AJSH_Movebox* Elevator;
+
+	UPROPERTY()
 	class AJSH_Movebox* cage;
 
 	bool Ofen = false;

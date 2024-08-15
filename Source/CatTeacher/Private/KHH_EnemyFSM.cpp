@@ -15,6 +15,7 @@
 #include "LeverComponent.h"
 #include "GameFramework/Actor.h"
 #include "KMK_PlayerHand.h"
+#include "Sound/SoundCue.h"
 
 
 // Sets default values for this component's properties

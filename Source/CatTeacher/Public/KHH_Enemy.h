@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "Components/AudioComponent.h"
 #include "KHH_Enemy.generated.h"
 
 UCLASS()
@@ -32,4 +33,21 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = FSMComponent)
 	bool isRun = false;
+
+	//UPROPERTY(VisibleAnywhere)
+	//TArray<class UAudioComponent*> audioComps;
+	//UPROPERTY(EditDefaultsOnly, Category = "Sound")
+	//TArray<class USoundCue*> soundCue;
+	//UPROPERTY()
+	//TArray<bool> isSFX = {false, false, false};
+	//UPROPERTY(EditDefaultsOnly, Category = "Sound")
+	//float walkSpeed = 0.5f;
+	//UPROPERTY(EditDefaultsOnly, Category = "Sound")
+	//float RunSpeed = 1;
+
+	//void PlayEnemySound(int index);
+ //   void StopEnemySound(int index);
+
+	//float GetVeloFunc();
+
 };

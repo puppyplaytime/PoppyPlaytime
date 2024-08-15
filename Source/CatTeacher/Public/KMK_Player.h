@@ -23,7 +23,7 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = "Camera", BlueprintReadWrite)
 	class UCameraComponent* camera = nullptr;
-
+	
 	UPROPERTY(EditAnywhere, Category = "Component")
 	class UKMK_PlayerHandFSM* FSM = nullptr;
 

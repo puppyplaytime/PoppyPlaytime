@@ -23,8 +23,6 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Mesh")
-	USkeletalMeshComponent* SkeletalMeshComponent;
-
-
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool EndingVisible = false;
 };

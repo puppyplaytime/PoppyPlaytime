@@ -24,11 +24,12 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
+	
 
 	UPROPERTY(EditAnywhere)
 	class UBoxComponent* FalseBox;
 
-
+	UPROPERTY()
 	class AJSH_CatDoor* CatDoor;
 
 	
@@ -36,14 +37,21 @@ public:
 	class AJSH_EndingCat* me;
 
 
-
+	UPROPERTY()
 	class AJSH_Cat* cat1;
-	
+	UPROPERTY()
 	class AJSH_Cat* cat2;
-
+	UPROPERTY()
 	class AJSH_Cat* cat3;
-	
+	UPROPERTY()
 	class AJSH_Cat* cat4;
-
+	UPROPERTY()
 	class AJSH_Cat* cat5;
+
+	UPROPERTY(EditAnywhere)
+	class AJSH_Cat* CatS5;
+	
+
+	bool EndingStart = false;
+	bool JumpScareEnding = false;
 };

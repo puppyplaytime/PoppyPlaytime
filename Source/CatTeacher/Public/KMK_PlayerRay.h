@@ -35,16 +35,29 @@ public:
 	UPROPERTY(EditAnywhere)
 	float rayDis = 1000;
 
+	UPROPERTY()
 	class UKMK_PlayerHandFSM* FSM;
+	
+	UPROPERTY()
 	class AKMK_Player* playerComp;
+	
 	UPROPERTY()
 	bool isRay = false;
+	
 	float RayDistance =0;
+	
+	UPROPERTY()
 	class UKHH_EnemyFSM* teacher;
+
+	UPROPERTY()
 	class UKMK_Bat* b;
 
+	UPROPERTY()
 	TArray<class AKMK_PlayerHand*> Hands;
+
+	UPROPERTY()
 	TArray<class AKMK_Battery*> Bats;
+	
 	UPROPERTY(EditAnywhere)
 	float PDis = 300;
 	
@@ -52,5 +65,5 @@ public:
 
 	int startPoint = -1;
 #pragma endregion
-		
+
 };

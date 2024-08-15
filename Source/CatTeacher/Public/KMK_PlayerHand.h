@@ -32,6 +32,7 @@ public:
 	class UArrowComponent* arrow;
 	UPROPERTY(EditAnywhere, Category = "Hand")
 	class UBoxComponent* box;
+	UPROPERTY()
 	class AKMK_Player* player;
 
 protected:
@@ -66,8 +67,10 @@ public:
 	
 	UPROPERTY(EditAnywhere)
 	class UKMK_PlayerHandFSM* FSM;
-	// 물건을 잡을 수 있게하는 컴포넌트 
+	// 물건을 잡을 수 있게하는 컴포넌트
+	UPROPERTY()
 	class UPhysicsHandleComponent* handle = nullptr;
+	UPROPERTY()
 	class UPrimitiveComponent* hitinfo;
 	UPROPERTY(EditAnywhere)
 	bool isGrab = false;
@@ -86,6 +89,7 @@ public:
 	bool bFromSweep,
 	const FHitResult& SweepResult);
 
+	UPROPERTY()
 	class AKMK_Battery* grabActor;
 
 	UPROPERTY(EditAnywhere)
@@ -102,6 +106,7 @@ public:
 	UPROPERTY()
 	bool isBatCom = false;
 
+	UPROPERTY()
 	class UKMK_Bat* b;
 
 	FString SwitchName;
@@ -114,6 +119,7 @@ public:
 	float HandTime = 0.5f;
 
 	bool isGet = false;
+	UPROPERTY()
 	class UKHH_RotateDoor* rotDoor;
 	bool isDoor = false;
 	FRotator firstRot;
@@ -129,14 +135,26 @@ public:
 	UPROPERTY(EditAnywhere)
     class UMaterialInstance* matFact;
 
+	UPROPERTY()
 	UMaterialInstanceDynamic* myMatDynamic;
 
+	UPROPERTY()
 	class ULeverComponent* lever;
 	UPROPERTY(EditAnywhere)
 	bool isLever = false;
 	FRotator leverRot;
 
 	// BeginOverlap된 액터를 저장하는 변수
+	UPROPERTY()
 	AActor* overActor;
 
+	// Ending을 위한 
+	UPROPERTY()
+	class AJSH_EndingCat* EndingCat;
+
+	UPROPERTY()
+	class AJSH_Ending* EndingHelper;
+
+	int gCount = 0;
+	int rCount = 0;
 };

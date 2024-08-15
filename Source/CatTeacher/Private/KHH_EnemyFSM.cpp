@@ -135,7 +135,7 @@ void UKHH_EnemyFSM::SpawnState()
 {
 	
 	Anim->DelightState=mState;
-	GetOwner()->SetActorLocation(GetOwner()->GetActorLocation() + GetOwner()->GetActorForwardVector() * 100 * GetWorld()->GetDeltaSeconds());
+	GetOwner()->SetActorLocation(GetOwner()->GetActorLocation() + GetOwner()->GetActorForwardVector() * 200 * GetWorld()->GetDeltaSeconds());
 
 	float distance = FVector::Distance(target->GetActorLocation(), GetOwner()->GetActorLocation());
 
@@ -145,29 +145,15 @@ void UKHH_EnemyFSM::SpawnState()
 		mState = EEnemyState::Die;
 		Anim->DelightState = mState;
 	}
-	//else
-	//{
-	//	UE_LOG(LogTemp, Warning, TEXT("else"));
-	//	
-	//}
-
-	//else if
-	//{
-	//// 공격 애니메이션 
-	//}
-	//// leveMove가 true이면 
-	//// die state로
-	//mState = EEnemyState::Die;
-	//// 그게 아니면 딜라이트 죽음 애니메이션 
-
+	
 }
 
 void UKHH_EnemyFSM::DieState()
 {
 	// 달려오는 애니메이션으로 전환
 
-	GetOwner()->SetActorLocation(FVector(2582.989926, 394.258331,69.763294));
-	
+	GetOwner()->SetActorLocation(FVector(2600.989926, 394.258331,69.763294));
+	//(2582.989926, 394.258331,69.763294)
 }
 
 

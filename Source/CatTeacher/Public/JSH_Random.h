@@ -31,7 +31,23 @@ private:
 	// 태그를 찾고 랜덤으로 선택하는 함수
 	void FindAndSelectRandomTag();
 
+
+
 public:
 	UPROPERTY(EditAnywhere, Category = "Control")
-	float TrueRandomeTime = 15.0f;
+	float TrueRandomeTime = 10.0f;
+
+
+	// 티비 화면에 맞춰서 Tag 뽑기를 시작하는 함수 
+	void ss();
+
+	// JumpScare나 Endig때에 Tag 뽑기를 멈추는 함수
+	void StopRandomTagSelection();
+	
+	UPROPERTY(EditAnywhere)
+	bool start = false;
+
+
+	UPROPERTY(EditAnywhere)
+	bool Stop = false;
 };

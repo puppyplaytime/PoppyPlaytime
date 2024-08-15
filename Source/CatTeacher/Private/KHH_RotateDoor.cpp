@@ -6,6 +6,8 @@
 #include "Engine/World.h"
 #include "Components/ActorComponent.h"
 #include "KMK_Player.h"
+#include "Sound/SoundCue.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values for this component's properties
 UKHH_RotateDoor::UKHH_RotateDoor()
@@ -73,6 +75,10 @@ void UKHH_RotateDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 	if (Distance <= DistanceThreshold && !ShouldMove)
 	{
 		RotateDoor(DeltaTime);
+		if (!RDS) {
+			RDS = true;
+			UGameplayStatics::PlaySoundAtLocation(GetWorld(), RotateDoorSound, GetOwner()->GetActorLocation());
+		}
 	}
 }
 
@@ -88,6 +94,7 @@ void UKHH_RotateDoor::RotateDoor(float DeltaTime)
 	NewRotation = FMath::RInterpConstantTo(CurrentRotation, TargetRotation, DeltaTime, Speed);
 	GetOwner()->SetActorRotation(NewRotation);
 }
+
 void UKHH_RotateDoor::RotateDoor1(float DeltaTime, FRotator angle, float time)
 {
 	CurrentRotation = GetOwner()->GetActorRotation();

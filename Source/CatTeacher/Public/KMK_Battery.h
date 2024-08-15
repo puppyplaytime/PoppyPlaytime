@@ -28,10 +28,11 @@ public:
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     bool isPush = false;
-
+    UPROPERTY()
     class AKMK_PlayerHand* hand;
+    UPROPERTY()
     TArray<AActor*> actors;
-
+    UPROPERTY()
     class UKMK_Bat* bat;
 
     UFUNCTION()

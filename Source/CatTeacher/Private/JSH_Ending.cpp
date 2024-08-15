@@ -73,10 +73,25 @@ void AJSH_Ending::BeginPlay()
 			{
 				cat4 = FoundCat;
 			}
-			else if (FoundCat->ActorHasTag("S5"))
+			else if (FoundCat->ActorHasTag("FCatAttack"))
 			{
 				cat5 = FoundCat;
 			}
+		}
+	}
+
+
+	TArray<AActor*> FoundActors;
+	UGameplayStatics::GetAllActorsWithTag(GetWorld(), FName("S5"), FoundActors);
+
+	// 찾은 액터들 중에서 AJSH_Cat 타입의 액터를 CatS5에 저장합니다.
+	for (AActor* Actor : FoundActors)
+	{
+		AJSH_Cat* FoundCat = Cast<AJSH_Cat>(Actor);
+		if (FoundCat)
+		{
+			CatS5 = FoundCat;
+			break;  // 첫 번째로 찾은 AJSH_Cat을 저장한 후 루프 종료
 		}
 	}
 	
@@ -87,18 +102,7 @@ void AJSH_Ending::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	
-
-}
-
-void AJSH_Ending::NotifyActorBeginOverlap(AActor* OtherActor)
-{
-	Super::NotifyActorBeginOverlap(OtherActor);
-
-
-	AKMK_PlayerHand* Hand = Cast<AKMK_PlayerHand>(OtherActor);
-
-	if (Hand && OtherActor->ActorHasTag("Green"))
+	if (EndingStart)
 	{
 		CatDoor->fsm->cnt++;
 		CatDoor->fsm->isOpen = true;
@@ -126,11 +130,88 @@ void AJSH_Ending::NotifyActorBeginOverlap(AActor* OtherActor)
 			cat4->fsm->ending = true;
 
 		}
-		if (cat5 && cat5->ActorHasTag("S5"))
+		if (cat5 && cat5->ActorHasTag("FCatAttack"))
 		{
 			cat5->Destroy();
 		}
-		// Cat의 애니메이션 실행 되도록
+		
+		CatS5->Destroy();
+		
+		EndingStart = false;
 	}
+
+
+	if (JumpScareEnding)
+	{
+		if (cat1 && cat1->ActorHasTag("S1"))
+		{
+			cat1->fsm->cState = ECatState::ending;
+			cat1->fsm->ending = true;
+		}
+		if (cat2 && cat2->ActorHasTag("S2"))
+		{
+			cat2->fsm->cState = ECatState::ending;
+			cat2->fsm->ending = true;
+
+		}
+		if (cat3 && cat3->ActorHasTag("S3"))
+		{
+			cat3->fsm->cState = ECatState::ending;
+			cat3->fsm->ending = true;
+
+		}
+		if (cat4 && cat4->ActorHasTag("S4"))
+		{
+			cat4->fsm->cState = ECatState::ending;
+			cat4->fsm->ending = true;
+
+		}
+		CatS5->Destroy();
+		
+		JumpScareEnding = false;
+	}
+}
+
+void AJSH_Ending::NotifyActorBeginOverlap(AActor* OtherActor)
+{
+	Super::NotifyActorBeginOverlap(OtherActor);
+
+
+	// AKMK_PlayerHand* Hand = Cast<AKMK_PlayerHand>(OtherActor);
+	//
+	// if (Hand && OtherActor->ActorHasTag("Green"))
+	// {
+	// 	CatDoor->fsm->cnt++;
+	// 	CatDoor->fsm->isOpen = true;
+	// 	
+	// 	if (cat1 && cat1->ActorHasTag("S1"))
+	// 	{
+	// 		cat1->fsm->cState = ECatState::ending;
+	// 		cat1->fsm->ending = true;
+	// 	}
+	// 	if (cat2 && cat2->ActorHasTag("S2"))
+	// 	{
+	// 		cat2->fsm->cState = ECatState::ending;
+	// 		cat2->fsm->ending = true;
+	//
+	// 	}
+	// 	if (cat3 && cat3->ActorHasTag("S3"))
+	// 	{
+	// 		cat3->fsm->cState = ECatState::ending;
+	// 		cat3->fsm->ending = true;
+	//
+	// 	}
+	// 	if (cat4 && cat4->ActorHasTag("S4"))
+	// 	{
+	// 		cat4->fsm->cState = ECatState::ending;
+	// 		cat4->fsm->ending = true;
+	//
+	// 	}
+	// 	if (cat5 && cat5->ActorHasTag("S5"))
+	// 	{
+	// 		cat5->Destroy();
+	// 	}
+	// 	// Cat의 애니메이션 실행 되도록
+	// }
 }
 

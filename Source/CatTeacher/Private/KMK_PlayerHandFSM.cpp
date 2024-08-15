@@ -11,6 +11,8 @@
 #include "PlayerAnimInstance.h"
 #include "../../../../Plugins/Runtime/CableComponent/Source/CableComponent/Classes/CableComponent.h"
 #include "../../../../Plugins/FX/Niagara/Source/Niagara/Public/NiagaraComponent.h"
+#include "Components/AudioComponent.h"
+#include "Sound/SoundCue.h"
 
 // Sets default values for this component's properties
 UKMK_PlayerHandFSM::UKMK_PlayerHandFSM()
@@ -43,6 +45,10 @@ void UKMK_PlayerHandFSM::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 		Player->CableComp[0]->SetMaterial(0, cableMat[0]);
 		Player->Hands[0]->VFXComp->SetVisibility(false);
 		Player->Hands[0]->myMatDynamic->SetScalarParameterValue("charge_light", 0);
+		if (Player->audioComps[6]->IsPlaying())
+		{
+			Player->StopPlayerSound(6);
+		}
 	}
 	// 스테이트 변경
 	switch (PState)
@@ -76,6 +82,8 @@ void UKMK_PlayerHandFSM::JumpHand()
 
 	if(isJump)
 	{
+		Player->isSFX[0] = false;
+		Player->isSFX[1] = false;
 		if(movementComp->JumpZVelocity != JumpPower * 2)
 		{
 			movementComp->JumpZVelocity = JumpPower * 1.8f;
@@ -106,10 +114,18 @@ void UKMK_PlayerHandFSM::EnergyHand()
 {
 	Player->CableComp[0]->SetMaterial(0, cableMat[1]);
 	t += GetWorld()->DeltaTimeSeconds;
+	if (!Player->audioComps[6]->IsPlaying())
+	{
+		Player->PlayPlayerSound(6);
+	}
     GEngine->AddOnScreenDebugMessage(8, 1, FColor::Blue, FString::Printf(TEXT("charge")));
 	if (t > chargeTime)
 	{
 		isCharge = false;
+		if (Player->audioComps[6]->IsPlaying())
+		{
+			Player->StopPlayerSound(6);
+		}
 		Player->CableComp[0]->SetMaterial(0, cableMat[0]);
 		PState = PlayerHandFSM::Normal;
 		t = 0;

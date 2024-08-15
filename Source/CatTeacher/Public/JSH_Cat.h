@@ -42,10 +42,22 @@ public:
 
 	bool timestart = false;
 	float currtime = 0;
-	float aniendtime = 1.7;
+	float aniendtime = 1.4;
 
 
 	// widget 실행을 위한 변수
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool WidgetPlay = false;
+
+	UPROPERTY()
+	class AJSH_Ending* EndingHelper;
+
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<class UCameraShakeBase> ccamera;
+
+
+	// JumpScare때에 Player의 손을 없애기
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool HandDel = false;
 };

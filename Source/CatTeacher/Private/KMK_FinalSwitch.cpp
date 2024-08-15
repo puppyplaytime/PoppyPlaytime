@@ -2,8 +2,12 @@
 
 
 #include "KMK_FinalSwitch.h"
+
+#include "JSH_Random.h"
 #include "KMK_Bat.h"
 #include "KMK_Player.h"
+#include "Kismet/GameplayStatics.h"
+#include "Perception/AISense_Hearing.h"
 
 // Sets default values for this component's properties
 UKMK_FinalSwitch::UKMK_FinalSwitch()
@@ -39,6 +43,9 @@ void UKMK_FinalSwitch::BeginPlay()
 	if (matFact != nullptr && meshComp != nullptr) meshComp->SetMaterial(0, myMatDynamic);
 	myMatDynamic->SetScalarParameterValue("Page", 0);
 	myMatDynamic->SetScalarParameterValue("Gage", 100);
+
+	// CatNab RandomTag 
+	RandomTag = Cast<AJSH_Random>(UGameplayStatics::GetActorOfClass(GetWorld(), AJSH_Random::StaticClass()));
 }
 
 
@@ -56,7 +63,7 @@ void UKMK_FinalSwitch::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 	{
 		// 일정시간이 지나면
 		t += DeltaTime;
-		if (t > 1)
+		if (t > 10)
 		{
 			// 스크린 페이지가 변경되고
 			myMatDynamic->SetScalarParameterValue("Page", 1);
@@ -66,6 +73,10 @@ void UKMK_FinalSwitch::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 				t = 0;
 				isTrue = true;
 				myMatDynamic->SetScalarParameterValue("Gage", 0);
+
+				// CatNab 공격 상태를 변경해주는 로직 시작
+				RandomTag->start = true;
+				UE_LOG(LogTemp, Warning, TEXT("FSM Start"));
 			}
 		}
 	}

@@ -43,6 +43,7 @@ void UJSH_Battery::TickComponent(float DeltaTime, ELevelTick TickType, FActorCom
 	Cat04Component = Cat04->FindComponentByClass<UJSH_CatFSM>();
 	
 	BatComponent03 = batsave03->FindComponentByClass<UKMK_Bat>();
+	
 	FSMOnOff03 = BatComponent03->isHaveBat;
 	if (BatComponent03->isHaveBat == false)
 	{

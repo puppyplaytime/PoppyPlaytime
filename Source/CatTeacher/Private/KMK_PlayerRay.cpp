@@ -45,7 +45,7 @@ void UKMK_PlayerRay::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 
 	// hit된 물체 정보 들고오기
 	FHitResult hitInfo;
-	GetWorld()->LineTraceSingleByChannel(hitInfo, playerComp->startPos, endPos, ECC_GameTraceChannel8, params);
+	//GetWorld()->LineTraceSingleByChannel(hitInfo, playerComp->startPos, endPos, ECC_GameTraceChannel8, params);
 	// DrawDebugLine(GetWorld(), playerComp->startPos, endPos, FColor::Blue, false, 1.f);
 
 	// 레이를 쏘고
@@ -186,7 +186,6 @@ void UKMK_PlayerRay::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 						Hands[0]->isPick = false;
 					}
 					else Hands[0]->isGo = true;
-
 				}
 			}
 			// 물체가 맞지 않은 경우

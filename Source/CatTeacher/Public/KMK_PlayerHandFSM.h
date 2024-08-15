@@ -33,8 +33,9 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 	// 플레이어 객체 가져올 변수
+	UPROPERTY()
 	class AKMK_Player* Player = nullptr;
-	
+	UPROPERTY()
 	class UCharacterMovementComponent* movementComp = nullptr;
 	UPROPERTY(EditAnywhere)
 	PlayerHandFSM PState = PlayerHandFSM::Normal;

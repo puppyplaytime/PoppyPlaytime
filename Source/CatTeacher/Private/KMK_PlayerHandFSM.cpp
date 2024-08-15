@@ -102,6 +102,7 @@ void UKMK_PlayerHandFSM::GunHand()
 {
 	if (isFire && cnt < 1)
 	{
+		UGameplayStatics::PlaySoundAtLocation(this, Player->soundCue[8], Player->GetActorLocation());
 		// 총알 효과 재생
 		GetWorld()->SpawnActor<AKMK_Bullet>(bulletFact, bulletTrans);
 		Player->anim->PlayFireMontage();

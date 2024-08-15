@@ -513,7 +513,7 @@ void AKMK_Player::Cheat2(const struct FInputActionValue& value)
 // 기본 손
 void AKMK_Player::InputNum1(const struct FInputActionValue& value)
 {
-
+	UGameplayStatics::PlaySoundAtLocation(this, soundCue[7], GetActorLocation());
 	isClick[0] = true;
 	FSM->cnt = 0;
 	anim->PlayChangeMontage();
@@ -525,6 +525,7 @@ void AKMK_Player::InputNum1(const struct FInputActionValue& value)
 // 총쏘기
 void AKMK_Player::InputNum2(const struct FInputActionValue& value)
 {
+	UGameplayStatics::PlaySoundAtLocation(this, soundCue[7], GetActorLocation());
 	if (FSM->isFire)
 	{
 		FSM->isFire = false;
@@ -540,6 +541,7 @@ void AKMK_Player::InputNum2(const struct FInputActionValue& value)
 // 점프 손
 void AKMK_Player::InputNum3(const struct FInputActionValue& value)
 {
+	UGameplayStatics::PlaySoundAtLocation(this, soundCue[7], GetActorLocation());
 	isClick[2] = true;
 	FSM->cnt = 0;
 	FSM->PState = PlayerHandFSM::JumpPack;

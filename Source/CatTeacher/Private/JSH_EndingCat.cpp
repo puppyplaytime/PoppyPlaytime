@@ -17,7 +17,7 @@ void AJSH_EndingCat::BeginPlay()
 	Super::BeginPlay();
 
 
-
+	soundoff = false;
 	
 }
 

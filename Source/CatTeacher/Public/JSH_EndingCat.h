@@ -25,4 +25,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool EndingVisible = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool soundoff = false;
 };

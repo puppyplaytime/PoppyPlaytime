@@ -106,6 +106,8 @@ void AJSH_Ending::Tick(float DeltaTime)
 	{
 		CatDoor->fsm->cnt++;
 		CatDoor->fsm->isOpen = true;
+		static USoundWave* OpenSound = LoadObject<USoundWave>(nullptr, TEXT("/Script/Engine.SoundWave'/Game/Project/JSH/Audio/TopOpen.TopOpen'"));
+		UGameplayStatics::PlaySoundAtLocation(GetWorld(), OpenSound, GetActorLocation());
 		
 		if (cat1 && cat1->ActorHasTag("S1"))
 		{

@@ -50,4 +50,18 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	bool Stop = false;
+
+	
+	UPROPERTY()
+	UAudioComponent* BasicBGM;
+
+	UPROPERTY()
+	UAudioComponent* DangerBGM;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool EndingSoundOff = false;
+
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class AJSH_EndingCat* EndingCat;
 };

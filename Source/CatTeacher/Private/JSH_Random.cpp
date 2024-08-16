@@ -57,7 +57,7 @@ void AJSH_Random::Tick(float DeltaTime)
         Stop = false;
     }
 
-    if (EndingSoundOff)
+    if (EndingSoundOff && BasicBGM != nullptr)
     {
         BasicBGM->Stop();
         DangerBGM->Stop();

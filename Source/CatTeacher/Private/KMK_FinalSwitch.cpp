@@ -90,8 +90,8 @@ void UKMK_FinalSwitch::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 	}
 	if(!isTrue) return;
 	// 캣냅 기믹이 시작되는 부분
-	GEngine->AddOnScreenDebugMessage(-1, 1, FColor::White, FString::Printf(TEXT("%f"), allCharge));
-	GEngine->AddOnScreenDebugMessage(6, 1, FColor::Yellow, FString::Printf(TEXT("%d"), count));
+	//GEngine->AddOnScreenDebugMessage(-1, 1, FColor::White, FString::Printf(TEXT("%f"), allCharge));
+	//GEngine->AddOnScreenDebugMessage(6, 1, FColor::Yellow, FString::Printf(TEXT("%d"), count));
 	// 4개 단자에서 모든 게이지를 얻는 경우
 	if (allCharge > 100 || (player != nullptr && player->isCheat2))
 	{

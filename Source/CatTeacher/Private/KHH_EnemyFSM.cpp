@@ -153,7 +153,7 @@ void UKHH_EnemyFSM::DieState()
 {
 	// 달려오는 애니메이션으로 전환
 
-	GetOwner()->SetActorLocation(FVector(2600.989926, 394.258331,69.763294));
+	GetOwner()->SetActorLocation(FVector(2600.989926, 290,69.763294));
 	//(2582.989926, 394.258331,69.763294)
 }
 

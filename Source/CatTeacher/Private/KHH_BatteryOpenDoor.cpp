@@ -85,8 +85,8 @@ void UKHH_BatteryOpenDoor::SpawnEnemy()
 
     if (count == 0)
     {   
-    
-        FTransform spawnLocation = FTransform(FVector(1091.563649, 394.258328, 68.000004));
+        // (X = 1100.000000, Y = 290.000000, Z = 68.000000)
+        FTransform spawnLocation = FTransform(FVector(1100.000000, 290.000000, 68.000004));
 
 
         //(1091.563649, 394.258328, 68.000004) ╪еем ╬у

@@ -133,7 +133,7 @@ void UKMK_PlayerRay::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 	{
 	
 		// 레이를 그리고
-		if(hitInfo.GetActor() != nullptr) DrawDebugLine(GetWorld(), startPos, endPos, FColor::Blue, false, 1.f);
+		// if(hitInfo.GetActor() != nullptr) DrawDebugLine(GetWorld(), startPos, endPos, FColor::Blue, false, 1.f);
 		if (isCome)
 		{
 			isCome = false;
